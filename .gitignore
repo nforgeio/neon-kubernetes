@@ -13,7 +13,8 @@
 .idea/
 *.iml
 
-# Vscode files
+# Visual Studio and Vscode files
+.vs
 .vscode
 
 # This is where the result of the go build goes
