@@ -56,6 +56,10 @@ import (
 	"k8s.io/kubectl/pkg/cmd/get"
 	"k8s.io/kubectl/pkg/cmd/label"
 	"k8s.io/kubectl/pkg/cmd/logs"
+	neon_cluster "k8s.io/kubectl/pkg/cmd/neon/cluster"
+	neon_helm "k8s.io/kubectl/pkg/cmd/neon/helm"
+	neon_login "k8s.io/kubectl/pkg/cmd/neon/login"
+	neon_logout "k8s.io/kubectl/pkg/cmd/neon/logout"
 	"k8s.io/kubectl/pkg/cmd/options"
 	"k8s.io/kubectl/pkg/cmd/patch"
 	"k8s.io/kubectl/pkg/cmd/plugin"
@@ -367,6 +371,15 @@ func NewKubectlCommand(o KubectlOptions) *cobra.Command {
 				rollout.NewCmdRollout(f, o.IOStreams),
 				scale.NewCmdScale(f, o.IOStreams),
 				autoscale.NewCmdAutoscale(f, o.IOStreams),
+			},
+		},
+		{
+			Message: "NEONKUBE Commands:",
+			Commands: []*cobra.Command{
+				neon_cluster.NewCmdNeonCluster(f, o.IOStreams),
+				neon_helm.NewCmdNeonHelm(f, o.IOStreams),
+				neon_login.NewCmdNeonLogin(f, o.IOStreams),
+				neon_logout.NewCmdNeonLogout(f, o.IOStreams),
 			},
 		},
 		{

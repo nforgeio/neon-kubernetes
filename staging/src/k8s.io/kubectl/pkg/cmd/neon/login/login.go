@@ -20,9 +20,14 @@ import (
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+
+	neon_login_delete "k8s.io/kubectl/pkg/cmd/neon/login/delete"
+	neon_login_export "k8s.io/kubectl/pkg/cmd/neon/login/export"
+	neon_login_import "k8s.io/kubectl/pkg/cmd/neon/login/import"
+	neon_login_list "k8s.io/kubectl/pkg/cmd/neon/login/list"
 )
 
-// NewCmdNeonLogin returns a Command instance for NEON-CLI 'login' sub command
+// NewCmdNeonLogin returns a Command instance for NEON-CLI 'login' sub commands
 func NewCmdNeonLogin(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                   "",
@@ -32,6 +37,11 @@ func NewCmdNeonLogin(f cmdutil.Factory, streams genericclioptions.IOStreams) *co
 		Example:               "",
 		Run:                   cmdutil.DefaultSubCommandRun(streams.Out),
 	}
+	// Subcommands
+	cmd.AddCommand(neon_login_delete.NewCmdNeonLoginDelete(f, streams))
+	cmd.AddCommand(neon_login_export.NewCmdNeonLoginExport(f, streams))
+	cmd.AddCommand(neon_login_import.NewCmdNeonLoginImport(f, streams))
+	cmd.AddCommand(neon_login_list.NewCmdNeonLoginList(f, streams))
 
 	return cmd
 }

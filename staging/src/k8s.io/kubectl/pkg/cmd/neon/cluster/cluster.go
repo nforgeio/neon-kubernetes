@@ -22,21 +22,22 @@ import (
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 
-	neonclustercheck "k8s.io/kubectl/pkg/cmd/neon/cluster/check"
-	neonclusterdashboard "k8s.io/kubectl/pkg/cmd/neon/cluster/dashboard"
-	neonclusterdelete "k8s.io/kubectl/pkg/cmd/neon/cluster/delete"
-	neonclusterdeploy "k8s.io/kubectl/pkg/cmd/neon/cluster/deploy"
-	neonclusterhealth "k8s.io/kubectl/pkg/cmd/neon/cluster/health"
-	neonclusterinfo "k8s.io/kubectl/pkg/cmd/neon/cluster/info"
-	neonclusterislocked "k8s.io/kubectl/pkg/cmd/neon/cluster/islocked"
-	neonclusterpause "k8s.io/kubectl/pkg/cmd/neon/cluster/pause"
-	neonclusterprepare "k8s.io/kubectl/pkg/cmd/neon/cluster/prepare"
-	neonclusterpurpose "k8s.io/kubectl/pkg/cmd/neon/cluster/purpose"
-	neonclusterreset "k8s.io/kubectl/pkg/cmd/neon/cluster/reset"
-	neonclustersetup "k8s.io/kubectl/pkg/cmd/neon/cluster/setup"
-	neonclusterstart "k8s.io/kubectl/pkg/cmd/neon/cluster/start"
-	neonclusterstop "k8s.io/kubectl/pkg/cmd/neon/cluster/stop"
-	neonclustervalidate "k8s.io/kubectl/pkg/cmd/neon/cluster/validate"
+	neon_cluster_check "k8s.io/kubectl/pkg/cmd/neon/cluster/check"
+	neon_cluster_dashboard "k8s.io/kubectl/pkg/cmd/neon/cluster/dashboard"
+	neon_cluster_delete "k8s.io/kubectl/pkg/cmd/neon/cluster/delete"
+	neon_cluster_deploy "k8s.io/kubectl/pkg/cmd/neon/cluster/deploy"
+	neon_cluster_health "k8s.io/kubectl/pkg/cmd/neon/cluster/health"
+	neon_cluster_info "k8s.io/kubectl/pkg/cmd/neon/cluster/info"
+	neon_cluster_islocked "k8s.io/kubectl/pkg/cmd/neon/cluster/islocked"
+	neon_cluster_lock "k8s.io/kubectl/pkg/cmd/neon/cluster/lock"
+	neon_cluster_pause "k8s.io/kubectl/pkg/cmd/neon/cluster/pause"
+	neon_cluster_prepare "k8s.io/kubectl/pkg/cmd/neon/cluster/prepare"
+	neon_cluster_purpose "k8s.io/kubectl/pkg/cmd/neon/cluster/purpose"
+	neon_cluster_reset "k8s.io/kubectl/pkg/cmd/neon/cluster/reset"
+	neon_cluster_setup "k8s.io/kubectl/pkg/cmd/neon/cluster/setup"
+	neon_cluster_start "k8s.io/kubectl/pkg/cmd/neon/cluster/start"
+	neon_cluster_stop "k8s.io/kubectl/pkg/cmd/neon/cluster/stop"
+	neon_cluster_validate "k8s.io/kubectl/pkg/cmd/neon/cluster/validate"
 )
 
 var commandExample string = `
@@ -45,7 +46,7 @@ var commandExample string = `
 # neon cluster setup root@my-cluster
 `
 
-// NewCmdNeonCluster returns a Command instance for NEON-CLI 'cluster' commands.
+// NewCmdNeonCluster returns a Command instance for NEON-CLI 'cluster' sub commands.
 func NewCmdNeonCluster(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                   "cluster SUBCOMMAND",
@@ -56,21 +57,22 @@ func NewCmdNeonCluster(f cmdutil.Factory, streams genericclioptions.IOStreams) *
 		Run:                   cmdutil.DefaultSubCommandRun(streams.Out),
 	}
 	// subcommands
-	cmd.AddCommand(neonclustercheck.NewCmdNeonClusterCheck(f, streams))
-	cmd.AddCommand(neonclusterdashboard.NewCmdNeonClusterDashboard(f, streams))
-	cmd.AddCommand(neonclusterdelete.NewCmdNeonClusterDelete(f, streams))
-	cmd.AddCommand(neonclusterdeploy.NewCmdNeonClusterDeploy(f, streams))
-	cmd.AddCommand(neonclusterhealth.NewCmdNeonClusterHealth(f, streams))
-	cmd.AddCommand(neonclusterinfo.NewCmdNeonClusterInfo(f, streams))
-	cmd.AddCommand(neonclusterislocked.NewCmdNeonClusterIsLocked(f, streams))
-	cmd.AddCommand(neonclusterpause.NewCmdNeonClusterPause(f, streams))
-	cmd.AddCommand(neonclusterprepare.NewCmdNeonClusterPrepare(f, streams))
-	cmd.AddCommand(neonclusterpurpose.NewCmdNeonClusterPurpose(f, streams))
-	cmd.AddCommand(neonclusterreset.NewCmdNeonClusterReset(f, streams))
-	cmd.AddCommand(neonclustersetup.NewCmdNeonClusterSetup(f, streams))
-	cmd.AddCommand(neonclusterstart.NewCmdNeonClusterStart(f, streams))
-	cmd.AddCommand(neonclusterstop.NewCmdNeonClusterStop(f, streams))
-	cmd.AddCommand(neonclustervalidate.NewCmdNeonClusterValidate(f, streams))
+	cmd.AddCommand(neon_cluster_check.NewCmdNeonClusterCheck(f, streams))
+	cmd.AddCommand(neon_cluster_dashboard.NewCmdNeonClusterDashboard(f, streams))
+	cmd.AddCommand(neon_cluster_delete.NewCmdNeonClusterDelete(f, streams))
+	cmd.AddCommand(neon_cluster_deploy.NewCmdNeonClusterDeploy(f, streams))
+	cmd.AddCommand(neon_cluster_health.NewCmdNeonClusterHealth(f, streams))
+	cmd.AddCommand(neon_cluster_info.NewCmdNeonClusterInfo(f, streams))
+	cmd.AddCommand(neon_cluster_islocked.NewCmdNeonClusterIsLocked(f, streams))
+	cmd.AddCommand(neon_cluster_lock.NewCmdNeonClusterLock(f, streams))
+	cmd.AddCommand(neon_cluster_pause.NewCmdNeonClusterPause(f, streams))
+	cmd.AddCommand(neon_cluster_prepare.NewCmdNeonClusterPrepare(f, streams))
+	cmd.AddCommand(neon_cluster_purpose.NewCmdNeonClusterPurpose(f, streams))
+	cmd.AddCommand(neon_cluster_reset.NewCmdNeonClusterReset(f, streams))
+	cmd.AddCommand(neon_cluster_setup.NewCmdNeonClusterSetup(f, streams))
+	cmd.AddCommand(neon_cluster_start.NewCmdNeonClusterStart(f, streams))
+	cmd.AddCommand(neon_cluster_stop.NewCmdNeonClusterStop(f, streams))
+	cmd.AddCommand(neon_cluster_validate.NewCmdNeonClusterValidate(f, streams))
 
 	return cmd
 }
