@@ -48,10 +48,10 @@ var (
 
 	autoscaleExample = templates.Examples(i18n.T(`
 		# Auto scale a deployment "foo", with the number of pods between 2 and 10, no target CPU utilization specified so a default autoscaling policy will be used
-		kubectl autoscale deployment foo --min=2 --max=10
+		neon autoscale deployment foo --min=2 --max=10
 
 		# Auto scale a replication controller "foo", with the number of pods between 1 and 5, target CPU utilization at 80%
-		kubectl autoscale rc foo --max=5 --cpu-percent=80`))
+		neon autoscale rc foo --max=5 --cpu-percent=80`))
 )
 
 // AutoscaleOptions declares the arguments accepted by the Autoscale command

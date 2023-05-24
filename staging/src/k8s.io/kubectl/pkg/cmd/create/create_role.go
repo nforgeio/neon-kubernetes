@@ -45,16 +45,16 @@ var (
 
 	roleExample = templates.Examples(i18n.T(`
 		# Create a role named "pod-reader" that allows user to perform "get", "watch" and "list" on pods
-		kubectl create role pod-reader --verb=get --verb=list --verb=watch --resource=pods
+		neon create role pod-reader --verb=get --verb=list --verb=watch --resource=pods
 
 		# Create a role named "pod-reader" with ResourceName specified
-		kubectl create role pod-reader --verb=get --resource=pods --resource-name=readablepod --resource-name=anotherpod
+		neon create role pod-reader --verb=get --resource=pods --resource-name=readablepod --resource-name=anotherpod
 
 		# Create a role named "foo" with API Group specified
-		kubectl create role foo --verb=get,list,watch --resource=rs.extensions
+		neon create role foo --verb=get,list,watch --resource=rs.extensions
 
 		# Create a role named "foo" with SubResource specified
-		kubectl create role foo --verb=get,list,watch --resource=pods,pods/status`))
+		neon create role foo --verb=get,list,watch --resource=pods,pods/status`))
 
 	// Valid resource verb list for validation.
 	validResourceVerbs = []string{"*", "get", "delete", "list", "create", "update", "patch", "watch", "proxy", "deletecollection", "use", "bind", "escalate", "impersonate"}

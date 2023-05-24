@@ -45,10 +45,10 @@ var (
 
 	explainExamples = templates.Examples(i18n.T(`
 		# Get the documentation of the resource and its fields
-		kubectl explain pods
+		neon explain pods
 
 		# Get the documentation of a specific field of a resource
-		kubectl explain pods.spec.containers`))
+		neon explain pods.spec.containers`))
 )
 
 type ExplainOptions struct {

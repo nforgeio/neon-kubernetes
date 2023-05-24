@@ -32,16 +32,16 @@ var (
 
 	rolloutExample = templates.Examples(`
 		# Rollback to the previous deployment
-		kubectl rollout undo deployment/abc
+		neon rollout undo deployment/abc
 
 		# Check the rollout status of a daemonset
-		kubectl rollout status daemonset/foo
+		neon rollout status daemonset/foo
 
 		# Restart a deployment
-		kubectl rollout restart deployment/abc
+		neon rollout restart deployment/abc
 
 		# Restart deployments with the app=nginx label
-		kubectl rollout restart deployment --selector=app=nginx`)
+		neon rollout restart deployment --selector=app=nginx`)
 
 	rolloutValidResources = dedent.Dedent(`
 		Valid resource types include:

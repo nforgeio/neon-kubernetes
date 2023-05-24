@@ -42,7 +42,7 @@ var (
 
 	serviceAccountExample = templates.Examples(i18n.T(`
 	  # Create a new service account named my-service-account
-	  kubectl create serviceaccount my-service-account`))
+	  neon create serviceaccount my-service-account`))
 )
 
 // ServiceAccountOpts holds the options for 'create serviceaccount' sub command

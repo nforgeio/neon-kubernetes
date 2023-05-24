@@ -38,7 +38,7 @@ type setClusterTest struct {
 func TestCreateCluster(t *testing.T) {
 	conf := clientcmdapi.Config{}
 	test := setClusterTest{
-		description: "Testing 'kubectl config set-cluster' with a new cluster",
+		description: "Testing 'neon config set-cluster' with a new cluster",
 		config:      conf,
 		args:        []string{"my-cluster"},
 		flags: []string{
@@ -58,7 +58,7 @@ func TestCreateCluster(t *testing.T) {
 func TestCreateClusterWithProxy(t *testing.T) {
 	conf := clientcmdapi.Config{}
 	test := setClusterTest{
-		description: "Testing 'kubectl config set-cluster' with a new cluster",
+		description: "Testing 'neon config set-cluster' with a new cluster",
 		config:      conf,
 		args:        []string{"my-cluster"},
 		flags: []string{
@@ -87,7 +87,7 @@ func TestModifyCluster(t *testing.T) {
 		},
 	}
 	test := setClusterTest{
-		description: "Testing 'kubectl config set-cluster' with an existing cluster",
+		description: "Testing 'neon config set-cluster' with an existing cluster",
 		config:      conf,
 		args:        []string{"my-cluster"},
 		flags: []string{
@@ -111,7 +111,7 @@ func TestModifyClusterWithProxy(t *testing.T) {
 		},
 	}
 	test := setClusterTest{
-		description: "Testing 'kubectl config set-cluster' with an existing cluster",
+		description: "Testing 'neon config set-cluster' with an existing cluster",
 		config:      conf,
 		args:        []string{"my-cluster"},
 		flags: []string{
@@ -141,7 +141,7 @@ func TestModifyClusterWithProxyOverride(t *testing.T) {
 		},
 	}
 	test := setClusterTest{
-		description: "Testing 'kubectl config set-cluster' with an existing cluster",
+		description: "Testing 'neon config set-cluster' with an existing cluster",
 		config:      conf,
 		args:        []string{"my-cluster"},
 		flags: []string{
@@ -165,7 +165,7 @@ func TestModifyClusterServerAndTLS(t *testing.T) {
 		},
 	}
 	test := setClusterTest{
-		description: "Testing 'kubectl config set-cluster' with an existing cluster",
+		description: "Testing 'neon config set-cluster' with an existing cluster",
 		config:      conf,
 		args:        []string{"my-cluster"},
 		flags: []string{

@@ -43,10 +43,10 @@ var (
 
 	unsetExample = templates.Examples(`
 		# Unset the current-context
-		kubectl config unset current-context
+		neon config unset current-context
 
 		# Unset namespace in foo context
-		kubectl config unset contexts.foo.namespace`)
+		neon config unset contexts.foo.namespace`)
 )
 
 // NewCmdConfigUnset returns a Command instance for 'config unset' sub command

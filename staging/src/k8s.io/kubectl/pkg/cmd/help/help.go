@@ -27,7 +27,7 @@ import (
 
 var helpLong = templates.LongDesc(i18n.T(`
 	Help provides help for any command in the application.
-	Simply type kubectl help [path to command] for full details.`))
+	Simply type neon help [path to command] for full details.`))
 
 // NewCmdHelp returns the help Cobra command
 func NewCmdHelp() *cobra.Command {

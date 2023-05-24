@@ -49,7 +49,7 @@ func TestUseContext(t *testing.T) {
 		CurrentContext: "minikube",
 	}
 	test := useContextTest{
-		description: "Testing for kubectl config use-context",
+		description: "Testing for neon config use-context",
 		config:      conf,
 		args:        []string{"my-cluster"},
 		expected:    `Switched to context "my-cluster".` + "\n",
@@ -87,7 +87,7 @@ func (test useContextTest) run(t *testing.T) {
 	cmd := NewCmdConfigUseContext(buf, pathOptions)
 	cmd.SetArgs(test.args)
 	if err := cmd.Execute(); err != nil {
-		t.Fatalf("unexpected error executing command: %v,kubectl config use-context args: %v", err, test.args)
+		t.Fatalf("unexpected error executing command: %v,neon config use-context args: %v", err, test.args)
 	}
 	config, err := clientcmd.LoadFromFile(fakeKubeFile.Name())
 	if err != nil {

@@ -33,7 +33,7 @@ import (
 var (
 	deleteUserExample = templates.Examples(`
 		# Delete the minikube user
-		kubectl config delete-user minikube`)
+		neon config delete-user minikube`)
 )
 
 // DeleteUserOptions holds the data needed to run the command

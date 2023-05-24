@@ -39,7 +39,7 @@ var (
 
 	currentContextExample = templates.Examples(`
 		# Display the current-context
-		kubectl config current-context`)
+		neon config current-context`)
 )
 
 // NewCmdConfigCurrentContext returns a Command instance for 'config current-context' sub command

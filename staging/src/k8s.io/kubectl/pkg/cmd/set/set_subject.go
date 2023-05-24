@@ -42,13 +42,13 @@ var (
 
 	subjectExample = templates.Examples(`
 	# Update a cluster role binding for serviceaccount1
-	kubectl set subject clusterrolebinding admin --serviceaccount=namespace:serviceaccount1
+	neon set subject clusterrolebinding admin --serviceaccount=namespace:serviceaccount1
 
 	# Update a role binding for user1, user2, and group1
-	kubectl set subject rolebinding admin --user=user1 --user=user2 --group=group1
+	neon set subject rolebinding admin --user=user1 --user=user2 --group=group1
 
 	# Print the result (in YAML format) of updating rolebinding subjects from a local, without hitting the server
-	kubectl create rolebinding admin --role=admin --user=admin -o yaml --dry-run=client | kubectl set subject --local -f - --user=foo -o yaml`)
+	neon create rolebinding admin --role=admin --user=admin -o yaml --dry-run=client | neon set subject --local -f - --user=foo -o yaml`)
 )
 
 type updateSubjects func(existings []rbacv1.Subject, targets []rbacv1.Subject) (bool, []rbacv1.Subject)

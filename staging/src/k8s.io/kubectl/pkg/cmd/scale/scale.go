@@ -48,19 +48,19 @@ var (
 
 	scaleExample = templates.Examples(i18n.T(`
 		# Scale a replica set named 'foo' to 3
-		kubectl scale --replicas=3 rs/foo
+		neon scale --replicas=3 rs/foo
 
 		# Scale a resource identified by type and name specified in "foo.yaml" to 3
-		kubectl scale --replicas=3 -f foo.yaml
+		neon scale --replicas=3 -f foo.yaml
 
 		# If the deployment named mysql's current size is 2, scale mysql to 3
-		kubectl scale --current-replicas=2 --replicas=3 deployment/mysql
+		neon scale --current-replicas=2 --replicas=3 deployment/mysql
 
 		# Scale multiple replication controllers
-		kubectl scale --replicas=5 rc/foo rc/bar rc/baz
+		neon scale --replicas=5 rc/foo rc/bar rc/baz
 
 		# Scale stateful set named 'web' to 3
-		kubectl scale --replicas=3 statefulset/web`))
+		neon scale --replicas=3 statefulset/web`))
 )
 
 type ScaleOptions struct {

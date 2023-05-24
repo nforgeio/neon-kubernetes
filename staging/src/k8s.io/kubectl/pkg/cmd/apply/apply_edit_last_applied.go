@@ -51,10 +51,10 @@ var (
 
 	applyEditLastAppliedExample = templates.Examples(`
 		# Edit the last-applied-configuration annotations by type/name in YAML
-		kubectl apply edit-last-applied deployment/nginx
+		neon apply edit-last-applied deployment/nginx
 
 		# Edit the last-applied-configuration annotations by file in JSON
-		kubectl apply edit-last-applied -f deploy.yaml -o json`)
+		neon apply edit-last-applied -f deploy.yaml -o json`)
 )
 
 // NewCmdApplyEditLastApplied created the cobra CLI command for the `apply edit-last-applied` command.

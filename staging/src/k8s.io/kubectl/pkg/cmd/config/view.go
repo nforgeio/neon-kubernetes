@@ -58,13 +58,13 @@ var (
 
 	viewExample = templates.Examples(`
 		# Show merged kubeconfig settings
-		kubectl config view
+		neon config view
 
 		# Show merged kubeconfig settings and raw certificate data
-		kubectl config view --raw
+		neon config view --raw
 
 		# Get the password for the e2e user
-		kubectl config view -o jsonpath='{.users[?(@.name == "e2e")].user.password}'`)
+		neon config view -o jsonpath='{.users[?(@.name == "e2e")].user.password}'`)
 )
 
 // NewCmdConfigView returns a Command instance for 'config view' sub command

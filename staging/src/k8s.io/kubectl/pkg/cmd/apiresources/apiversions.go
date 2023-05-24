@@ -33,7 +33,7 @@ import (
 var (
 	apiversionsExample = templates.Examples(i18n.T(`
 		# Print the supported API versions
-		kubectl api-versions`))
+		neon api-versions`))
 )
 
 // APIVersionsOptions have the data required for API versions

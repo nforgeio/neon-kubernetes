@@ -57,7 +57,7 @@ var (
 
 	cordonExample = templates.Examples(i18n.T(`
 		# Mark node "foo" as unschedulable
-		kubectl cordon foo`))
+		neon cordon foo`))
 )
 
 func NewCmdCordon(f cmdutil.Factory, ioStreams genericclioptions.IOStreams) *cobra.Command {
@@ -86,7 +86,7 @@ var (
 
 	uncordonExample = templates.Examples(i18n.T(`
 		# Mark node "foo" as schedulable
-		kubectl uncordon foo`))
+		neon uncordon foo`))
 )
 
 func NewCmdUncordon(f cmdutil.Factory, ioStreams genericclioptions.IOStreams) *cobra.Command {
@@ -130,17 +130,17 @@ var (
 		'drain' waits for graceful termination. You should not operate on the machine until
 		the command completes.
 
-		When you are ready to put the node back into service, use kubectl uncordon, which
+		When you are ready to put the node back into service, use neon uncordon, which
 		will make the node schedulable again.
 
 		![Workflow](https://kubernetes.io/images/docs/kubectl_drain.svg)`))
 
 	drainExample = templates.Examples(i18n.T(`
 		# Drain node "foo", even if there are pods not managed by a replication controller, replica set, job, daemon set or stateful set on it
-		kubectl drain foo --force
+		neon drain foo --force
 
 		# As above, but abort if there are pods not managed by a replication controller, replica set, job, daemon set or stateful set, and use a grace period of 15 minutes
-		kubectl drain foo --grace-period=900`))
+		neon drain foo --grace-period=900`))
 )
 
 func NewDrainCmdOptions(f cmdutil.Factory, ioStreams genericclioptions.IOStreams) *DrainCmdOptions {

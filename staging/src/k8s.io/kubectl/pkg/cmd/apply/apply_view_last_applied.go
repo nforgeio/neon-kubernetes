@@ -53,10 +53,10 @@ var (
 
 	applyViewLastAppliedExample = templates.Examples(i18n.T(`
 		# View the last-applied-configuration annotations by type/name in YAML
-		kubectl apply view-last-applied deployment/nginx
+		neon apply view-last-applied deployment/nginx
 
 		# View the last-applied-configuration annotations by file in JSON
-		kubectl apply view-last-applied -f deploy.yaml -o json`))
+		neon apply view-last-applied -f deploy.yaml -o json`))
 )
 
 // NewViewLastAppliedOptions takes option arguments from a CLI stream and returns it at ViewLastAppliedOptions type.

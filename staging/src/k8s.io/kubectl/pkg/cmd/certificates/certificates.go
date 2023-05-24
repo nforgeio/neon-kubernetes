@@ -125,7 +125,7 @@ func NewCmdCertificateApprove(f cmdutil.Factory, ioStreams genericclioptions.IOS
 		Long: templates.LongDesc(i18n.T(`
 		Approve a certificate signing request.
 
-		kubectl certificate approve allows a cluster admin to approve a certificate
+		neon certificate approve allows a cluster admin to approve a certificate
 		signing request (CSR). This action tells a certificate signing controller to
 		issue a certificate to the requestor with the attributes requested in the CSR.
 
@@ -136,7 +136,7 @@ func NewCmdCertificateApprove(f cmdutil.Factory, ioStreams genericclioptions.IOS
 		`)),
 		Example: templates.Examples(i18n.T(`
 			# Approve CSR 'csr-sqgzp'
-			kubectl certificate approve csr-sqgzp
+			neon certificate approve csr-sqgzp
 		`)),
 		Run: func(cmd *cobra.Command, args []string) {
 			cmdutil.CheckErr(o.Complete(f, cmd, args))
@@ -159,7 +159,7 @@ func (o *CertificateOptions) RunCertificateApprove(force bool) error {
 		o.builder,
 		o.clientSet,
 		force,
-		addConditionIfNeeded(string(certificatesv1.CertificateDenied), string(certificatesv1.CertificateApproved), "KubectlApprove", "This CSR was approved by kubectl certificate approve."),
+		addConditionIfNeeded(string(certificatesv1.CertificateDenied), string(certificatesv1.CertificateApproved), "KubectlApprove", "This CSR was approved by neon certificate approve."),
 	)
 }
 
@@ -174,13 +174,13 @@ func NewCmdCertificateDeny(f cmdutil.Factory, ioStreams genericclioptions.IOStre
 		Long: templates.LongDesc(i18n.T(`
 		Deny a certificate signing request.
 
-		kubectl certificate deny allows a cluster admin to deny a certificate
+		neon certificate deny allows a cluster admin to deny a certificate
 		signing request (CSR). This action tells a certificate signing controller to
 		not to issue a certificate to the requestor.
 		`)),
 		Example: templates.Examples(i18n.T(`
 			# Deny CSR 'csr-sqgzp'
-			kubectl certificate deny csr-sqgzp
+			neon certificate deny csr-sqgzp
 		`)),
 		Run: func(cmd *cobra.Command, args []string) {
 			cmdutil.CheckErr(o.Complete(f, cmd, args))

@@ -365,7 +365,7 @@ func prepareCompletionTest() (*cmdtesting.TestFactory, *cobra.Command) {
 	defer tf.Cleanup()
 
 	streams, _, _, _ := genericclioptions.NewTestIOStreams()
-	cmd := get.NewCmdGet("kubectl", tf, streams)
+	cmd := get.NewCmdGet("neon", tf, streams)
 	return tf, cmd
 }
 

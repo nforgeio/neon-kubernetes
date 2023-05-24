@@ -426,7 +426,7 @@ func TestAnnotateErrors(t *testing.T) {
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 			iostreams, _, bufOut, bufErr := genericclioptions.NewTestIOStreams()
-			cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+			cmd := NewCmdAnnotate("neon", tf, iostreams)
 			cmd.SetOutput(bufOut)
 
 			for k, v := range testCase.flags {
@@ -489,7 +489,7 @@ func TestAnnotateObject(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	iostreams, _, bufOut, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	cmd.SetOutput(bufOut)
 	options := NewAnnotateOptions(iostreams)
 	args := []string{"pods/foo", "a=b", "c-"}
@@ -555,7 +555,7 @@ func TestAnnotateResourceVersion(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	iostreams, _, bufOut, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	cmd.SetOutput(bufOut)
 	options := NewAnnotateOptions(iostreams)
 	options.resourceVersion = "10"
@@ -609,7 +609,7 @@ func TestAnnotateObjectFromFile(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	iostreams, _, bufOut, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	cmd.SetOutput(bufOut)
 	options := NewAnnotateOptions(iostreams)
 	options.Filenames = []string{"../../../testdata/controller.yaml"}
@@ -640,7 +640,7 @@ func TestAnnotateLocal(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	iostreams, _, _, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	options := NewAnnotateOptions(iostreams)
 	options.local = true
 	options.Filenames = []string{"../../../testdata/controller.yaml"}
@@ -695,7 +695,7 @@ func TestAnnotateMultipleObjects(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	iostreams, _, _, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	cmd.SetOutput(iostreams.Out)
 	options := NewAnnotateOptions(iostreams)
 	options.all = true

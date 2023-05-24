@@ -84,16 +84,16 @@ var (
 
 	imageExample = templates.Examples(`
 		# Set a deployment's nginx container image to 'nginx:1.9.1', and its busybox container image to 'busybox'
-		kubectl set image deployment/nginx busybox=busybox nginx=nginx:1.9.1
+		neon set image deployment/nginx busybox=busybox nginx=nginx:1.9.1
 
 		# Update all deployments' and rc's nginx container's image to 'nginx:1.9.1'
-		kubectl set image deployments,rc nginx=nginx:1.9.1 --all
+		neon set image deployments,rc nginx=nginx:1.9.1 --all
 
 		# Update image of all containers of daemonset abc to 'nginx:1.9.1'
-		kubectl set image daemonset abc *=nginx:1.9.1
+		neon set image daemonset abc *=nginx:1.9.1
 
 		# Print result (in yaml format) of updating nginx container image from local file, without hitting the server
-		kubectl set image -f path/to/file.yaml nginx=nginx:1.9.1 --local -o yaml`)
+		neon set image -f path/to/file.yaml nginx=nginx:1.9.1 --local -o yaml`)
 )
 
 // NewImageOptions returns an initialized SetImageOptions instance

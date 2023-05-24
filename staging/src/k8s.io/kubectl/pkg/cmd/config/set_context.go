@@ -49,7 +49,7 @@ var (
 
 	setContextExample = templates.Examples(`
 		# Set the user field on the gce context entry without touching other values
-		kubectl config set-context gce --user=cluster-admin`)
+		neon config set-context gce --user=cluster-admin`)
 )
 
 // NewCmdConfigSetContext returns a Command instance for 'config set-context' sub command

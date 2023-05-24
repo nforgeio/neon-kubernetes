@@ -42,13 +42,13 @@ var (
 
 	pcExample = templates.Examples(i18n.T(`
 		# Create a priority class named high-priority
-		kubectl create priorityclass high-priority --value=1000 --description="high priority"
+		neon create priorityclass high-priority --value=1000 --description="high priority"
 
 		# Create a priority class named default-priority that is considered as the global default priority
-		kubectl create priorityclass default-priority --value=1000 --global-default=true --description="default priority"
+		neon create priorityclass default-priority --value=1000 --global-default=true --description="default priority"
 
 		# Create a priority class named high-priority that cannot preempt pods with lower priority
-		kubectl create priorityclass high-priority --value=1000 --description="high priority" --preemption-policy="Never"`))
+		neon create priorityclass high-priority --value=1000 --description="high priority" --preemption-policy="Never"`))
 )
 
 // PriorityClassOptions holds the options for 'create priorityclass' sub command

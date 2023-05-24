@@ -84,22 +84,22 @@ var (
 
 	patchExample = templates.Examples(i18n.T(`
 		# Partially update a node using a strategic merge patch, specifying the patch as JSON
-		kubectl patch node k8s-node-1 -p '{"spec":{"unschedulable":true}}'
+		neon patch node k8s-node-1 -p '{"spec":{"unschedulable":true}}'
 
 		# Partially update a node using a strategic merge patch, specifying the patch as YAML
-		kubectl patch node k8s-node-1 -p $'spec:\n unschedulable: true'
+		neon patch node k8s-node-1 -p $'spec:\n unschedulable: true'
 
 		# Partially update a node identified by the type and name specified in "node.json" using strategic merge patch
-		kubectl patch -f node.json -p '{"spec":{"unschedulable":true}}'
+		neon patch -f node.json -p '{"spec":{"unschedulable":true}}'
 
 		# Update a container's image; spec.containers[*].name is required because it's a merge key
-		kubectl patch pod valid-pod -p '{"spec":{"containers":[{"name":"kubernetes-serve-hostname","image":"new image"}]}}'
+		neon patch pod valid-pod -p '{"spec":{"containers":[{"name":"kubernetes-serve-hostname","image":"new image"}]}}'
 
 		# Update a container's image using a JSON patch with positional arrays
-		kubectl patch pod valid-pod --type='json' -p='[{"op": "replace", "path": "/spec/containers/0/image", "value":"new image"}]'
+		neon patch pod valid-pod --type='json' -p='[{"op": "replace", "path": "/spec/containers/0/image", "value":"new image"}]'
 		
 		# Update a deployment's replicas through the scale subresource using a merge patch.
-		kubectl patch deployment nginx-deployment --subresource='scale' --type='merge' -p '{"spec":{"replicas":2}}'`))
+		neon patch deployment nginx-deployment --subresource='scale' --type='merge' -p '{"spec":{"replicas":2}}'`))
 )
 
 var supportedSubresources = []string{"status", "scale"}

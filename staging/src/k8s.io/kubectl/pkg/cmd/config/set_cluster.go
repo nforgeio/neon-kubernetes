@@ -52,19 +52,19 @@ var (
 
 	setClusterExample = templates.Examples(`
 		# Set only the server field on the e2e cluster entry without touching other values
-		kubectl config set-cluster e2e --server=https://1.2.3.4
+		neon config set-cluster e2e --server=https://1.2.3.4
 
 		# Embed certificate authority data for the e2e cluster entry
-		kubectl config set-cluster e2e --embed-certs --certificate-authority=~/.kube/e2e/kubernetes.ca.crt
+		neon config set-cluster e2e --embed-certs --certificate-authority=~/.kube/e2e/kubernetes.ca.crt
 
 		# Disable cert checking for the e2e cluster entry
-		kubectl config set-cluster e2e --insecure-skip-tls-verify=true
+		neon config set-cluster e2e --insecure-skip-tls-verify=true
 
 		# Set custom TLS server name to use for validation for the e2e cluster entry
-		kubectl config set-cluster e2e --tls-server-name=my-cluster-name
+		neon config set-cluster e2e --tls-server-name=my-cluster-name
 
 		# Set proxy url for the e2e cluster entry
-		kubectl config set-cluster e2e --proxy-url=https://1.2.3.4`)
+		neon config set-cluster e2e --proxy-url=https://1.2.3.4`)
 )
 
 // NewCmdConfigSetCluster returns a Command instance for 'config set-cluster' sub command

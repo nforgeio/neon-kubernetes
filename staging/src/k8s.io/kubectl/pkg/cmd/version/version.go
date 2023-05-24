@@ -48,7 +48,7 @@ type Version struct {
 var (
 	versionExample = templates.Examples(i18n.T(`
 		# Print the client and server versions for the current context
-		kubectl version`))
+		neon version`))
 )
 
 // Options is a struct to support version command
@@ -144,7 +144,7 @@ func (o *Options) Run() error {
 				fmt.Fprintf(o.Out, "Server Version: %s\n", versionInfo.ServerVersion.GitVersion)
 			}
 		} else {
-			fmt.Fprintf(o.ErrOut, "WARNING: This version information is deprecated and will be replaced with the output from kubectl version --short.  Use --output=yaml|json to get the full version.\n")
+			fmt.Fprintf(o.ErrOut, "WARNING: This version information is deprecated and will be replaced with the output from neon version --short.  Use --output=yaml|json to get the full version.\n")
 			fmt.Fprintf(o.Out, "Client Version: %#v\n", *versionInfo.ClientVersion)
 			fmt.Fprintf(o.Out, "Kustomize Version: %s\n", versionInfo.KustomizeVersion)
 			if versionInfo.ServerVersion != nil {

@@ -69,18 +69,18 @@ type PatchBuffer struct {
 var (
 	applySetLastAppliedLong = templates.LongDesc(i18n.T(`
 		Set the latest last-applied-configuration annotations by setting it to match the contents of a file.
-		This results in the last-applied-configuration being updated as though 'kubectl apply -f <file>' was run,
+		This results in the last-applied-configuration being updated as though 'neon apply -f <file>' was run,
 		without updating any other parts of the object.`))
 
 	applySetLastAppliedExample = templates.Examples(i18n.T(`
 		# Set the last-applied-configuration of a resource to match the contents of a file
-		kubectl apply set-last-applied -f deploy.yaml
+		neon apply set-last-applied -f deploy.yaml
 
 		# Execute set-last-applied against each configuration file in a directory
-		kubectl apply set-last-applied -f path/
+		neon apply set-last-applied -f path/
 
 		# Set the last-applied-configuration of a resource to match the contents of a file; will create the annotation if it does not already exist
-		kubectl apply set-last-applied -f deploy.yaml --create-annotation=true
+		neon apply set-last-applied -f deploy.yaml --create-annotation=true
 		`))
 )
 

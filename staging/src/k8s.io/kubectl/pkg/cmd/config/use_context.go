@@ -34,7 +34,7 @@ import (
 var (
 	useContextExample = templates.Examples(`
 		# Use the context for the minikube cluster
-		kubectl config use-context minikube`)
+		neon config use-context minikube`)
 )
 
 type useContextOptions struct {

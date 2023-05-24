@@ -472,7 +472,7 @@ func (test setCredentialsTest) run(t *testing.T) {
 	cmd.SetArgs(test.args)
 	cmd.Flags().Parse(test.flags)
 	if err := cmd.Execute(); err != nil {
-		t.Fatalf("unexpected error executing command: %v,kubectl config set-credentials  args: %v,flags: %v", err, test.args, test.flags)
+		t.Fatalf("unexpected error executing command: %v,neon config set-credentials  args: %v,flags: %v", err, test.args, test.flags)
 	}
 	config, err := clientcmd.LoadFromFile(fakeKubeFile.Name())
 	if err != nil {

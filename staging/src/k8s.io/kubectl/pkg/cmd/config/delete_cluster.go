@@ -31,7 +31,7 @@ import (
 var (
 	deleteClusterExample = templates.Examples(`
 		# Delete the minikube cluster
-		kubectl config delete-cluster minikube`)
+		neon config delete-cluster minikube`)
 )
 
 // NewCmdConfigDeleteCluster returns a Command instance for 'config delete-cluster' sub command

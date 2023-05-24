@@ -45,7 +45,7 @@ func TestSetConfigCurrentContext(t *testing.T) {
 	expectedConfig := *clientcmdapi.NewConfig()
 	expectedConfig.CurrentContext = "my-cluster"
 	test := setConfigTest{
-		description:    "Testing for kubectl config set current-context",
+		description:    "Testing for neon config set current-context",
 		config:         conf,
 		args:           []string{"current-context", "my-cluster"},
 		expected:       `Property "current-context" set.` + "\n",
