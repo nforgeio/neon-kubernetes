@@ -40,12 +40,6 @@ import (
 	neon_cluster_validate "k8s.io/kubectl/pkg/cmd/neon/cluster/validate"
 )
 
-var commandExample string = `
-# Provision a 
-# neon cluster prepare my-clusterdef.yaml 
-# neon cluster setup root@my-cluster
-`
-
 // NewCmdNeonCluster returns a Command instance for NEON-CLI 'cluster' sub commands.
 func NewCmdNeonCluster(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{

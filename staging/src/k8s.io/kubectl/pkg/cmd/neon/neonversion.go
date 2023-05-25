@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package neon_version
+package neon_utility
 
 // GetNeonKubeVersion returns the associated NEONKUBE version.
 func GetNeonKubeVersion() string {
-    return "0.9.2-alpha"
+	return "0.9.2-alpha"
 }
 
 // GetNeonHelmVersion returns the associated Helm version.
 func GetNeonHelmVersion() string {
-    return "3.7.1"
+	return "3.7.1"
 }
