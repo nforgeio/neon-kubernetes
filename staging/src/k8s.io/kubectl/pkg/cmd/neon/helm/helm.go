@@ -19,18 +19,38 @@ package neon_helm
 import (
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
+	neon_utility "k8s.io/kubectl/pkg/cmd/neon"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
+)
+
+var (
+	helmLong = templates.LongDesc(i18n.T(`
+		Executes a Helm command.
+		
+		Run "neon helm help" to list the available commands.`))
+
+	helmExample = templates.Examples(i18n.T(`
+		# Get help for Helm commands
+		neon helm help
+
+		# Install the Helm chart from the "./myapp" folder
+		helm install ./myapp`))
 )
 
 // NewCmdNeonHelm returns a Command instance for NEON-CLI 'helm' sub command
 func NewCmdNeonHelm(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                   "",
-		DisableFlagsInUseLine: true,
-		Short:                 "",
-		Long:                  "",
-		Example:               "",
-		Run:                   cmdutil.DefaultSubCommandRun(streams.Out),
+		Use:                "helm SUBCOMMAND...",
+		Args:               nil,
+		DisableFlagParsing: true,
+		Short:              i18n.T("Executes a Helm command"),
+		Long:               helmLong,
+		Example:            helmExample,
+		Run: func(cmd *cobra.Command, args []string) {
+			neon_utility.HelmExec(args)
+		},
 	}
 
 	return cmd

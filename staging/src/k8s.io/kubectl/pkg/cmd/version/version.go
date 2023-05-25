@@ -22,6 +22,8 @@ import (
 	"fmt"
 	"runtime/debug"
 
+	neon_utility "k8s.io/kubectl/pkg/cmd/neon"
+
 	"github.com/spf13/cobra"
 	"sigs.k8s.io/yaml"
 
@@ -43,6 +45,8 @@ type Version struct {
 	ClientVersion    *apimachineryversion.Info `json:"clientVersion,omitempty" yaml:"clientVersion,omitempty"`
 	KustomizeVersion string                    `json:"kustomizeVersion,omitempty" yaml:"kustomizeVersion,omitempty"`
 	ServerVersion    *apimachineryversion.Info `json:"serverVersion,omitempty" yaml:"serverVersion,omitempty"`
+	NeonCliVersion   string                    `json:"neoncliVersion,omitempty" yaml:"neoncliVersion,omitempty"`
+	HelmVersion      string                    `json:"helmVersion,omitempty" yaml:"helmVersion,omitempty"`
 }
 
 var (
@@ -128,6 +132,8 @@ func (o *Options) Run() error {
 
 	versionInfo.ClientVersion = func() *apimachineryversion.Info { v := version.Get(); return &v }()
 	versionInfo.KustomizeVersion = getKustomizeVersion()
+	versionInfo.NeonCliVersion = neon_utility.GetNeonCliVersion()
+	versionInfo.HelmVersion = neon_utility.GetHelmVersion()
 
 	if !o.ClientOnly && o.discoveryClient != nil {
 		// Always request fresh data from the server
@@ -143,6 +149,8 @@ func (o *Options) Run() error {
 			if versionInfo.ServerVersion != nil {
 				fmt.Fprintf(o.Out, "Server Version: %s\n", versionInfo.ServerVersion.GitVersion)
 			}
+			fmt.Fprintf(o.Out, "neon-cli Version: %s\n", versionInfo.NeonCliVersion)
+			fmt.Fprintf(o.Out, "Helm Version: %s\n", versionInfo.HelmVersion)
 		} else {
 			fmt.Fprintf(o.ErrOut, "WARNING: This version information is deprecated and will be replaced with the output from neon version --short.  Use --output=yaml|json to get the full version.\n")
 			fmt.Fprintf(o.Out, "Client Version: %#v\n", *versionInfo.ClientVersion)
@@ -150,6 +158,8 @@ func (o *Options) Run() error {
 			if versionInfo.ServerVersion != nil {
 				fmt.Fprintf(o.Out, "Server Version: %#v\n", *versionInfo.ServerVersion)
 			}
+			fmt.Fprintf(o.Out, "neon-cli Version: %s\n", versionInfo.NeonCliVersion)
+			fmt.Fprintf(o.Out, "Helm Version: %s\n", versionInfo.HelmVersion)
 		}
 	case "yaml":
 		marshalled, err := yaml.Marshal(&versionInfo)
