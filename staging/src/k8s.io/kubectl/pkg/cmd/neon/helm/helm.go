@@ -36,7 +36,7 @@ var (
 		neon helm help
 
 		# Install the Helm chart from the "./myapp" folder
-		helm install ./myapp`))
+		neon helm install ./myapp`))
 )
 
 // NewCmdNeonHelm returns a Command instance for NEON-CLI 'helm' sub command

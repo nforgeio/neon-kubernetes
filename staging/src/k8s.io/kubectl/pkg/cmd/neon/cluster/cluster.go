@@ -21,6 +21,8 @@ import (
 
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
 
 	neon_cluster_check "k8s.io/kubectl/pkg/cmd/neon/cluster/check"
 	neon_cluster_dashboard "k8s.io/kubectl/pkg/cmd/neon/cluster/dashboard"
@@ -40,15 +42,85 @@ import (
 	neon_cluster_validate "k8s.io/kubectl/pkg/cmd/neon/cluster/validate"
 )
 
+var (
+	clusterLong = templates.LongDesc(i18n.T(`
+	    Use the subcommands to deploy and manage NEONKUBE clusters.`))
+
+	clusterExample = templates.Examples(i18n.T(`
+		# Performs some cluster checks on the current NEONKUBE cluster,
+		# typically performed by maintainers while testing
+		neon cluster check
+
+		# Lists the avaiable NONKUBE cluster dashboards and displays
+		# the kubernetes and grafana dashboards
+		neon cluster dashboard
+		neon cluster dashboard kubernetes
+		neon cluster dashboard grafana
+
+		# Removes the current NEONKUBE cluster
+		neon cluster delete
+
+		# Deploys a NEONKUBE cluster from a cluster definition YAML file
+		neon cluster deploy my-cluster.yaml
+		
+		# Returns information about the health of the current NEONKUBE cluster
+		neon cluster health
+
+		# Returns information about the current NEONKUBE cluster
+		neon cluster info
+
+		# Determines whether the current NEONKUBE cluster is locked, with exit
+		# codes: 0=locked, 1=request failed, 2=unlocked.  Dangerous operations
+		# like cluster delete are disabled by default for locked clusters.
+		neon cluster islocked
+
+		# Locks the current NEONKUBE cluster
+		neon cluster lock
+
+		# Pauses the current NEONKUBE cluster.  This isn't available for all
+		# hosting environments.
+		neon cluster pause
+
+		# Prepares the underlying infrastructure for a NEONKUBE cluster and then
+		# setup the cluster.  This approach is usually used only by maintainers
+		# because the [neon cluster deploy] command performs both steps.
+		neon cluster prepare my-cluster.yaml
+		neon cluster setup root@CLUSTERNAME
+		
+		# Used to retrieve or update the purpose for the current NEONKUBE cluster.
+		# We currently define these purposes: development, production, stage, test
+		# and unspecified.  The first command returns the current NEONKUBE cluster
+		# purpose and the second changes the purpose to [production].
+		neon cluster purpose
+		neon cluster purpose production
+
+		# Used to reset the state of the current NEONKUBE cluster to close to its
+		# "factory new" condition.  This typically used for returning a cluster to
+		# a known state for testing.  The cluster must be unlocked.
+		neon cluster reset
+
+		# Restart a paused or stopped current NEONKUBE cluster
+		neon cluster start
+
+		# Stops the current NEONKUBE cluster by shutting down all of its node machines.
+		# The cluster must be unlocked.
+		neon cluster stop
+		
+		# Unlocks the current NEONKUBE cluster
+		neon cluster unlock
+
+		# Verifies that a cluster definition YAML file is valid
+		neon cluster validate my-cluster.yaml`))
+)
+
 // NewCmdNeonCluster returns a Command instance for NEON-CLI 'cluster' sub commands.
 func NewCmdNeonCluster(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                   "cluster SUBCOMMAND",
-		DisableFlagsInUseLine: true,
-		Short:                 "Deploy and manage NEONKUBE clusters.",
-		Long:                  "Deploy and manage NEONKUBE clusters.",
-		Example:               "",
-		Run:                   cmdutil.DefaultSubCommandRun(streams.Out),
+		Use:     "cluster SUBCOMMAND",
+		Short:   i18n.T("Deploy and manage NEONKUBE clusters."),
+		Long:    clusterLong,
+		Example: clusterExample,
+		Run:     cmdutil.DefaultSubCommandRun(streams.Out),
 	}
 	// subcommands
 	cmd.AddCommand(neon_cluster_check.NewCmdNeonClusterCheck(f, streams))
