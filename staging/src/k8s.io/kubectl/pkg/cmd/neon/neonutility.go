@@ -22,6 +22,7 @@ import (
 	"os/exec"
 	"path"
 	"strings"
+	"time"
 )
 
 // NeonCliExec locates the [neon-cli] executable and then executes it, passing
@@ -100,6 +101,24 @@ func fileExists(filename string) bool {
 	return !info.IsDir()
 }
 
+type pathInfo struct {
+	path      string
+	timestamp time.Time
+}
+
+// appendPathInfo appends a pathInfo struct to the paths slice when the file
+// at the specified path exists and returns the new slice.  If the file doesn't
+// exist, the function returns the unmodified slice.
+func appendPathInfo(paths []pathInfo, path string) []pathInfo {
+
+	info, err := os.Stat(path)
+	if os.IsNotExist(err) || info.IsDir() {
+		return paths
+	}
+
+	return append(paths, pathInfo{path: path, timestamp: info.ModTime()})
+}
+
 // getNeonCliPath attempts to locate the [neon-cli] binary.
 func getNeonCliPath() string {
 
@@ -115,45 +134,60 @@ func getNeonCliPath() string {
 	// neon-cli/neon-desktop is not installed:
 	// ---------------------------------------
 	// The NEON_INSTALL_FOLDER environment variable will not be present for
-	// this case.  We're going to check if the NC_ROOT environment variable
-	// pointing to the NEONCLOUD source repo exists and try to locate the
-	// [neon-cli] binary there.  We're going to use the first binary found
-	// in one of (searched in the listed order):
+	// this case.  We're going to look for the most recently built binary
+	// that exists at these locations andf use that.
 	//
-	//		1. {NC_ROOT}/Build/neon-cli
-	//		2. {NC_ROOT}/Tools/neon-cli/bin/Debug
-	//		2. {NC_ROOT}/Tools/neon-cli/bin/Release
+	// $(NC_ROOT)/Build/neon-cli/neon-cli.exe
+	// $(NC_ROOT)/Tools/neon-cli/bin/Debug/net7.0-windows10.0.17763.0/win10-x64/neon-cli.exe
+	// $(NC_ROOT)/Tools/neon-cli/bin/Release/net7.0-windows10.0.17763.0/win10-x64/neon-cli.exe
+	// $(NK_ROOT)/Tools/neon-cli/bin/Debug/net7.0-windows10.0.17763.0/win10-x64/neon-cli.exe
+	// $(NK_ROOT)/Tools/neon-cli/bin/Debug/net7.0-windows10.0.17763.0/win10-x64/neon-cli.exe
 	//
 	// NOTE: We'll need to update the hardcoded subfolder paths when we
 	//       update .NET SDKs or we target another version of Windows.
 
-	neonCliPath := ""
+	const frameworkMoniker = "net7.0-windows10.0.17763.0"
+	const architecture = "win10-x64"
+
+	// Create a slice with information about the candidate executables.
+
+	candidates := make([]pathInfo, 10)
+
 	neonInstallFolder := os.Getenv("NEON_INSTALL_FOLDER")
-
 	if neonInstallFolder != "" {
-		neonCliPath = path.Join(neonInstallFolder, "neoncli.exe")
-	} else {
-		ncRoot := os.Getenv("NC_ROOT")
-		if ncRoot != "" {
-			neonCliBuildPath := path.Join(ncRoot, "Build", "neon-cli", "neon-cli.exe")
-			neonCliDebugPath := path.Join(ncRoot, "Tools", "neon-cli", "bin", "Debug", "net7.0-windows10.0.17763.0", "win10-x64", "neon-cli.exe")
-			neonCliReleasePath := path.Join(ncRoot, "Tools", "neon-cli", "bin", "Release", "net7.0-windows10.0.17763.0", "win10-x64", "neon-cli.exe")
+		candidates = appendPathInfo(candidates, path.Join(neonInstallFolder, "neoncli.exe"))
+	}
 
-			if fileExists(neonCliBuildPath) {
-				neonCliPath = neonCliBuildPath
-			} else if fileExists(neonCliDebugPath) {
-				neonCliPath = neonCliDebugPath
-			} else if fileExists(neonCliReleasePath) {
-				neonCliPath = neonCliReleasePath
-			}
+	ncRoot := os.Getenv("NC_ROOT")
+	if ncRoot != "" {
+
+		candidates = appendPathInfo(candidates, path.Join(ncRoot, "Build", "neon-cli", "neon-cli.exe"))
+		candidates = appendPathInfo(candidates, path.Join(ncRoot, "Tools", "neon-cli", "bin", "Debug", frameworkMoniker, architecture, "neon-cli.exe"))
+		candidates = appendPathInfo(candidates, path.Join(ncRoot, "Tools", "neon-cli", "bin", "Release", frameworkMoniker, architecture, "neon-cli.exe"))
+	}
+
+	nkRoot := os.Getenv("NK_ROOT")
+	if nkRoot != "" {
+
+		candidates = appendPathInfo(candidates, path.Join(nkRoot, "Tools", "neon-cli", "bin", "Debug", frameworkMoniker, architecture, "neon-cli.exe"))
+		candidates = appendPathInfo(candidates, path.Join(nkRoot, "Tools", "neon-cli", "bin", "Release", frameworkMoniker, architecture, "neon-cli.exe"))
+	}
+
+	if len(candidates) == 0 {
+		panic(errors.New("cannot locate the [neon-cli] binary"))
+	}
+
+	// Look for the candidate executable with the most recent timestamp.
+
+	latestCandidate := candidates[0]
+
+	for _, candidate := range candidates {
+		if candidate.timestamp.After(latestCandidate.timestamp) {
+			latestCandidate = candidate
 		}
 	}
 
-	if neonCliPath == "" || !fileExists(neonCliPath) {
-		panic(errors.New("cannot locate the [neon-cli] binary"))
-	} else {
-		return neonCliPath
-	}
+	return latestCandidate.path
 }
 
 // ExecInheritStreams executes the program whose path is specified, passing
