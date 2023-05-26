@@ -18,40 +18,31 @@ package neon_utility
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"os/exec"
 	"path"
 	"strings"
-	"syscall"
 )
 
 // NeonCliExec locates the [neon-cli] executable and then executes it, passing
 // the specified arguments.  The current process will be terminated with a (-1)
-// exit code if the executable couldn't be located.
+// exit code if the executable couldn't be located.  The standard input, output,
+// and error streams for the current process are redirected to the subprocess.
 //
-// This function does not return.  It replaces the current process with the new
-// [neon-cli] process.
+// This function does not return.  The current process exits, returning the
+// exitcode returned by the subprocess.
 func NeonCliExec(args []string) {
 
-	neonCliPath, err := getNeonCliPath()
-	if err != nil {
-		panic(err)
-	}
-
-	err = syscall.Exec(neonCliPath, args, os.Environ())
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "*** ERROR: Cannot launch the [neon-cli] binary.\n")
-		os.Exit(-1)
-	}
+	ExecInheritStreams(getNeonCliPath(), args)
 }
 
 // HelmExec locates the [helm] executable and then executes it, passing the
-// specified arguments.  The current process will be terminated with a (-1)
-// exit code if the executable couldn't be located.
+// the specified arguments.  The current process will be terminated with a (-1)
+// exit code if the executable couldn't be located.  The standard input, output,
+// and error streams for the current process are redirected to the subprocess.
 //
-// This function does not return.  It replaces the current process with the new
-// [helm] process.
+// This function does not return.  The current process exits, returning the
+// exitcode returned by the subprocess.
 func HelmExec(args []string) {
 
 	// Locate the [neon-cli.exe] binary, handling two possible scenarios:
@@ -73,47 +64,31 @@ func HelmExec(args []string) {
 	helmPath := ""
 	neonInstallFolder := os.Getenv("NEON_INSTALL_FOLDER")
 
-	fmt.Fprintf(os.Stderr, "HelmExec: 0a: %s\n", neonInstallFolder)
 	if neonInstallFolder != "" {
 		helmPath = path.Join(neonInstallFolder, "tools", "helm.exe")
 	} else {
-		// Note that we can't use [NeonCliExec()] here because that replaces
-		// the existing process and we need to run [neon-cli] as a subprocess
-		// here.
+		// Note that we can't use [NeonCliExec()] here because that redirects
+		// the standard streams and never returns.
 
-		fmt.Fprintf(os.Stderr, "HelmExec: 0b\n")
-		neonCliPath, err := getNeonCliPath()
-		if err != nil {
-			panic(err)
-		}
-		fmt.Fprintf(os.Stderr, "HelmExec: 1\n")
+		neonCliPath := getNeonCliPath()
 
-		cmd := exec.Command(neonCliPath, "toolpath", "helm")
-		fmt.Fprintf(os.Stderr, "HelmExec: 2\n")
-		cmd.Env = os.Environ()
-		fmt.Fprintf(os.Stderr, "HelmExec: 3\n")
-		bytes, err := cmd.Output()
-		fmt.Fprintf(os.Stderr, "HelmExec: 4: %s\n", neonCliPath)
+		neonCliToolPathCmd := exec.Command(neonCliPath, "toolpath", "helm")
+		neonCliToolPathCmd.Env = os.Environ()
+		bytes, err := neonCliToolPathCmd.Output()
 		if err != nil {
 			panic(err)
 		}
 
-		fmt.Fprintf(os.Stderr, "HelmExec: 5\n")
+		helmPath = string(bytes[:])
+
 		if helmPath == "" {
 			panic(errors.New("cannot locate the helm binary"))
 		}
 
-		fmt.Fprintf(os.Stderr, "HelmExec: 6\n")
 		helmPath = strings.TrimSpace(string(bytes[:]))
-		fmt.Fprintf(os.Stderr, "HelmExec: 7\n")
 	}
 
-	err := syscall.Exec(helmPath, args, os.Environ())
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "HelmExec: 8\n")
-		fmt.Fprintf(os.Stderr, "*** ERROR: Cannot launch the [helm] binary: %s\n", helmPath)
-		os.Exit(-1)
-	}
+	ExecInheritStreams(helmPath, args)
 }
 
 // fileExists returns TRUE when a specified file exists.
@@ -126,7 +101,7 @@ func fileExists(filename string) bool {
 }
 
 // getNeonCliPath attempts to locate the [neon-cli] binary.
-func getNeonCliPath() (string, error) {
+func getNeonCliPath() string {
 
 	// Locate the [neon-cli.exe] binary, handling two possible scenarios:
 	//
@@ -152,40 +127,73 @@ func getNeonCliPath() (string, error) {
 	// NOTE: We'll need to update the hardcoded subfolder paths when we
 	//       update .NET SDKs or we target another version of Windows.
 
-	fmt.Fprintf(os.Stderr, "getNeonCliPath: 0\n")
 	neonCliPath := ""
 	neonInstallFolder := os.Getenv("NEON_INSTALL_FOLDER")
 
-	fmt.Fprintf(os.Stderr, "getNeonCliPath: 1: %s\n", neonInstallFolder)
 	if neonInstallFolder != "" {
-		fmt.Fprintf(os.Stderr, "getNeonCliPath: 2\n")
 		neonCliPath = path.Join(neonInstallFolder, "neoncli.exe")
 	} else {
-		fmt.Fprintf(os.Stderr, "getNeonCliPath: 3\n")
 		ncRoot := os.Getenv("NC_ROOT")
 		if ncRoot != "" {
 			neonCliBuildPath := path.Join(ncRoot, "Build", "neon-cli", "neon-cli.exe")
 			neonCliDebugPath := path.Join(ncRoot, "Tools", "neon-cli", "bin", "Debug", "net7.0-windows10.0.17763.0", "win10-x64", "neon-cli.exe")
 			neonCliReleasePath := path.Join(ncRoot, "Tools", "neon-cli", "bin", "Release", "net7.0-windows10.0.17763.0", "win10-x64", "neon-cli.exe")
 
-			fmt.Fprintf(os.Stderr, "getNeonCliPath: 4\n")
 			if fileExists(neonCliBuildPath) {
-				fmt.Fprintf(os.Stderr, "getNeonCliPath: 5\n")
 				neonCliPath = neonCliBuildPath
 			} else if fileExists(neonCliDebugPath) {
-				fmt.Fprintf(os.Stderr, "getNeonCliPath: 6\n")
 				neonCliPath = neonCliDebugPath
 			} else if fileExists(neonCliReleasePath) {
-				fmt.Fprintf(os.Stderr, "getNeonCliPath: 7\n")
 				neonCliPath = neonCliReleasePath
 			}
 		}
 	}
-	fmt.Fprintf(os.Stderr, "getNeonCliPath: 8\n")
 
 	if neonCliPath == "" || !fileExists(neonCliPath) {
-		return "", errors.New("cannot locate the [neon-cli] binary")
+		panic(errors.New("cannot locate the [neon-cli] binary"))
 	} else {
-		return neonCliPath, nil
+		return neonCliPath
+	}
+}
+
+// ExecInheritStreams executes the program whose path is specified, passing
+// the specified arguments.  The standard input, output, and error streams
+// for the subprocess are wired up to the current (parent) process.
+//
+// This function does not return.  The current process exits, returning the
+// exitcode returned by the subprocess or it panics when the executable
+// could not be launched.
+func ExecInheritStreams(path string, args []string) {
+
+	// Attempt to execute the command.
+
+	cmd := exec.Command(path, args...)
+	cmd.Env = os.Environ()
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+
+	// Assume [exitcode=0] when there's no error.
+
+	if err == nil {
+		os.Exit(0)
+	}
+
+	// We're going to special case "exit status" errors here by extracting
+	// the exit code from the error and terminating the current process with
+	// that code.
+	//
+	// We'll panic for all other errors, like when the executable file doesn't
+	// exist or when it isn't a valid executable.
+
+	if strings.HasPrefix(err.Error(), "exit status") {
+		var exitError *exec.ExitError
+
+		errors.As(err, &exitError)
+		os.Exit(exitError.ExitCode())
+	} else {
+		panic(err)
 	}
 }
