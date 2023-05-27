@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package neon_cluster_start
+package neon_cluster_unlock
 
 import (
 	"github.com/spf13/cobra"
@@ -26,27 +26,32 @@ import (
 )
 
 var (
-	startLong = templates.LongDesc(i18n.T(`
-	Starts the current stopped or paused NEONKUBE cluster.`))
+	unlockLong = templates.LongDesc(i18n.T(`
+		Unlocks the current NEONKUBE cluster, enabling dangerous cluster operations like:
+		
+		pause remove reset stop
+		
+		All clusters besides NEONDESKTOP clusters are locked by default when they're
+		deployed.  You can disable this by setting [IsLocked=false] in your cluster
+		definition.`))
 
-	startExample = templates.Examples(i18n.T(`
-		# Start the current NEONKUBE cluster
-		neon cluster start
-`))
+	unlockExample = templates.Examples(i18n.T(`
+		# Unlock the current NEONKUBE cluster
+		neon cluster unlock`))
 )
 
-// NewCmdNeonClusterStart returns a Command instance for NEON-CLI 'cluster start' sub command
-func NewCmdNeonClusterStart(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
+// NewCmdNeonClusterLock returns a Command instance for NEON-CLI 'cluster lock' sub command
+func NewCmdNeonClusterUnlock(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "start",
-		Short:   i18n.T("Starts the current stopped or paused NEONKUBE cluster"),
-		Long:    startLong,
-		Example: startExample,
+		Use:     "unlock",
+		Short:   i18n.T("Unlocks the current NEONKUBE cluster"),
+		Long:    unlockLong,
+		Example: unlockExample,
 		Run: func(cmd *cobra.Command, args []string) {
 
 			neonCliArgs := make([]string, 0)
 			neonCliArgs = append(neonCliArgs, "cluster")
-			neonCliArgs = append(neonCliArgs, "start")
+			neonCliArgs = append(neonCliArgs, "unlock")
 
 			neon_utility.ExecNeonCli(neonCliArgs)
 		},

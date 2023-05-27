@@ -31,7 +31,7 @@ func NewCmdAlpha(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.
 	cmd := &cobra.Command{
 		Use:   "alpha",
 		Short: i18n.T("Commands for features in alpha"),
-		Long:  templates.LongDesc(i18n.T("These commands correspond to alpha features that are not enabled in Kubernetes clusters by default.")),
+		Long:  templates.LongDesc("These commands correspond to alpha features that are not enabled in Kubernetes clusters by default."),
 	}
 
 	// Alpha commands should be added here. As features graduate from alpha they should move

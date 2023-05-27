@@ -27,7 +27,7 @@ import (
 
 var (
 	lockLong = templates.LongDesc(i18n.T(`
-		Locks the current NEONKUBE cluster, protecting the cluster from these operations:
+		Locks the current NEONKUBE cluster, disabling cluster operations like:
 		
 		pause remove reset stop`))
 

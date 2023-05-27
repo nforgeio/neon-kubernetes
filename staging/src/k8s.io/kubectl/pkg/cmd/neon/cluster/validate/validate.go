@@ -19,18 +19,41 @@ package neon_cluster_validate
 import (
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
+	neon_utility "k8s.io/kubectl/pkg/cmd/neon"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
+)
+
+var (
+	validateLong = templates.LongDesc(i18n.T(`
+		Validates a NEONKUBE cluster definition YAML file.`))
+
+	validateExample = templates.Examples(i18n.T(`
+		# Validate a NEONKUBE cluster definition file
+		neon cluster validate my-cluster.yaml`))
 )
 
 // NewCmdNeonClusterValidate returns a Command instance for NEON-CLI 'cluster validate' sub command
 func NewCmdNeonClusterValidate(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                   "",
-		DisableFlagsInUseLine: true,
-		Short:                 "",
-		Long:                  "",
-		Example:               "",
-		Run:                   cmdutil.DefaultSubCommandRun(streams.Out),
+		Use:     "validate CLUSTERDEF",
+		Short:   i18n.T("Validates a NEONKUBE cluster definition YAML file"),
+		Long:    validateLong,
+		Example: validateExample,
+		Run: func(cmd *cobra.Command, args []string) {
+
+			if len(args) == 0 {
+				neon_utility.CommandError("CLUSTERDEF argument is required")
+			}
+
+			neonCliArgs := make([]string, 0)
+			neonCliArgs = append(neonCliArgs, "cluster")
+			neonCliArgs = append(neonCliArgs, "validate")
+			neonCliArgs = append(neonCliArgs, args[0])
+
+			neon_utility.ExecNeonCli(neonCliArgs)
+		},
 	}
 
 	return cmd

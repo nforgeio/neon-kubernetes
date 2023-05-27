@@ -45,18 +45,18 @@ type ViewLastAppliedOptions struct {
 }
 
 var (
-	applyViewLastAppliedLong = templates.LongDesc(i18n.T(`
+	applyViewLastAppliedLong = templates.LongDesc(`
 		View the latest last-applied-configuration annotations by type/name or file.
 
 		The default output will be printed to stdout in YAML format. You can use the -o option
-		to change the output format.`))
+		to change the output format.`)
 
-	applyViewLastAppliedExample = templates.Examples(i18n.T(`
+	applyViewLastAppliedExample = templates.Examples(`
 		# View the last-applied-configuration annotations by type/name in YAML
 		neon apply view-last-applied deployment/nginx
 
 		# View the last-applied-configuration annotations by file in JSON
-		neon apply view-last-applied -f deploy.yaml -o json`))
+		neon apply view-last-applied -f deploy.yaml -o json`)
 )
 
 // NewViewLastAppliedOptions takes option arguments from a CLI stream and returns it at ViewLastAppliedOptions type.

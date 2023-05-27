@@ -31,6 +31,10 @@ import (
 // like [--use-staged] and [--use-staged=VALUE].
 const NoFlagValue = "__empty_flag__"
 
+// DefaultClusterDeployParallel specifies the default number of cluster deployment
+// node operations that will be performed in parallel.
+const DefaultClusterDeployParallel = 6
+
 // CommandError writes a command line related error to STDOUT and then
 // terminates the process with exitcode=-1.
 func CommandError(message string) {

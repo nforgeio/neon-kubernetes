@@ -28,7 +28,7 @@ import (
 )
 
 var (
-	applyEditLastAppliedLong = templates.LongDesc(i18n.T(`
+	applyEditLastAppliedLong = templates.LongDesc(`
 		Edit the latest last-applied-configuration annotations of resources from the default editor.
 
 		The edit-last-applied command allows you to directly edit any API resource you can retrieve via the
@@ -47,7 +47,7 @@ var (
 		that contains your unapplied changes. The most common error when updating a resource
 		is another editor changing the resource on the server. When this occurs, you will have
 		to apply your changes to the newer version of the resource, or update your temporary
-		saved copy to include the latest resource version.`))
+		saved copy to include the latest resource version.`)
 
 	applyEditLastAppliedExample = templates.Examples(`
 		# Edit the last-applied-configuration annotations by type/name in YAML
