@@ -19,18 +19,36 @@ package neon_cluster_info
 import (
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
+	neon_utility "k8s.io/kubectl/pkg/cmd/neon"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
+)
+
+var (
+	infoLong = templates.LongDesc(i18n.T(`
+		Prints information about the current NEONKUBE cluster.`))
+
+	infoExample = templates.Examples(i18n.T(`
+		# Print information about the current NEONKUBE cluster
+		neon cluster info`))
 )
 
 // NewCmdNeonClusterInfo returns a Command instance for NEON-CLI 'cluster info' sub command
 func NewCmdNeonClusterInfo(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                   "",
-		DisableFlagsInUseLine: true,
-		Short:                 "",
-		Long:                  "",
-		Example:               "",
-		Run:                   cmdutil.DefaultSubCommandRun(streams.Out),
+		Use:     "info",
+		Short:   i18n.T("Prints information about the current NEONKUBE cluster"),
+		Long:    infoLong,
+		Example: infoExample,
+		Run: func(cmd *cobra.Command, args []string) {
+
+			neonCliArgs := make([]string, 0)
+			neonCliArgs = append(neonCliArgs, "cluster")
+			neonCliArgs = append(neonCliArgs, "info")
+
+			neon_utility.ExecNeonCli(neonCliArgs)
+		},
 	}
 
 	return cmd

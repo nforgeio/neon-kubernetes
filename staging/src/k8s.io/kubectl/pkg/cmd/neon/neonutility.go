@@ -18,6 +18,7 @@ package neon_utility
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"os/exec"
 	"path"
@@ -25,26 +26,42 @@ import (
 	"time"
 )
 
-// NeonCliExec locates the [neon-cli] executable and then executes it, passing
-// the specified arguments.  The current process will be terminated with a (-1)
-// exit code if the executable couldn't be located.  The standard input, output,
-// and error streams for the current process are redirected to the subprocess.
-//
-// This function does not return.  The current process exits, returning the
-// exitcode returned by the subprocess.
-func NeonCliExec(args []string) {
+// NoFlagValue returns a special value that is used as the default value
+// for a Cobra command string option so we can distinguish between flags
+// like [--use-staged] and [--use-staged=VALUE].
+const NoFlagValue = "__empty_flag__"
 
-	ExecInheritStreams(getNeonCliPath(), args)
+// CommandError writes a command line related error to STDOUT and then
+// terminates the process with exitcode=-1.
+func CommandError(message string) {
+	fmt.Fprintf(os.Stderr, "error: %v", message)
+	os.Exit(-1)
 }
 
-// HelmExec locates the [helm] executable and then executes it, passing the
+// ExecNeonCli locates the [neon-cli] executable and then executes it, passing
 // the specified arguments.  The current process will be terminated with a (-1)
 // exit code if the executable couldn't be located.  The standard input, output,
 // and error streams for the current process are redirected to the subprocess.
 //
 // This function does not return.  The current process exits, returning the
 // exitcode returned by the subprocess.
-func HelmExec(args []string) {
+func ExecNeonCli(args []string) {
+
+	//###############################
+	// $debug(jefflill): DELETE THIS!
+	fmt.Fprintf(os.Stdout, "ARGS: %v", args)
+	//###############################
+	//ExecInheritStreams(getNeonCliPath(), args)
+}
+
+// ExecHelm locates the [helm] executable and then executes it, passing the
+// the specified arguments.  The current process will be terminated with a (-1)
+// exit code if the executable couldn't be located.  The standard input, output,
+// and error streams for the current process are redirected to the subprocess.
+//
+// This function does not return.  The current process exits, returning the
+// exitcode returned by the subprocess.
+func ExecHelm(args []string) {
 
 	// Locate the [neon-cli.exe] binary, handling two possible scenarios:
 	//

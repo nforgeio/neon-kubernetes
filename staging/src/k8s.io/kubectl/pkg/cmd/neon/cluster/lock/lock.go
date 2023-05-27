@@ -19,18 +19,38 @@ package neon_cluster_lock
 import (
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
+	neon_utility "k8s.io/kubectl/pkg/cmd/neon"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
+)
+
+var (
+	lockLong = templates.LongDesc(i18n.T(`
+		Locks the current NEONKUBE cluster, protecting the cluster from these operations:
+		
+		pause remove reset stop`))
+
+	lockExample = templates.Examples(i18n.T(`
+		# Lock the current NEONKUBE cluster
+		neon cluster lock`))
 )
 
 // NewCmdNeonClusterLock returns a Command instance for NEON-CLI 'cluster lock' sub command
 func NewCmdNeonClusterLock(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                   "",
-		DisableFlagsInUseLine: true,
-		Short:                 "",
-		Long:                  "",
-		Example:               "",
-		Run:                   cmdutil.DefaultSubCommandRun(streams.Out),
+		Use:     "lock",
+		Short:   i18n.T("Locks the current NEONKUBE cluster"),
+		Long:    lockLong,
+		Example: lockExample,
+		Run: func(cmd *cobra.Command, args []string) {
+
+			neonCliArgs := make([]string, 0)
+			neonCliArgs = append(neonCliArgs, "cluster")
+			neonCliArgs = append(neonCliArgs, "lock")
+
+			neon_utility.ExecNeonCli(neonCliArgs)
+		},
 	}
 
 	return cmd

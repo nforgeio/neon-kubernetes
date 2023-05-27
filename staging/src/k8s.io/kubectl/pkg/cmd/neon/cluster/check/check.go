@@ -17,9 +17,6 @@ limitations under the License.
 package neon_cluster_check
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	neon_utility "k8s.io/kubectl/pkg/cmd/neon"
@@ -82,9 +79,7 @@ func NewCmdNeonClusterCheck(f cmdutil.Factory, streams genericclioptions.IOStrea
 				neonCliArgs = append(neonCliArgs, "--details")
 			}
 
-			fmt.Fprintf(os.Stdout, "cmd: %v\n", neonCliArgs)
-
-			neon_utility.NeonCliExec(neonCliArgs)
+			neon_utility.ExecNeonCli(neonCliArgs)
 		},
 	}
 

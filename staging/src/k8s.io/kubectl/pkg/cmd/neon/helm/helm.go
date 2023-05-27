@@ -49,7 +49,7 @@ func NewCmdNeonHelm(f cmdutil.Factory, streams genericclioptions.IOStreams) *cob
 		Long:               helmLong,
 		Example:            helmExample,
 		Run: func(cmd *cobra.Command, args []string) {
-			neon_utility.HelmExec(args)
+			neon_utility.ExecHelm(args)
 		},
 	}
 

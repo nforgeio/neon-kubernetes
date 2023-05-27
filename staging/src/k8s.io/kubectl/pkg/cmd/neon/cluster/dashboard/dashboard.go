@@ -19,19 +19,66 @@ package neon_cluster_dashboard
 import (
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
+	neon_utility "k8s.io/kubectl/pkg/cmd/neon"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
 )
+
+var (
+	dashboardLong = templates.LongDesc(i18n.T(`
+	Lists the dashboards available for the current NEONKUBE cluster or displays
+	a named dashboard in a browser window.`))
+
+	dashboardExample = templates.Examples(i18n.T(`
+		# Lists the available NEONKUBE cluster dashboards
+		neon cluster dashboard
+
+		# Displays the grafana dashboard
+		neon cluster grafana
+
+		# Returns the URL for the grafana dashboard
+		neon cluster --url grafana`))
+)
+
+type flags struct {
+	url bool
+}
 
 // NewCmdNeonClusterCheck returns a Command instance for NEON-CLI 'cluster dashboard' sub command
 func NewCmdNeonClusterDashboard(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
+
+	flags := flags{}
+
 	cmd := &cobra.Command{
-		Use:                   "",
-		DisableFlagsInUseLine: true,
-		Short:                 "",
-		Long:                  "",
-		Example:               "",
-		Run:                   cmdutil.DefaultSubCommandRun(streams.Out),
+		Use:     "dashboard [NAME]",
+		Short:   i18n.T("Lists or displays NEONKUBE dashboards"),
+		Long:    dashboardLong,
+		Example: dashboardExample,
+		Run: func(cmd *cobra.Command, args []string) {
+
+			neonCliArgs := make([]string, 0)
+			neonCliArgs = append(neonCliArgs, "cluster")
+			neonCliArgs = append(neonCliArgs, "dashboard")
+
+			if len(args) > 0 {
+				neonCliArgs = append(neonCliArgs, args[0])
+			}
+
+			if len(args) > 1 {
+				neonCliArgs = append(neonCliArgs, args[0])
+			}
+
+			if flags.url {
+				neonCliArgs = append(neonCliArgs, "--url")
+			}
+
+			neon_utility.ExecNeonCli(neonCliArgs)
+		},
 	}
+
+	cmd.Flags().BoolVarP(&flags.url, "url", "", false,
+		i18n.T("Return the URL for the dashboard instead of launching a browser"))
 
 	return cmd
 }

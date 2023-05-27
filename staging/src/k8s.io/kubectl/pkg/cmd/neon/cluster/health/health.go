@@ -19,18 +19,36 @@ package neon_cluster_health
 import (
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
+	neon_utility "k8s.io/kubectl/pkg/cmd/neon"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
+)
+
+var (
+	healthLong = templates.LongDesc(i18n.T(`
+		Prints health information for the current cluster.`))
+
+	healthExample = templates.Examples(i18n.T(`
+		# Print cluster health information
+		neon cluster health`))
 )
 
 // NewCmdNeonClusterHealth returns a Command instance for NEON-CLI 'cluster health' sub command
 func NewCmdNeonClusterHealth(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                   "",
-		DisableFlagsInUseLine: true,
-		Short:                 "",
-		Long:                  "",
-		Example:               "",
-		Run:                   cmdutil.DefaultSubCommandRun(streams.Out),
+		Use:     "health",
+		Short:   i18n.T("Prints health information for the current cluster"),
+		Long:    healthLong,
+		Example: healthExample,
+		Run: func(cmd *cobra.Command, args []string) {
+
+			neonCliArgs := make([]string, 0)
+			neonCliArgs = append(neonCliArgs, "cluster")
+			neonCliArgs = append(neonCliArgs, "health")
+
+			neon_utility.ExecNeonCli(neonCliArgs)
+		},
 	}
 
 	return cmd

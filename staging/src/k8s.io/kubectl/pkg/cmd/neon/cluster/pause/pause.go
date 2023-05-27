@@ -19,18 +19,38 @@ package neon_cluster_pause
 import (
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
+	neon_utility "k8s.io/kubectl/pkg/cmd/neon"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
+)
+
+var (
+	pauseLong = templates.LongDesc(i18n.T(`
+		Pauses the current NEONKUBE cluster by putting cluster virtual machines to sleep.
+		
+		This is not supported by all hosting environments.`))
+
+	pauseExample = templates.Examples(i18n.T(`
+		# Print information about the current NEONKUBE cluster
+		neon cluster info`))
 )
 
 // NewCmdNeonClusterPause returns a Command instance for NEON-CLI 'cluster pause' sub command
 func NewCmdNeonClusterPause(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                   "",
-		DisableFlagsInUseLine: true,
-		Short:                 "",
-		Long:                  "",
-		Example:               "",
-		Run:                   cmdutil.DefaultSubCommandRun(streams.Out),
+		Use:     "pause",
+		Short:   i18n.T("Pauses the current NEONKUBE cluster"),
+		Long:    pauseLong,
+		Example: pauseExample,
+		Run: func(cmd *cobra.Command, args []string) {
+
+			neonCliArgs := make([]string, 0)
+			neonCliArgs = append(neonCliArgs, "cluster")
+			neonCliArgs = append(neonCliArgs, "pause")
+
+			neon_utility.ExecNeonCli(neonCliArgs)
+		},
 	}
 
 	return cmd
