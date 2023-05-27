@@ -19,18 +19,37 @@ package neon_login_list
 import (
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
+	neon_utility "k8s.io/kubectl/pkg/cmd/neon"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
+)
+
+var (
+	listLong = templates.LongDesc(i18n.T(`
+		Lists the NEONKUBE contexts.`))
+
+	listExample = templates.Examples(i18n.T(`
+		# List the NEONKUBE contexts
+		neon login list
+`))
 )
 
 // NewCmdNeonLoginList returns a Command instance for NEON-CLI 'login list' sub command
 func NewCmdNeonLoginList(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                   "",
-		DisableFlagsInUseLine: true,
-		Short:                 "",
-		Long:                  "",
-		Example:               "",
-		Run:                   cmdutil.DefaultSubCommandRun(streams.Out),
+		Use:     "list",
+		Short:   i18n.T("Lists the NEONKUBE contexts"),
+		Long:    listLong,
+		Example: listExample,
+		Run: func(cmd *cobra.Command, args []string) {
+
+			neonCliArgs := make([]string, 0)
+			neonCliArgs = append(neonCliArgs, "login")
+			neonCliArgs = append(neonCliArgs, "list")
+
+			neon_utility.ExecNeonCli(neonCliArgs)
+		},
 	}
 
 	return cmd

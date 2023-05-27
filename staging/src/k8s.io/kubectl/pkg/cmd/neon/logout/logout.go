@@ -19,18 +19,35 @@ package neon_logout
 import (
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
+	neon_utility "k8s.io/kubectl/pkg/cmd/neon"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
+)
+
+var (
+	logoutLong = templates.LongDesc(i18n.T(`
+	Logs out of the current NEONKUBE context by selecting no context.`))
+
+	logoutExample = templates.Examples(i18n.T(`
+		# Logout of the current NEONKUBE cluster context
+		neon logout`))
 )
 
 // NewCmdNeonLogout returns a Command instance for NEON-CLI 'logout' sub command
 func NewCmdNeonLogout(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                   "",
-		DisableFlagsInUseLine: true,
-		Short:                 "",
-		Long:                  "",
-		Example:               "",
-		Run:                   cmdutil.DefaultSubCommandRun(streams.Out),
+		Use:     "logout",
+		Short:   i18n.T("Logs out of the current NEONKUBE context"),
+		Long:    logoutLong,
+		Example: logoutExample,
+		Run: func(cmd *cobra.Command, args []string) {
+
+			neonCliArgs := make([]string, 0)
+			neonCliArgs = append(neonCliArgs, "logout")
+
+			neon_utility.ExecNeonCli(neonCliArgs)
+		},
 	}
 
 	return cmd

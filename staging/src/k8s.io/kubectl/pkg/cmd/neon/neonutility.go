@@ -50,12 +50,7 @@ func CommandError(message string) {
 // This function does not return.  The current process exits, returning the
 // exitcode returned by the subprocess.
 func ExecNeonCli(args []string) {
-
-	//###############################
-	// $debug(jefflill): DELETE THIS!
-	fmt.Fprintf(os.Stdout, "ARGS: %v", args)
-	//###############################
-	//ExecInheritStreams(getNeonCliPath(), args)
+	ExecInheritStreams(getNeonCliPath(), args)
 }
 
 // ExecHelm locates the [helm] executable and then executes it, passing the

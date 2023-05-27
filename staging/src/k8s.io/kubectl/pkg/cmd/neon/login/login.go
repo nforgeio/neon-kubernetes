@@ -1,5 +1,5 @@
 /*
-Copyright 2023 NEONFORGE LLC.
+Copyright 2023 NEONFORGE, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,8 +18,11 @@ package neon_login
 
 import (
 	"github.com/spf13/cobra"
+
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
 
 	neon_login_delete "k8s.io/kubectl/pkg/cmd/neon/login/delete"
 	neon_login_export "k8s.io/kubectl/pkg/cmd/neon/login/export"
@@ -27,17 +30,34 @@ import (
 	neon_login_list "k8s.io/kubectl/pkg/cmd/neon/login/list"
 )
 
-// NewCmdNeonLogin returns a Command instance for NEON-CLI 'login' sub commands
+var (
+	loginLong = templates.LongDesc(i18n.T(`
+	    Use the subcommands to manage cluster logins.`))
+
+	loginExample = templates.Examples(i18n.T(`
+		# Removes the current NEONKUBE context from the kubeconfig
+		neon login delete
+
+		# Exports the current NEONKUBE cluster context to a file
+		neon login export
+
+		# Imports an exported NEONKUBE cluster context from a file
+		neon login import
+
+		# Lists the NEONKUBE cluster contexts from the kubeconfig
+		neon login list`))
+)
+
+// NewCmdNeonCluster returns a Command instance for NEON-CLI 'cluster' sub commands.
 func NewCmdNeonLogin(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                   "",
-		DisableFlagsInUseLine: true,
-		Short:                 "",
-		Long:                  "",
-		Example:               "",
-		Run:                   cmdutil.DefaultSubCommandRun(streams.Out),
+		Use:     "login SUBCOMMAND",
+		Short:   i18n.T("Deploy and manage NEONKUBE clusters."),
+		Long:    loginLong,
+		Example: loginExample,
+		Run:     cmdutil.DefaultSubCommandRun(streams.Out),
 	}
-	// Subcommands
+	// subcommands
 	cmd.AddCommand(neon_login_delete.NewCmdNeonLoginDelete(f, streams))
 	cmd.AddCommand(neon_login_export.NewCmdNeonLoginExport(f, streams))
 	cmd.AddCommand(neon_login_import.NewCmdNeonLoginImport(f, streams))
