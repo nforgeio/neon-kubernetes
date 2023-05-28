@@ -276,8 +276,7 @@ func NewKubectlCommand(o KubectlOptions) *cobra.Command {
 		Use:   "neon",
 		Short: i18n.T("neon controls the Kubernetes cluster manager"),
 		Long: templates.LongDesc(`
-      neon controls the Kubernetes cluster manager.  This is a lightly modified
-      extension of kubectl that includes additional commands.
+      neon controls the Kubernetes cluster manager.  This modifies kubectl by adding NEONKUBE commands.
 
       Find more information at:
             https://kubernetes.io/docs/reference/kubectl/overview/`),
