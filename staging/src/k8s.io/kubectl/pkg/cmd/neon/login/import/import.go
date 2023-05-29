@@ -62,7 +62,7 @@ func NewCmdNeonLoginImport(f cmdutil.Factory, streams genericclioptions.IOStream
 			}
 
 			neonCliArgs := make([]string, 0)
-			neonCliArgs = append(neonCliArgs, "cluster")
+			neonCliArgs = append(neonCliArgs, "login")
 			neonCliArgs = append(neonCliArgs, "import")
 			neonCliArgs = append(neonCliArgs, args[0])
 
