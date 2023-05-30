@@ -109,11 +109,12 @@ func ExecHelm(args []string) {
 }
 
 // fileExists returns TRUE when a specified file exists.
-func fileExists(filename string) bool {
-	info, err := os.Stat(filename)
-	if os.IsNotExist(err) {
+func fileExists(path string) bool {
+	info, err := os.Stat(path)
+	if err != nil {
 		return false
 	}
+
 	return !info.IsDir()
 }
 
@@ -122,15 +123,16 @@ type pathInfo struct {
 	timestamp time.Time
 }
 
-// appendPathInfo appends a pathInfo struct to the paths slice when the file
-// at the specified path exists and returns the new slice.  If the file doesn't
+// appendPathInfo appends a [pathInfo] struct to the paths slice when the file
+// at the specified path exists, returning the new slice.  If the file doesn't
 // exist, the function returns the unmodified slice.
 func appendPathInfo(paths []pathInfo, path string) []pathInfo {
 
-	info, err := os.Stat(path)
-	if os.IsNotExist(err) || info.IsDir() {
+	if !fileExists(path) {
 		return paths
 	}
+
+	info, _ := os.Stat(path)
 
 	return append(paths, pathInfo{path: path, timestamp: info.ModTime()})
 }
@@ -167,7 +169,7 @@ func getNeonCliPath() string {
 
 	// Create a slice with information about the candidate executables.
 
-	candidates := make([]pathInfo, 10)
+	candidates := make([]pathInfo, 0)
 
 	neonInstallFolder := os.Getenv("NEON_INSTALL_FOLDER")
 	if neonInstallFolder != "" {

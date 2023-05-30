@@ -55,6 +55,8 @@ var (
 	loginExample = templates.Examples(i18n.T(`
 	    # Print the current context name and default namespace
 		neon login --show
+		neon login --show --output json
+		neon login --show --output yaml
 
 		# Select root@mycluster as the current context
 		neon login root@mycluster
@@ -92,9 +94,10 @@ var (
 )
 
 type flags struct {
-	show      bool
-	namespace string
-	sso       string
+	show         bool
+	namespace    string
+	outputFormat string
+	sso          string
 }
 
 // NewCmdNeonCluster returns a Command instance for NEON-CLI 'cluster' sub commands.
@@ -126,6 +129,10 @@ func NewCmdNeonLogin(f cmdutil.Factory, streams genericclioptions.IOStreams) *co
 				neonCliArgs = append(neonCliArgs, "--namespace="+flags.namespace)
 			}
 
+			if flags.outputFormat != "" {
+				neonCliArgs = append(neonCliArgs, "--output="+flags.outputFormat)
+			}
+
 			if flags.sso != "" {
 				neonCliArgs = append(neonCliArgs, "--sso="+flags.sso)
 			}
@@ -140,6 +147,9 @@ func NewCmdNeonLogin(f cmdutil.Factory, streams genericclioptions.IOStreams) *co
 
 	cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", "",
 		i18n.T("Identifies the namespace to be configured as the default for the current context"))
+
+	cmd.Flags().StringVarP(&flags.outputFormat, "output", "o", "",
+		i18n.T("specifies the format used to print the current context and namespace"))
 
 	cmd.Flags().BoolVarP(&flags.show, "show", "", false,
 		i18n.T("Prints the current context name and default namespace (always happens when the context is changed)"))
