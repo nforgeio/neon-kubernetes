@@ -35,10 +35,18 @@ var (
 `))
 )
 
+type flags struct {
+	outputFormat string
+}
+
 // NewCmdNeonLoginList returns a Command instance for NEON-CLI 'login list' sub command
 func NewCmdNeonLoginList(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
+
+	flags := flags{}
+
 	cmd := &cobra.Command{
 		Use:     "list",
+		Aliases: []string{"ls"},
 		Short:   i18n.T("Lists the NEONKUBE contexts"),
 		Long:    listLong,
 		Example: listExample,
@@ -48,9 +56,16 @@ func NewCmdNeonLoginList(f cmdutil.Factory, streams genericclioptions.IOStreams)
 			neonCliArgs = append(neonCliArgs, "login")
 			neonCliArgs = append(neonCliArgs, "list")
 
+			if flags.outputFormat != "" {
+				neonCliArgs = append(neonCliArgs, "--output="+flags.outputFormat)
+			}
+
 			neon_utility.ExecNeonCli(neonCliArgs)
 		},
 	}
+
+	cmd.Flags().StringVarP(&flags.outputFormat, "output", "o", "",
+		i18n.T("specifies the format used to print the logins"))
 
 	return cmd
 }

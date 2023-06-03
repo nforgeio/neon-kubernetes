@@ -32,6 +32,7 @@ var (
 	deleteExample = templates.Examples(i18n.T(`
 		# Remove the current NEONKUBE cluster context
 		neon login delete
+		neon login rm
 		
 		# Remove the root@mycluster context
 		neon login delete root@mycluster
@@ -51,6 +52,7 @@ func NewCmdNeonLoginDelete(f cmdutil.Factory, streams genericclioptions.IOStream
 
 	cmd := &cobra.Command{
 		Use:     "delete [CONTEXTNAME]",
+		Aliases: []string{"rm"},
 		Short:   i18n.T("Removes the current NEONKUBE cluster context or a context by name"),
 		Long:    deleteLong,
 		Example: deleteExample,

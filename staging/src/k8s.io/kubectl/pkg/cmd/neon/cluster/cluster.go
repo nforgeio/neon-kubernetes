@@ -60,6 +60,11 @@ var (
 
 		# Removes the current NEONKUBE cluster
 		neon cluster delete
+		neon cluster rm
+
+		# Removes a specific NEONKUBE cluster
+		neon cluster delete root@my-cluster
+		neon cluster rm root@my-cluster
 
 		# Deploys a NEONKUBE cluster from a cluster definition YAML file
 		neon cluster deploy my-cluster.yaml

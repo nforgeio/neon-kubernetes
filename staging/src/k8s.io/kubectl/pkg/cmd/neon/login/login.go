@@ -54,9 +54,9 @@ var (
 
 	loginExample = templates.Examples(i18n.T(`
 	    # Print the current context name and default namespace
-		neon login --show
-		neon login --show --output json
-		neon login --show --output yaml
+		neon login
+		neon login --output json
+		neon login -o yaml
 
 		# Select root@mycluster as the current context
 		neon login root@mycluster
@@ -112,18 +112,8 @@ func NewCmdNeonLogin(f cmdutil.Factory, streams genericclioptions.IOStreams) *co
 		Example: loginExample,
 		Run: func(cmd *cobra.Command, args []string) {
 
-			if len(args) == 0 && !flags.show && flags.namespace == "" && flags.sso == "" {
-
-				cmdutil.DefaultSubCommandRun(streams.Out)
-				return
-			}
-
 			neonCliArgs := make([]string, 0)
 			neonCliArgs = append(neonCliArgs, "login")
-
-			if flags.show {
-				neonCliArgs = append(neonCliArgs, "--show")
-			}
 
 			if flags.namespace != "" {
 				neonCliArgs = append(neonCliArgs, "--namespace="+flags.namespace)
@@ -150,9 +140,6 @@ func NewCmdNeonLogin(f cmdutil.Factory, streams genericclioptions.IOStreams) *co
 
 	cmd.Flags().StringVarP(&flags.outputFormat, "output", "o", "",
 		i18n.T("specifies the format used to print the current context and namespace"))
-
-	cmd.Flags().BoolVarP(&flags.show, "show", "", false,
-		i18n.T("Prints the current context name and default namespace (always happens when the context is changed)"))
 
 	cmd.Flags().StringVarP(&flags.sso, "sso", "", "",
 		i18n.T("Alternative way to specify the cluster domain for single sign on"))
