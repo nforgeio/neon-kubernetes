@@ -139,7 +139,7 @@ func NewCmdNeonLogin(f cmdutil.Factory, streams genericclioptions.IOStreams) *co
 		i18n.T("Identifies the namespace to be configured as the default for the current context"))
 
 	cmd.Flags().StringVarP(&flags.outputFormat, "output", "o", "",
-		i18n.T("specifies the format used to print the current context and namespace"))
+		i18n.T("specifies the format used to print the current context and namespace (json|yaml)"))
 
 	cmd.Flags().StringVarP(&flags.sso, "sso", "", "",
 		i18n.T("Alternative way to specify the cluster domain for single sign on"))

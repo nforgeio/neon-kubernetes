@@ -34,8 +34,15 @@ var (
 		neon cluster health`))
 )
 
+type flags struct {
+	outputFormat string
+}
+
 // NewCmdNeonClusterHealth returns a Command instance for NEON-CLI 'cluster health' sub command
 func NewCmdNeonClusterHealth(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
+
+	flags := flags{}
+
 	cmd := &cobra.Command{
 		Use:     "health",
 		Short:   i18n.T("Prints health information for the current cluster"),
@@ -47,9 +54,16 @@ func NewCmdNeonClusterHealth(f cmdutil.Factory, streams genericclioptions.IOStre
 			neonCliArgs = append(neonCliArgs, "cluster")
 			neonCliArgs = append(neonCliArgs, "health")
 
+			if flags.outputFormat != "" {
+				neonCliArgs = append(neonCliArgs, "--output="+flags.outputFormat)
+			}
+
 			neon_utility.ExecNeonCli(neonCliArgs)
 		},
 	}
+
+	cmd.Flags().StringVarP(&flags.outputFormat, "output", "o", "",
+		i18n.T("sspecifies the output format (json|yaml)"))
 
 	return cmd
 }

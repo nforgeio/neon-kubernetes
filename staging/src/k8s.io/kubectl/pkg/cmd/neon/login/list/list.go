@@ -65,7 +65,7 @@ func NewCmdNeonLoginList(f cmdutil.Factory, streams genericclioptions.IOStreams)
 	}
 
 	cmd.Flags().StringVarP(&flags.outputFormat, "output", "o", "",
-		i18n.T("specifies the format used to print the logins"))
+		i18n.T("specifies the output format (json|yaml)"))
 
 	return cmd
 }

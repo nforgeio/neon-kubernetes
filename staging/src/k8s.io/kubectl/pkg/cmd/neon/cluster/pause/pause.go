@@ -64,7 +64,7 @@ func NewCmdNeonClusterPause(f cmdutil.Factory, streams genericclioptions.IOStrea
 		},
 	}
 
-	cmd.Flags().BoolVarP(&flags.force, "pause", "", false,
+	cmd.Flags().BoolVarP(&flags.force, "force", "", false,
 		i18n.T("Don't prompt for permission or require the the cluster be unlocked before pausing"))
 
 	return cmd

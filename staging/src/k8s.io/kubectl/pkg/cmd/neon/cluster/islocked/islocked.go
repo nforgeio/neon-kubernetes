@@ -39,8 +39,15 @@ var (
 		neon cluster islocked`))
 )
 
+type flags struct {
+	outputFormat string
+}
+
 // NewCmdNeonClusterIsLocked returns a Command instance for NEON-CLI 'cluster islocked' sub command
 func NewCmdNeonClusterIsLocked(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
+
+	flags := flags{}
+
 	cmd := &cobra.Command{
 		Use:                   "islocked",
 		DisableFlagsInUseLine: true,
@@ -53,9 +60,16 @@ func NewCmdNeonClusterIsLocked(f cmdutil.Factory, streams genericclioptions.IOSt
 			neonCliArgs = append(neonCliArgs, "cluster")
 			neonCliArgs = append(neonCliArgs, "islocked")
 
+			if flags.outputFormat != "" {
+				neonCliArgs = append(neonCliArgs, "--output="+flags.outputFormat)
+			}
+
 			neon_utility.ExecNeonCli(neonCliArgs)
 		},
 	}
+
+	cmd.Flags().StringVarP(&flags.outputFormat, "output", "o", "",
+		i18n.T("specifies the output format (json|yaml)"))
 
 	return cmd
 }
