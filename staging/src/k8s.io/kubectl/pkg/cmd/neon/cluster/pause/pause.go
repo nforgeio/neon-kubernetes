@@ -36,8 +36,15 @@ var (
 		neon cluster info`))
 )
 
+type flags struct {
+	force bool
+}
+
 // NewCmdNeonClusterPause returns a Command instance for NEON-CLI 'cluster pause' sub command
 func NewCmdNeonClusterPause(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
+
+	flags := flags{}
+
 	cmd := &cobra.Command{
 		Use:     "pause",
 		Short:   i18n.T("Pauses the current NEONKUBE cluster"),
@@ -49,9 +56,16 @@ func NewCmdNeonClusterPause(f cmdutil.Factory, streams genericclioptions.IOStrea
 			neonCliArgs = append(neonCliArgs, "cluster")
 			neonCliArgs = append(neonCliArgs, "pause")
 
+			if flags.force {
+				neonCliArgs = append(neonCliArgs, "--force")
+			}
+
 			neon_utility.ExecNeonCli(neonCliArgs)
 		},
 	}
+
+	cmd.Flags().BoolVarP(&flags.force, "pause", "", false,
+		i18n.T("Don't prompt for permission or require the the cluster be unlocked before pausing"))
 
 	return cmd
 }
