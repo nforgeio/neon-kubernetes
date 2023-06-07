@@ -94,7 +94,6 @@ var (
 )
 
 type flags struct {
-	show         bool
 	namespace    string
 	outputFormat string
 	sso          string
