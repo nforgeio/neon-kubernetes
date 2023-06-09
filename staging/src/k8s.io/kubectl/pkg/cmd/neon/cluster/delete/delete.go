@@ -37,9 +37,9 @@ var (
 		# Delete the current NEONKUBE cluster without prompting for permission
 		neon cluster delete --force
 		
-		# Delete the NEONKUBE cluster identified by kube context name
-		neon cluster delete root@my-cluster
-		neon cluster rm root@my-cluster`))
+		# Delete the NEONKUBE cluster identified by cluster name
+		neon cluster delete my-cluster
+		neon cluster rm my-cluster`))
 )
 
 type flags struct {
@@ -52,7 +52,7 @@ func NewCmdNeonClusterDelete(f cmdutil.Factory, streams genericclioptions.IOStre
 	flags := flags{}
 
 	cmd := &cobra.Command{
-		Use:     "delete [CONTEXT]",
+		Use:     "delete [CLUSTERNAME]",
 		Aliases: []string{"rm"},
 		Short:   i18n.T("Permanently deletes the current NEONKUBE cluster or a specific cluster"),
 		Long:    deleteLong,
