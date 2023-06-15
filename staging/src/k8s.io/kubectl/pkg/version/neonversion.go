@@ -23,5 +23,5 @@ func GetNeonCliVersion() string {
 
 // GetHelmVersion returns the associated Helm version.
 func GetHelmVersion() string {
-    return "3.7.1"
+    return "3.12.0"
 }
