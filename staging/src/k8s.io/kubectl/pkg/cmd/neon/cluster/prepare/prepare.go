@@ -48,6 +48,7 @@ type flags struct {
 	baseImageName  string
 	debug          bool
 	disablePending bool
+	insecure       bool
 	maxParallel    int
 	nodeImagePath  string
 	nodeImageUri   string
@@ -87,6 +88,9 @@ func NewCmdNeonClusterPrepare(f cmdutil.Factory, streams genericclioptions.IOStr
 			}
 			if flags.disablePending {
 				neonCliArgs = append(neonCliArgs, "--disable-pending")
+			}
+			if flags.insecure {
+				neonCliArgs = append(neonCliArgs, "--insecure")
 			}
 			if flags.maxParallel != neon_utility.DefaultClusterDeployParallel {
 				neonCliArgs = append(neonCliArgs, "--max-parallel="+strconv.Itoa(flags.maxParallel))
@@ -140,6 +144,14 @@ func NewCmdNeonClusterPrepare(f cmdutil.Factory, streams genericclioptions.IOStr
 			Disable parallization of setup tasks across steps.
 			This is generally intended for use while debugging
 			cluster setup and may slow cluster prepare substantially.`)))
+
+	cmd.Flags().BoolVarP(&flags.insecure, "insecure", "", false,
+		templates.LongDesc(i18n.T(`
+		MAINTAINER ONLY: Prevents the cluster node [sysadmin]
+		account from being set to a secure password and also
+		enables SSH password authentication.  Used for debugging.
+
+		WARNING: NEVER USE FOR PRODUCTION CLUSTERS!`)))
 
 	cmd.Flags().IntVarP(&flags.maxParallel, "max-parallel", "", neon_utility.DefaultClusterDeployParallel,
 		templates.LongDesc(i18n.T(`
