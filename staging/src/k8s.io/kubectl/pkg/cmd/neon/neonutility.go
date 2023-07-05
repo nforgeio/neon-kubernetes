@@ -173,7 +173,7 @@ func getNeonCliPath() string {
 
 	neonInstallFolder := os.Getenv("NEON_INSTALL_FOLDER")
 	if neonInstallFolder != "" {
-		candidates = appendPathInfo(candidates, path.Join(neonInstallFolder, "neoncli.exe"))
+		candidates = appendPathInfo(candidates, path.Join(neonInstallFolder, "neon-cli.exe"))
 	}
 
 	ncRoot := os.Getenv("NC_ROOT")
