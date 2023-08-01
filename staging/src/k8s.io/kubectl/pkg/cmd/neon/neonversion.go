@@ -18,10 +18,10 @@ package neon_utility
 
 // GetNeonCliVersion returns the associated neon-cli version.
 func GetNeonCliVersion() string {
-	return "0.9.2-alpha"
+    return "0.10.0-beta.1"
 }
 
 // GetHelmVersion returns the associated Helm version.
 func GetHelmVersion() string {
-	return "3.7.1"
+    return "3.12.0"
 }
