@@ -72,36 +72,36 @@ var (
 		rest of the resource.
 
 		After a CustomResourceDefinition is deleted, invalidation of discovery cache may take up
-		to 10 minutes. If you don't want to wait, you might want to run "kubectl api-resources"
+		to 10 minutes. If you don't want to wait, you might want to run "neon api-resources"
 		to refresh the discovery cache.`))
 
 	deleteExample = templates.Examples(i18n.T(`
 		# Delete a pod using the type and name specified in pod.json
-		kubectl delete -f ./pod.json
+		neon delete -f ./pod.json
 
 		# Delete resources from a directory containing kustomization.yaml - e.g. dir/kustomization.yaml
-		kubectl delete -k dir
+		neon delete -k dir
 
 		# Delete resources from all files that end with '.json' - i.e. expand wildcard characters in file names
-		kubectl apply -f '*.json'
+		neon apply -f '*.json'
 
 		# Delete a pod based on the type and name in the JSON passed into stdin
-		cat pod.json | kubectl delete -f -
+		cat pod.json | neon delete -f -
 
 		# Delete pods and services with same names "baz" and "foo"
-		kubectl delete pod,service baz foo
+		neon delete pod,service baz foo
 
 		# Delete pods and services with label name=myLabel
-		kubectl delete pods,services -l name=myLabel
+		neon delete pods,services -l name=myLabel
 
 		# Delete a pod with minimal delay
-		kubectl delete pod foo --now
+		neon delete pod foo --now
 
 		# Force delete a pod on a dead node
-		kubectl delete pod foo --force
+		neon delete pod foo --force
 
 		# Delete all pods
-		kubectl delete pods --all`))
+		neon delete pods --all`))
 )
 
 type DeleteOptions struct {

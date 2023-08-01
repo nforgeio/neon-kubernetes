@@ -42,13 +42,13 @@ var (
 
 	jobExample = templates.Examples(i18n.T(`
 		# Create a job
-		kubectl create job my-job --image=busybox
+		neon create job my-job --image=busybox
 
 		# Create a job with a command
-		kubectl create job my-job --image=busybox -- date
+		neon create job my-job --image=busybox -- date
 
 		# Create a job from a cron job named "a-cronjob"
-		kubectl create job test-job --from=cronjob/a-cronjob`))
+		neon create job test-job --from=cronjob/a-cronjob`))
 )
 
 // CreateJobOptions is the command line options for 'create job'

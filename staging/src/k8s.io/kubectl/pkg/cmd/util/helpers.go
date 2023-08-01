@@ -481,11 +481,11 @@ func AddPodRunningTimeoutFlag(cmd *cobra.Command, defaultTimeout time.Duration) 
 }
 
 func AddApplyAnnotationFlags(cmd *cobra.Command) {
-	cmd.Flags().Bool(ApplyAnnotationsFlag, false, "If true, the configuration of current object will be saved in its annotation. Otherwise, the annotation will be unchanged. This flag is useful when you want to perform kubectl apply on this object in the future.")
+	cmd.Flags().Bool(ApplyAnnotationsFlag, false, "If true, the configuration of current object will be saved in its annotation. Otherwise, the annotation will be unchanged. This flag is useful when you want to perform neon apply on this object in the future.")
 }
 
 func AddApplyAnnotationVarFlags(cmd *cobra.Command, applyAnnotation *bool) {
-	cmd.Flags().BoolVar(applyAnnotation, ApplyAnnotationsFlag, *applyAnnotation, "If true, the configuration of current object will be saved in its annotation. Otherwise, the annotation will be unchanged. This flag is useful when you want to perform kubectl apply on this object in the future.")
+	cmd.Flags().BoolVar(applyAnnotation, ApplyAnnotationsFlag, *applyAnnotation, "If true, the configuration of current object will be saved in its annotation. Otherwise, the annotation will be unchanged. This flag is useful when you want to perform neon apply on this object in the future.")
 }
 
 func AddChunkSizeFlag(cmd *cobra.Command, value *int64) {

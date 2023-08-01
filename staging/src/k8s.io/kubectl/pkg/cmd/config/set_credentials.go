@@ -86,34 +86,34 @@ var (
 	setCredentialsExample = templates.Examples(`
 		# Set only the "client-key" field on the "cluster-admin"
 		# entry, without touching other values
-		kubectl config set-credentials cluster-admin --client-key=~/.kube/admin.key
+		neon config set-credentials cluster-admin --client-key=~/.kube/admin.key
 
 		# Set basic auth for the "cluster-admin" entry
-		kubectl config set-credentials cluster-admin --username=admin --password=uXFGweU9l35qcif
+		neon config set-credentials cluster-admin --username=admin --password=uXFGweU9l35qcif
 
 		# Embed client certificate data in the "cluster-admin" entry
-		kubectl config set-credentials cluster-admin --client-certificate=~/.kube/admin.crt --embed-certs=true
+		neon config set-credentials cluster-admin --client-certificate=~/.kube/admin.crt --embed-certs=true
 
 		# Enable the Google Compute Platform auth provider for the "cluster-admin" entry
-		kubectl config set-credentials cluster-admin --auth-provider=gcp
+		neon config set-credentials cluster-admin --auth-provider=gcp
 
 		# Enable the OpenID Connect auth provider for the "cluster-admin" entry with additional args
-		kubectl config set-credentials cluster-admin --auth-provider=oidc --auth-provider-arg=client-id=foo --auth-provider-arg=client-secret=bar
+		neon config set-credentials cluster-admin --auth-provider=oidc --auth-provider-arg=client-id=foo --auth-provider-arg=client-secret=bar
 
 		# Remove the "client-secret" config value for the OpenID Connect auth provider for the "cluster-admin" entry
-		kubectl config set-credentials cluster-admin --auth-provider=oidc --auth-provider-arg=client-secret-
+		neon config set-credentials cluster-admin --auth-provider=oidc --auth-provider-arg=client-secret-
 
 		# Enable new exec auth plugin for the "cluster-admin" entry
-		kubectl config set-credentials cluster-admin --exec-command=/path/to/the/executable --exec-api-version=client.authentication.k8s.io/v1beta1
+		neon config set-credentials cluster-admin --exec-command=/path/to/the/executable --exec-api-version=client.authentication.k8s.io/v1beta1
 
 		# Define new exec auth plugin args for the "cluster-admin" entry
-		kubectl config set-credentials cluster-admin --exec-arg=arg1 --exec-arg=arg2
+		neon config set-credentials cluster-admin --exec-arg=arg1 --exec-arg=arg2
 
 		# Create or update exec auth plugin environment variables for the "cluster-admin" entry
-		kubectl config set-credentials cluster-admin --exec-env=key1=val1 --exec-env=key2=val2
+		neon config set-credentials cluster-admin --exec-env=key1=val1 --exec-env=key2=val2
 
 		# Remove exec auth plugin environment variables for the "cluster-admin" entry
-		kubectl config set-credentials cluster-admin --exec-env=var-to-remove-`)
+		neon config set-credentials cluster-admin --exec-env=var-to-remove-`)
 )
 
 // NewCmdConfigSetCredentials returns a Command instance for 'config set-credentials' sub command
