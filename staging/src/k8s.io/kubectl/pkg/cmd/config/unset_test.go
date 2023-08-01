@@ -49,7 +49,7 @@ func TestUnsetConfigString(t *testing.T) {
 		CurrentContext: "minikube",
 	}
 	test := unsetConfigTest{
-		description: "Testing for kubectl config unset a value",
+		description: "Testing for neon config unset a value",
 		config:      conf,
 		args:        []string{"current-context"},
 		expected:    `Property "current-context" unset.` + "\n",
@@ -72,7 +72,7 @@ func TestUnsetConfigMap(t *testing.T) {
 		CurrentContext: "minikube",
 	}
 	test := unsetConfigTest{
-		description: "Testing for kubectl config unset a map",
+		description: "Testing for neon config unset a map",
 		config:      conf,
 		args:        []string{"clusters"},
 		expected:    `Property "clusters" unset.` + "\n",
@@ -96,7 +96,7 @@ func TestUnsetUnexistConfig(t *testing.T) {
 	}
 
 	test := unsetConfigTest{
-		description: "Testing for kubectl config unset a unexist map key",
+		description: "Testing for neon config unset a unexist map key",
 		config:      conf,
 		args:        []string{"contexts.foo.namespace"},
 		expectedErr: "current map key `foo` is invalid",

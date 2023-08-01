@@ -73,19 +73,19 @@ var (
 
 	secretExample = templates.Examples(i18n.T(`
 	  # Create a new secret named my-secret with keys for each file in folder bar
-	  kubectl create secret generic my-secret --from-file=path/to/bar
+	  neon create secret generic my-secret --from-file=path/to/bar
 
 	  # Create a new secret named my-secret with specified keys instead of names on disk
-	  kubectl create secret generic my-secret --from-file=ssh-privatekey=path/to/id_rsa --from-file=ssh-publickey=path/to/id_rsa.pub
+	  neon create secret generic my-secret --from-file=ssh-privatekey=path/to/id_rsa --from-file=ssh-publickey=path/to/id_rsa.pub
 
 	  # Create a new secret named my-secret with key1=supersecret and key2=topsecret
-	  kubectl create secret generic my-secret --from-literal=key1=supersecret --from-literal=key2=topsecret
+	  neon create secret generic my-secret --from-literal=key1=supersecret --from-literal=key2=topsecret
 
 	  # Create a new secret named my-secret using a combination of a file and a literal
-	  kubectl create secret generic my-secret --from-file=ssh-privatekey=path/to/id_rsa --from-literal=passphrase=topsecret
+	  neon create secret generic my-secret --from-file=ssh-privatekey=path/to/id_rsa --from-literal=passphrase=topsecret
 
 	  # Create a new secret named my-secret from env files
-	  kubectl create secret generic my-secret --from-env-file=path/to/foo.env --from-env-file=path/to/bar.env`))
+	  neon create secret generic my-secret --from-env-file=path/to/foo.env --from-env-file=path/to/bar.env`))
 )
 
 // CreateSecretOptions holds the options for 'create secret' sub command

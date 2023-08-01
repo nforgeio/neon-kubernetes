@@ -110,7 +110,7 @@ func TestGetUnknownSchemaObject(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"type", "foo"})
 
@@ -153,7 +153,7 @@ func TestGetSchemaObject(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.Run(cmd, []string{"replicationcontrollers", "foo"})
 
 	if !strings.Contains(buf.String(), "foo") {
@@ -177,7 +177,7 @@ func TestGetObjectsWithOpenAPIOutputFormatPresent(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Flags().Set(useOpenAPIPrintColumnFlagLabel, "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
@@ -230,7 +230,7 @@ func TestGetObjects(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"pods", "foo"})
 
@@ -255,7 +255,7 @@ func TestGetObjectSubresourceStatus(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Flags().Set("subresource", "status")
 	cmd.Run(cmd, []string{"replicationcontrollers", "rc1"})
@@ -282,7 +282,7 @@ func TestGetObjectSubresourceScale(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Flags().Set("subresource", "scale")
 	cmd.Run(cmd, []string{"replicationcontrollers", "rc1"})
@@ -309,7 +309,7 @@ func TestGetTableObjects(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"pods", "foo"})
 
@@ -334,7 +334,7 @@ func TestGetV1TableObjects(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"pods", "foo"})
 
@@ -359,7 +359,7 @@ func TestGetObjectsShowKind(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Flags().Set("show-kind", "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
@@ -385,7 +385,7 @@ func TestGetTableObjectsShowKind(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Flags().Set("show-kind", "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
@@ -438,7 +438,7 @@ func TestGetMultipleResourceTypesShowKinds(t *testing.T) {
 	}
 
 	streams, _, buf, bufErr := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"all"})
 
@@ -499,7 +499,7 @@ func TestGetMultipleTableResourceTypesShowKinds(t *testing.T) {
 	}
 
 	streams, _, buf, bufErr := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"all"})
 
@@ -560,7 +560,7 @@ func TestNoBlankLinesForGetMultipleTableResource(t *testing.T) {
 	}
 
 	streams, _, buf, bufErr := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	expected := `NAME      READY   STATUS   RESTARTS   AGE
@@ -578,12 +578,12 @@ service/baz   ClusterIP   <none>       <none>        <none>    <unknown>
 		cmd.Run(cmd, cmdArgs)
 
 		if e, a := expected, buf.String(); e != a {
-			t.Errorf("[kubectl get %v] expected\n%v\ngot\n%v", cmdArgs, e, a)
+			t.Errorf("[neon get %v] expected\n%v\ngot\n%v", cmdArgs, e, a)
 		}
 
 		// The error out should be empty
 		if e, a := "", bufErr.String(); e != a {
-			t.Errorf("[kubectl get %v] expected\n%v\ngot\n%v", cmdArgs, e, a)
+			t.Errorf("[neon get %v] expected\n%v\ngot\n%v", cmdArgs, e, a)
 		}
 
 		buf.Reset()
@@ -629,7 +629,7 @@ func TestNoBlankLinesForGetAll(t *testing.T) {
 	}
 
 	streams, _, buf, errbuf := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"all"})
 
@@ -655,7 +655,7 @@ func TestNotFoundMessageForGetNonNamespacedResources(t *testing.T) {
 	}
 
 	streams, _, buf, errbuf := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"persistentvolumes"})
 
@@ -683,7 +683,7 @@ func TestGetObjectsShowLabels(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Flags().Set("show-labels", "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
@@ -709,7 +709,7 @@ func TestGetTableObjectsShowLabels(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Flags().Set("show-labels", "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
@@ -744,7 +744,7 @@ func TestGetEmptyTable(t *testing.T) {
 	}
 
 	streams, _, buf, errbuf := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"pods"})
 
@@ -794,7 +794,7 @@ func TestGetObjectIgnoreNotFound(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Flags().Set("ignore-not-found", "true")
 	cmd.Flags().Set("output", "yaml")
@@ -820,7 +820,7 @@ func TestEmptyResult(t *testing.T) {
 	}
 
 	streams, _, _, errbuf := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	// we're assuming that an empty file is being passed from stdin
 	cmd.Flags().Set("filename", "-")
 	cmd.Run(cmd, []string{})
@@ -845,7 +845,7 @@ func TestEmptyResultJSON(t *testing.T) {
 	}
 
 	streams, _, outbuf, errbuf := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	// we're assuming that an empty file is being passed from stdin
 	cmd.Flags().Set("filename", "-")
 	cmd.Flags().Set("output", "json")
@@ -909,7 +909,7 @@ func TestGetSortedObjects(t *testing.T) {
 	tf.ClientConfigVal = &restclient.Config{ContentConfig: restclient.ContentConfig{GroupVersion: &corev1.SchemeGroupVersion}}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	// sorting with metadata.name
@@ -948,7 +948,7 @@ func TestGetSortedObjectsUnstructuredTable(t *testing.T) {
 	tf.ClientConfigVal = &restclient.Config{ContentConfig: restclient.ContentConfig{GroupVersion: &corev1.SchemeGroupVersion}}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	// sorting with metadata.name
@@ -1180,7 +1180,7 @@ func TestGetObjectsIdentifiedByFile(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Flags().Set("filename", "../../../testdata/controller.yaml")
 	cmd.Run(cmd, []string{})
@@ -1206,7 +1206,7 @@ func TestGetTableObjectsIdentifiedByFile(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Flags().Set("filename", "../../../testdata/controller.yaml")
 	cmd.Run(cmd, []string{})
@@ -1232,7 +1232,7 @@ func TestGetListObjects(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"pods"})
 
@@ -1258,7 +1258,7 @@ func TestGetListTableObjects(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"pods"})
 
@@ -1284,7 +1284,7 @@ func TestGetListComponentStatus(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"componentstatuses"})
 
@@ -1333,7 +1333,7 @@ func TestGetMixedGenericObjects(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Flags().Set("output", "json")
 	cmd.Run(cmd, []string{"pods"})
@@ -1382,7 +1382,7 @@ func TestGetMultipleTypeObjects(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"pods,services"})
 
@@ -1421,7 +1421,7 @@ func TestGetMultipleTypeTableObjects(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 	cmd.Run(cmd, []string{"pods,services"})
 
@@ -1461,7 +1461,7 @@ func TestGetMultipleTypeObjectsAsList(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("output", "json")
@@ -1563,7 +1563,7 @@ func TestGetMultipleTypeObjectsWithLabelSelector(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("selector", "a=b")
@@ -1607,7 +1607,7 @@ func TestGetMultipleTypeTableObjectsWithLabelSelector(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("selector", "a=b")
@@ -1651,7 +1651,7 @@ func TestGetMultipleTypeObjectsWithFieldSelector(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("field-selector", "a=b")
@@ -1695,7 +1695,7 @@ func TestGetMultipleTypeTableObjectsWithFieldSelector(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("field-selector", "a=b")
@@ -1741,7 +1741,7 @@ func TestGetMultipleTypeObjectsWithDirectReference(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Run(cmd, []string{"services/bar", "node/foo"})
@@ -1785,7 +1785,7 @@ func TestGetMultipleTypeTableObjectsWithDirectReference(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Run(cmd, []string{"services/bar", "node/foo"})
@@ -1940,7 +1940,7 @@ func TestWatchLabelSelector(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("watch", "true")
@@ -1991,7 +1991,7 @@ func TestWatchTableLabelSelector(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("watch", "true")
@@ -2042,7 +2042,7 @@ func TestWatchFieldSelector(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("watch", "true")
@@ -2093,7 +2093,7 @@ func TestWatchTableFieldSelector(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("watch", "true")
@@ -2138,7 +2138,7 @@ func TestWatchResource(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("watch", "true")
@@ -2182,7 +2182,7 @@ func TestWatchStatus(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("watch", "true")
@@ -2228,7 +2228,7 @@ func TestWatchTableResource(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("watch", "true")
@@ -2334,7 +2334,7 @@ func TestWatchResourceTable(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("watch", "true")
@@ -2546,7 +2546,7 @@ pod/foo
 			}
 
 			streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-			cmd := NewCmdGet("kubectl", tf, streams)
+			cmd := NewCmdGet("neon", tf, streams)
 			cmd.SetOutput(buf)
 
 			cmd.Flags().Set("watch", "true")
@@ -2592,7 +2592,7 @@ func TestWatchResourceIdentifiedByFile(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("watch", "true")
@@ -2636,7 +2636,7 @@ func TestWatchOnlyResource(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("watch-only", "true")
@@ -2678,7 +2678,7 @@ func TestWatchOnlyTableResource(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("watch-only", "true")
@@ -2723,7 +2723,7 @@ func TestWatchOnlyList(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("watch-only", "true")
@@ -2768,7 +2768,7 @@ func TestWatchOnlyTableList(t *testing.T) {
 	}
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdGet("kubectl", tf, streams)
+	cmd := NewCmdGet("neon", tf, streams)
 	cmd.SetOutput(buf)
 
 	cmd.Flags().Set("watch-only", "true")
