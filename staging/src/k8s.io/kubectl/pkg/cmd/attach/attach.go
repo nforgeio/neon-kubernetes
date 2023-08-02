@@ -44,17 +44,17 @@ var (
 	attachExample = templates.Examples(i18n.T(`
 		# Get output from running pod mypod; use the 'kubectl.kubernetes.io/default-container' annotation
 		# for selecting the container to be attached or the first container in the pod will be chosen
-		kubectl attach mypod
+		neon attach mypod
 
 		# Get output from ruby-container from pod mypod
-		kubectl attach mypod -c ruby-container
+		neon attach mypod -c ruby-container
 
 		# Switch to raw terminal mode; sends stdin to 'bash' in ruby-container from pod mypod
 		# and sends stdout/stderr from 'bash' back to the client
-		kubectl attach mypod -c ruby-container -i -t
+		neon attach mypod -c ruby-container -i -t
 
 		# Get output from the first pod of a replica set named nginx
-		kubectl attach rs/nginx
+		neon attach rs/nginx
 		`))
 )
 

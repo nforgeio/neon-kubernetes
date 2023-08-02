@@ -62,10 +62,10 @@ var (
 
 	topNodeExample = templates.Examples(i18n.T(`
 		  # Show metrics for all nodes
-		  kubectl top node
+		  neon top node
 
 		  # Show metrics for a given node
-		  kubectl top node NODE_NAME`))
+		  neon top node NODE_NAME`))
 )
 
 func NewCmdTopNode(f cmdutil.Factory, o *TopNodeOptions, streams genericclioptions.IOStreams) *cobra.Command {

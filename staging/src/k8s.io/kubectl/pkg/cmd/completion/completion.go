@@ -47,7 +47,7 @@ var (
 	completionLong = templates.LongDesc(i18n.T(`
 		Output shell completion code for the specified shell (bash, zsh, fish, or powershell).
 		The shell code must be evaluated to provide interactive
-		completion of kubectl commands.  This can be done by sourcing it from
+		completion of neon commands.  This can be done by sourcing it from
 		the .bash_profile.
 
 		Detailed instructions on how to do this are available here:
@@ -69,47 +69,47 @@ var (
 		    brew install bash-completion
 		## or, if running Bash 4.1+
 		    brew install bash-completion@2
-		## If kubectl is installed via homebrew, this should start working immediately
+		## If neon is installed via homebrew, this should start working immediately
 		## If you've installed via other means, you may need add the completion to your completion directory
-		    kubectl completion bash > $(brew --prefix)/etc/bash_completion.d/kubectl
+		    neon completion bash > $(brew --prefix)/etc/bash_completion.d/kubectl
 
 
 		# Installing bash completion on Linux
 		## If bash-completion is not installed on Linux, install the 'bash-completion' package
 		## via your distribution's package manager.
-		## Load the kubectl completion code for bash into the current shell
-		    source <(kubectl completion bash)
+		## Load the neon completion code for bash into the current shell
+		    source <(neon completion bash)
 		## Write bash completion code to a file and source it from .bash_profile
-		    kubectl completion bash > ~/.kube/completion.bash.inc
+		    neon completion bash > ~/.kube/completion.bash.inc
 		    printf "
-		      # Kubectl shell completion
+		      # neon shell completion
 		      source '$HOME/.kube/completion.bash.inc'
 		      " >> $HOME/.bash_profile
 		    source $HOME/.bash_profile
 
-		# Load the kubectl completion code for zsh[1] into the current shell
-		    source <(kubectl completion zsh)
+		# Load the neon completion code for zsh[1] into the current shell
+		    source <(neon completion zsh)
 		# Set the kubectl completion code for zsh[1] to autoload on startup
-		    kubectl completion zsh > "${fpath[1]}/_kubectl"
+		    neon completion zsh > "${fpath[1]}/_kubectl"
 
 
-		# Load the kubectl completion code for fish[2] into the current shell
-		    kubectl completion fish | source
+		# Load the neon completion code for fish[2] into the current shell
+		    neon completion fish | source
 		# To load completions for each session, execute once: 
-		    kubectl completion fish > ~/.config/fish/completions/kubectl.fish
+		    neon completion fish > ~/.config/fish/completions/kubectl.fish
 
-		# Load the kubectl completion code for powershell into the current shell
-		    kubectl completion powershell | Out-String | Invoke-Expression
-		# Set kubectl completion code for powershell to run on startup
+		# Load the neon completion code for powershell into the current shell
+		    neon completion powershell | Out-String | Invoke-Expression
+		# Set neon completion code for powershell to run on startup
 		## Save completion code to a script and execute in the profile
-		    kubectl completion powershell > $HOME\.kube\completion.ps1
+		    neon completion powershell > $HOME\.kube\completion.ps1
 		    Add-Content $PROFILE "$HOME\.kube\completion.ps1"
 		## Execute completion code in the profile
-		    Add-Content $PROFILE "if (Get-Command kubectl -ErrorAction SilentlyContinue) {
-		        kubectl completion powershell | Out-String | Invoke-Expression
+		    Add-Content $PROFILE "if (Get-Command neon -ErrorAction SilentlyContinue) {
+		        neon completion powershell | Out-String | Invoke-Expression
 		    }"
 		## Add completion code directly to the $PROFILE script
-		    kubectl completion powershell >> $PROFILE`))
+		    neon completion powershell >> $PROFILE`))
 )
 
 var (
@@ -181,7 +181,7 @@ func runCompletionZsh(out io.Writer, boilerPlate string, kubectl *cobra.Command)
 		return err
 	}
 
-	return kubectl.GenZshCompletion(out)
+	return  kubectl.GenZshCompletion(out)
 }
 
 func runCompletionFish(out io.Writer, boilerPlate string, kubectl *cobra.Command) error {

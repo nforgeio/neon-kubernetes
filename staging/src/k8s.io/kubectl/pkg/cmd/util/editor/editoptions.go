@@ -465,7 +465,7 @@ func (o *EditOptions) Run() error {
 			annotationInfos = append(annotationInfos, tempInfos[0])
 		}
 		if len(annotationInfos) == 0 {
-			return errors.New("no last-applied-configuration annotation found on resources, to create the annotation, use command `kubectl apply set-last-applied --create-annotation`")
+			return errors.New("no last-applied-configuration annotation found on resources, to create the annotation, use command `neon apply set-last-applied --create-annotation`")
 		}
 		return editFn(annotationInfos)
 	// If doing an edit before created, we don't want a list and instead want the normal behavior as kubectl create.
