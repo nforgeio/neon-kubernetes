@@ -65,6 +65,29 @@ kube::version::get_version_vars() {
       fi
     fi
 
+    ###########################################################################
+    # $note(jefflill):
+    #
+    # NEONKUBE custom branches and tags are formatted like:
+    #
+    #       v0.10.0-beta.2/v1.24
+    #
+    # where the part before the forward slash is the NEONKUBE Version and the
+    # part after is the Kubernertes version.
+    #
+    # If the slash is present, we're going to extract the Kubernetes version
+    # and use that.KUBE_GIT_VERSION
+
+    local kubeVersionPart
+
+    kubeVersionPart=${KUBE_GIT_VERSION#*/}
+
+    if [ "kubeVersionPart" != "" ] ; then
+       KUBE_GIT_VERSION=$kubeVersionPart
+    fi
+
+    ###########################################################################
+
     # Use git describe to find the version based on tags.
     if [[ -n ${KUBE_GIT_VERSION-} ]] || KUBE_GIT_VERSION=$("${git[@]}" describe --tags --match='v*' --abbrev=14 "${KUBE_GIT_COMMIT}^{commit}" 2>/dev/null); then
       # This translates the "git describe" to an actual semver.org
