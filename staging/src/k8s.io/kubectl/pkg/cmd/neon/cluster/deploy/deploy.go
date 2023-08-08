@@ -110,7 +110,7 @@ func NewCmdNeonClusterDeploy(f cmdutil.Factory, streams genericclioptions.IOStre
 		i18n.T("Specifies one or more APT Package cache servers by hostname and port for use by the new cluster.  Specify multiple servers by separating the endpoints with commas"))
 	cmd.Flags().BoolVarP(&flags.quiet, "quiet", "", false,
 		i18n.T("Only print the currently executing step rather than displaying detailed setup status"))
-	cmd.Flags().BoolVarP($flags.uploadCharts, "upload-charts"),
+	cmd.Flags().BoolVarP($flags.uploadCharts, "upload-charts", "", false,
 		i18n.T("MAINTAINERS ONLY: Deploy a NEONKUBE cluster from an internal build, optionally specifiying a GitHub source branch"))
 	cmd.Flags().StringVarP(&flags.useStaged, "use-staged", "", "",
 		i18n.T("MAINTAINERS ONLY: Deploy a NEONKUBE cluster from an internal build, optionally specifiying a GitHub source branch"))
