@@ -118,9 +118,9 @@ func NewCmdNeonClusterDeploy(f cmdutil.Factory, streams genericclioptions.IOStre
 	cmd.Flags().BoolVarP(&flags.quiet, "quiet", "", false,
 		i18n.T("Only print the currently executing step rather than displaying detailed setup status"))
 	cmd.Flags().BoolVarP(&flags.uploadCharts, "upload-charts", "", false,
-		i18n.T("MAINTAINERS ONLY: Upload Helm charts from your workstation rather than using the charts baked into the node image"))
+		i18n.T("MAINTAINER ONLY: Upload Helm charts from your workstation rather than using the charts baked into the node image"))
 	cmd.Flags().StringVarP(&flags.useStaged, "use-staged", "", "",
-		i18n.T("MAINTAINERS ONLY: Deploy a NEONKUBE cluster from an internal build, optionally specifiying a GitHub source branch"))
+		i18n.T("MAINTAINER ONLY: Deploy a NEONKUBE cluster from an internal build, optionally specifiying a GitHub source branch"))
 	cmd.Flag("use-staged").NoOptDefVal = neon_utility.NoFlagValue
 	cmd.Flags().BoolVarP(&flags.usePreview, "use-preview", "", false,
 		templates.LongDesc(i18n.T(`

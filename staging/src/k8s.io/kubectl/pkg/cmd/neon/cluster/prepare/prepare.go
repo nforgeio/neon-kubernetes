@@ -29,7 +29,7 @@ import (
 
 var (
 	prepareLong = templates.LongDesc(i18n.T(`
-		MAINTAINERS ONLY: Provisions local and/or cloud infrastructure required to host a 
+		MAINTAINER ONLY: Provisions local and/or cloud infrastructure required to host a 
 		NEONKUBE cluster.  This includes provisioning networks, load balancers, virtual
 		machines, etc.  Once the infrastructure is ready, you'll use the [neon cluster setup ...]
 		command to actually setup the cluster.
@@ -67,7 +67,7 @@ func NewCmdNeonClusterPrepare(f cmdutil.Factory, streams genericclioptions.IOStr
 
 	cmd := &cobra.Command{
 		Use:     "prepare CLUSTERDEF",
-		Short:   i18n.T("MAINTAINERS ONLY: Provisions local and/or cloud infrastructure required to host a NEONKUBE cluster"),
+		Short:   i18n.T("MAINTAINER ONLY: Provisions local and/or cloud infrastructure required to host a NEONKUBE cluster"),
 		Long:    prepareLong,
 		Example: prepareExample,
 		Run: func(cmd *cobra.Command, args []string) {
