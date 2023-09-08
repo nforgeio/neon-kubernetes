@@ -40,7 +40,7 @@ var (
 		neon cluster unlock`))
 )
 
-// NewCmdNeonClusterLock returns a Command instance for NEON-CLI 'cluster lock' sub command
+// NewCmdNeonClusterLock returns a Command instance for NEON-CLI 'cluster unlock' sub command
 func NewCmdNeonClusterUnlock(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "unlock",

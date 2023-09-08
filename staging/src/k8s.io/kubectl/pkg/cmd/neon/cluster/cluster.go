@@ -34,6 +34,7 @@ import (
 	neon_cluster_lock "k8s.io/kubectl/pkg/cmd/neon/cluster/lock"
 	neon_cluster_pause "k8s.io/kubectl/pkg/cmd/neon/cluster/pause"
 	neon_cluster_prepare "k8s.io/kubectl/pkg/cmd/neon/cluster/prepare"
+	neon_cluster_property "k8s.io/kubectl/pkg/cmd/neon/cluster/property"
 	neon_cluster_purpose "k8s.io/kubectl/pkg/cmd/neon/cluster/purpose"
 	neon_cluster_reset "k8s.io/kubectl/pkg/cmd/neon/cluster/reset"
 	neon_cluster_setup "k8s.io/kubectl/pkg/cmd/neon/cluster/setup"
@@ -139,6 +140,7 @@ func NewCmdNeonCluster(f cmdutil.Factory, streams genericclioptions.IOStreams) *
 	cmd.AddCommand(neon_cluster_lock.NewCmdNeonClusterLock(f, streams))
 	cmd.AddCommand(neon_cluster_pause.NewCmdNeonClusterPause(f, streams))
 	cmd.AddCommand(neon_cluster_prepare.NewCmdNeonClusterPrepare(f, streams))
+	cmd.AddCommand(neon_cluster_property.NewCmdNeonClusterProperty(f, streams))
 	cmd.AddCommand(neon_cluster_purpose.NewCmdNeonClusterPurpose(f, streams))
 	cmd.AddCommand(neon_cluster_reset.NewCmdNeonClusterReset(f, streams))
 	cmd.AddCommand(neon_cluster_setup.NewCmdNeonClusterSetup(f, streams))
