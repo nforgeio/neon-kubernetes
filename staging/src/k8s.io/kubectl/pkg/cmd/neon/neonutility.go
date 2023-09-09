@@ -47,10 +47,12 @@ func CommandError(message string) {
 // exit code if the executable couldn't be located.  The standard input, output,
 // and error streams for the current process are redirected to the subprocess.
 //
-// This function does not return.  The current process exits, returning the
+// IMPORTANT:
+//
+// This function does not return.  The current process exits, returning the 
 // exitcode returned by the subprocess.
 func ExecNeonCli(args []string) {
-	ExecInheritStreams(getNeonCliPath(), args)
+	execInheritStreams(getNeonCliPath(), args)
 }
 
 // ExecHelm locates the [helm] executable and then executes it, passing the
@@ -105,7 +107,7 @@ func ExecHelm(args []string) {
 		helmPath = strings.TrimSpace(string(bytes[:]))
 	}
 
-	ExecInheritStreams(helmPath, args)
+	execInheritStreams(helmPath, args)
 }
 
 // fileExists returns TRUE when a specified file exists.
@@ -206,46 +208,4 @@ func getNeonCliPath() string {
 	}
 
 	return latestCandidate.path
-}
-
-// ExecInheritStreams executes the program whose path is specified, passing
-// the specified arguments.  The standard input, output, and error streams
-// for the subprocess are wired up to the current (parent) process.
-//
-// This function does not return.  The current process exits, returning the
-// exitcode returned by the subprocess or it panics when the executable
-// could not be launched.
-func ExecInheritStreams(path string, args []string) {
-
-	// Attempt to execute the command.
-
-	cmd := exec.Command(path, args...)
-	cmd.Env = os.Environ()
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
-	err := cmd.Run()
-
-	// Assume [exitcode=0] when there's no error.
-
-	if err == nil {
-		os.Exit(0)
-	}
-
-	// We're going to special case "exit status" errors here by extracting
-	// the exit code from the error and terminating the current process with
-	// that code.
-	//
-	// We'll panic for all other errors, like when the executable file doesn't
-	// exist or when it isn't a valid executable.
-
-	if strings.HasPrefix(err.Error(), "exit status") {
-		var exitError *exec.ExitError
-
-		errors.As(err, &exitError)
-		os.Exit(exitError.ExitCode())
-	} else {
-		panic(err)
-	}
 }
