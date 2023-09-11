@@ -8,9 +8,9 @@ REM batch file.
 REM
 REM This must be [RUN AS ADMINISTRATOR].
 
-echo ============================================
-echo * NEONCLOUD Build Environment Configurator *
-echo ============================================
+echo ==================================================
+echo * neon-kubernetes Build Environment Configurator *
+echo ==================================================
 
 REM Default NKK_ROOT to the folder holding this batch file after stripping
 REM off the trailing backslash.
@@ -39,4 +39,4 @@ setx NKK_ROOT "%NKK_ROOT%" /M > nul
 echo ============================================================================================
 echo * Be sure to close and reopen Visual Studio and any command windows to pick up the changes *
 echo ============================================================================================
-pause
+
