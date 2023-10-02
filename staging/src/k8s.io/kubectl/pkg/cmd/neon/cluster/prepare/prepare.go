@@ -114,15 +114,15 @@ func NewCmdNeonClusterPrepare(f cmdutil.Factory, streams genericclioptions.IOStr
 			if flags.unredacted {
 				neonCliArgs = append(neonCliArgs, "--unredacted")
 			}
+			if flags.usePreview {
+				neonCliArgs = append(neonCliArgs, "--use-preview")
+			}
 			if flags.useStaged != "" {
 				if flags.useStaged == neon_utility.NoFlagValue {
 					neonCliArgs = append(neonCliArgs, "--use-staged")
 				} else {
 					neonCliArgs = append(neonCliArgs, "--use-staged="+flags.useStaged)
 				}
-			}
-			if flags.usePreview {
-				neonCliArgs = append(neonCliArgs, "--use-preview")
 			}
 
 			neon_utility.ExecNeonCli(neonCliArgs)
@@ -197,8 +197,10 @@ func NewCmdNeonClusterPrepare(f cmdutil.Factory, streams genericclioptions.IOStr
 
 	cmd.Flags().BoolVarP(&flags.usePreview, "use-preview", "", false,
 		templates.LongDesc(i18n.T(`
-			MAINTAINER ONLY: Uses the preview VM image from the Azure Marketplace
-			to provision the cluster.  This is ignored by other hosting environments.`)))
+			Uses the preview VM image from the Azure Marketplace to
+			provision the cluster.  Note that a project maintainer
+			must specifically grant access to each user, generally
+			to work with users to solve NEONKUBE problems.`)))
 
 	return cmd
 }
