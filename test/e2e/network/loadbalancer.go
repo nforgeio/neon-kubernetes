@@ -45,7 +45,6 @@ import (
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2edaemonset "k8s.io/kubernetes/test/e2e/framework/daemonset"
 	e2edeployment "k8s.io/kubernetes/test/e2e/framework/deployment"
-	e2ekubesystem "k8s.io/kubernetes/test/e2e/framework/kubesystem"
 	e2enetwork "k8s.io/kubernetes/test/e2e/framework/network"
 	e2enode "k8s.io/kubernetes/test/e2e/framework/node"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
@@ -55,7 +54,6 @@ import (
 	e2eservice "k8s.io/kubernetes/test/e2e/framework/service"
 	e2eskipper "k8s.io/kubernetes/test/e2e/framework/skipper"
 	"k8s.io/kubernetes/test/e2e/network/common"
-	gcecloud "k8s.io/legacy-cloud-providers/gce"
 	admissionapi "k8s.io/pod-security-admission/api"
 	netutils "k8s.io/utils/net"
 	utilpointer "k8s.io/utils/pointer"
@@ -121,7 +119,7 @@ func getReadySchedulableWorkerNode(ctx context.Context, c clientset.Interface) (
 
 var _ = common.SIGDescribe("LoadBalancers", func() {
 	f := framework.NewDefaultFramework("loadbalancers")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 
 	var cs clientset.Interface
 	var subnetPrefix *net.IPNet
@@ -550,8 +548,8 @@ var _ = common.SIGDescribe("LoadBalancers", func() {
 		// Make sure acceptPod is running. There are certain chances that pod might be terminated due to unexpected reasons.
 		acceptPod, err = cs.CoreV1().Pods(namespace).Get(ctx, acceptPod.Name, metav1.GetOptions{})
 		framework.ExpectNoError(err, "Unable to get pod %s", acceptPod.Name)
-		framework.ExpectEqual(acceptPod.Status.Phase, v1.PodRunning)
-		framework.ExpectNotEqual(acceptPod.Status.PodIP, "")
+		gomega.Expect(acceptPod.Status.Phase).To(gomega.Equal(v1.PodRunning))
+		gomega.Expect(acceptPod.Status.PodIP).ToNot(gomega.BeEmpty())
 
 		// Create loadbalancer service with source range from node[0] and podAccept
 		svc, err := jig.CreateTCPService(ctx, func(svc *v1.Service) {
@@ -580,8 +578,8 @@ var _ = common.SIGDescribe("LoadBalancers", func() {
 		// Make sure dropPod is running. There are certain chances that the pod might be terminated due to unexpected reasons.
 		dropPod, err = cs.CoreV1().Pods(namespace).Get(ctx, dropPod.Name, metav1.GetOptions{})
 		framework.ExpectNoError(err, "Unable to get pod %s", dropPod.Name)
-		framework.ExpectEqual(acceptPod.Status.Phase, v1.PodRunning)
-		framework.ExpectNotEqual(acceptPod.Status.PodIP, "")
+		gomega.Expect(acceptPod.Status.Phase).To(gomega.Equal(v1.PodRunning))
+		gomega.Expect(acceptPod.Status.PodIP).ToNot(gomega.BeEmpty())
 
 		ginkgo.By("Update service LoadBalancerSourceRange and check reachability")
 		_, err = jig.UpdateService(ctx, func(svc *v1.Service) {
@@ -735,82 +733,7 @@ var _ = common.SIGDescribe("LoadBalancers", func() {
 				framework.Failf("Loadbalancer IP not changed to internal.")
 			}
 			// should have the given static internal IP.
-			framework.ExpectEqual(e2eservice.GetIngressPoint(lbIngress), internalStaticIP)
-		}
-	})
-
-	// This test creates a load balancer, make sure its health check interval
-	// equals to gceHcCheckIntervalSeconds. Then the interval is manipulated
-	// to be something else, see if the interval will be reconciled.
-	ginkgo.It("should reconcile LB health check interval [Slow][Serial][Disruptive]", func(ctx context.Context) {
-		const gceHcCheckIntervalSeconds = int64(8)
-		// This test is for clusters on GCE.
-		// (It restarts kube-controller-manager, which we don't support on GKE)
-		e2eskipper.SkipUnlessProviderIs("gce")
-		e2eskipper.SkipUnlessSSHKeyPresent()
-
-		clusterID, err := gce.GetClusterID(ctx, cs)
-		if err != nil {
-			framework.Failf("framework.GetClusterID(cs) = _, %v; want nil", err)
-		}
-		gceCloud, err := gce.GetGCECloud()
-		if err != nil {
-			framework.Failf("framework.GetGCECloud() = _, %v; want nil", err)
-		}
-
-		namespace := f.Namespace.Name
-		serviceName := "lb-hc-int"
-		jig := e2eservice.NewTestJig(cs, namespace, serviceName)
-
-		ginkgo.By("create load balancer service")
-		// Create loadbalancer service with source range from node[0] and podAccept
-		svc, err := jig.CreateTCPService(ctx, func(svc *v1.Service) {
-			svc.Spec.Type = v1.ServiceTypeLoadBalancer
-		})
-		framework.ExpectNoError(err)
-
-		ginkgo.DeferCleanup(func(ctx context.Context) {
-			ginkgo.By("Clean up loadbalancer service")
-			e2eservice.WaitForServiceDeletedWithFinalizer(ctx, cs, svc.Namespace, svc.Name)
-		})
-
-		svc, err = jig.WaitForLoadBalancer(ctx, e2eservice.GetServiceLoadBalancerCreationTimeout(ctx, cs))
-		framework.ExpectNoError(err)
-
-		hcName := gcecloud.MakeNodesHealthCheckName(clusterID)
-		hc, err := gceCloud.GetHTTPHealthCheck(hcName)
-		if err != nil {
-			framework.Failf("gceCloud.GetHttpHealthCheck(%q) = _, %v; want nil", hcName, err)
-		}
-		framework.ExpectEqual(hc.CheckIntervalSec, gceHcCheckIntervalSeconds)
-
-		ginkgo.By("modify the health check interval")
-		hc.CheckIntervalSec = gceHcCheckIntervalSeconds - 1
-		if err = gceCloud.UpdateHTTPHealthCheck(hc); err != nil {
-			framework.Failf("gcecloud.UpdateHttpHealthCheck(%#v) = %v; want nil", hc, err)
-		}
-
-		ginkgo.By("restart kube-controller-manager")
-		if err := e2ekubesystem.RestartControllerManager(ctx); err != nil {
-			framework.Failf("e2ekubesystem.RestartControllerManager() = %v; want nil", err)
-		}
-		if err := e2ekubesystem.WaitForControllerManagerUp(ctx); err != nil {
-			framework.Failf("e2ekubesystem.WaitForControllerManagerUp() = %v; want nil", err)
-		}
-
-		ginkgo.By("health check should be reconciled")
-		pollInterval := framework.Poll * 10
-		loadBalancerPropagationTimeout := e2eservice.GetServiceLoadBalancerPropagationTimeout(ctx, cs)
-		if pollErr := wait.PollImmediate(pollInterval, loadBalancerPropagationTimeout, func() (bool, error) {
-			hc, err := gceCloud.GetHTTPHealthCheck(hcName)
-			if err != nil {
-				framework.Logf("ginkgo.Failed to get HttpHealthCheck(%q): %v", hcName, err)
-				return false, err
-			}
-			framework.Logf("hc.CheckIntervalSec = %v", hc.CheckIntervalSec)
-			return hc.CheckIntervalSec == gceHcCheckIntervalSeconds, nil
-		}); pollErr != nil {
-			framework.Failf("Health check %q does not reconcile its check interval to %d.", hcName, gceHcCheckIntervalSeconds)
+			gomega.Expect(e2eservice.GetIngressPoint(lbIngress)).To(gomega.Equal(internalStaticIP))
 		}
 	})
 
@@ -1037,7 +960,7 @@ var _ = common.SIGDescribe("LoadBalancers", func() {
 		_, err = udpJig.CreateUDPService(ctx, func(svc *v1.Service) {
 			svc.Spec.Type = v1.ServiceTypeLoadBalancer
 			svc.Spec.Ports = []v1.ServicePort{
-				{Port: 80, Name: "udp", Protocol: v1.ProtocolUDP, TargetPort: intstr.FromInt(80)},
+				{Port: 80, Name: "udp", Protocol: v1.ProtocolUDP, TargetPort: intstr.FromInt32(80)},
 			}
 		})
 		framework.ExpectNoError(err)
@@ -1169,7 +1092,7 @@ var _ = common.SIGDescribe("LoadBalancers", func() {
 		_, err = udpJig.CreateUDPService(ctx, func(svc *v1.Service) {
 			svc.Spec.Type = v1.ServiceTypeLoadBalancer
 			svc.Spec.Ports = []v1.ServicePort{
-				{Port: 80, Name: "udp", Protocol: v1.ProtocolUDP, TargetPort: intstr.FromInt(80)},
+				{Port: 80, Name: "udp", Protocol: v1.ProtocolUDP, TargetPort: intstr.FromInt32(80)},
 			}
 		})
 		framework.ExpectNoError(err)
@@ -1301,7 +1224,7 @@ var _ = common.SIGDescribe("LoadBalancers", func() {
 
 var _ = common.SIGDescribe("LoadBalancers ESIPP [Slow]", func() {
 	f := framework.NewDefaultFramework("esipp")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelBaseline
+	f.NamespacePodSecurityLevel = admissionapi.LevelBaseline
 	var loadBalancerCreateTimeout time.Duration
 
 	var cs clientset.Interface
@@ -1425,7 +1348,7 @@ var _ = common.SIGDescribe("LoadBalancers ESIPP [Slow]", func() {
 				// Change service port to avoid collision with opened hostPorts
 				// in other tests that run in parallel.
 				if len(svc.Spec.Ports) != 0 {
-					svc.Spec.Ports[0].TargetPort = intstr.FromInt(int(svc.Spec.Ports[0].Port))
+					svc.Spec.Ports[0].TargetPort = intstr.FromInt32(svc.Spec.Ports[0].Port)
 					svc.Spec.Ports[0].Port = 8081
 				}
 
@@ -1602,8 +1525,8 @@ var _ = common.SIGDescribe("LoadBalancers ESIPP [Slow]", func() {
 				noEndpointNodeMap[n.Name] = ips[0]
 			}
 		}
-		framework.ExpectNotEqual(len(endpointNodeMap), 0)
-		framework.ExpectNotEqual(len(noEndpointNodeMap), 0)
+		gomega.Expect(endpointNodeMap).ToNot(gomega.BeEmpty())
+		gomega.Expect(noEndpointNodeMap).ToNot(gomega.BeEmpty())
 
 		svcTCPPort := int(svc.Spec.Ports[0].Port)
 		svcNodePort := int(svc.Spec.Ports[0].NodePort)

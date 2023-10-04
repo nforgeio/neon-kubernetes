@@ -114,7 +114,7 @@ func (v *volumeExpandTestSuite) DefineTests(driver storageframework.TestDriver, 
 	// Beware that it also registers an AfterEach which renders f unusable. Any code using
 	// f must run inside an It or Context callback.
 	f := framework.NewFrameworkWithCustomTimeouts("volume-expand", storageframework.GetDriverTimeouts(driver))
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 
 	init := func(ctx context.Context) {
 		l = local{}
@@ -236,7 +236,7 @@ func (v *volumeExpandTestSuite) DefineTests(driver storageframework.TestDriver, 
 			framework.ExpectNoError(err, "while waiting for fs resize to finish")
 
 			pvcConditions := l.resource.Pvc.Status.Conditions
-			framework.ExpectEqual(len(pvcConditions), 0, "pvc should not have conditions")
+			gomega.Expect(pvcConditions).To(gomega.BeEmpty(), "pvc should not have conditions")
 		})
 
 		ginkgo.It("should resize volume when PVC is edited while pod is using it", func(ctx context.Context) {
@@ -285,7 +285,7 @@ func (v *volumeExpandTestSuite) DefineTests(driver storageframework.TestDriver, 
 			framework.ExpectNoError(err, "while waiting for fs resize to finish")
 
 			pvcConditions := l.resource.Pvc.Status.Conditions
-			framework.ExpectEqual(len(pvcConditions), 0, "pvc should not have conditions")
+			gomega.Expect(pvcConditions).To(gomega.BeEmpty(), "pvc should not have conditions")
 		})
 
 	}
@@ -315,7 +315,7 @@ func ExpandPVCSize(ctx context.Context, origPVC *v1.PersistentVolumeClaim, size 
 		}
 		return true, nil
 	})
-	if waitErr == wait.ErrWaitTimeout {
+	if wait.Interrupted(waitErr) {
 		return nil, fmt.Errorf("timed out attempting to update PVC size. last update error: %v", lastUpdateError)
 	}
 	if waitErr != nil {

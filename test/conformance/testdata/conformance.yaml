@@ -312,6 +312,14 @@
     definitions MUST be published for custom resource definitions.
   release: v1.16
   file: test/e2e/apimachinery/crd_publish_openapi.go
+- testname: Discovery, confirm the groupVerion and a resourcefrom each apiGroup
+  codename: '[sig-api-machinery] Discovery should locate the groupVersion and a resource
+    within each APIGroup [Conformance]'
+  description: A resourceList MUST be found for each apiGroup that is retrieved. For
+    each apiGroup the groupVersion MUST equal the groupVersion as reported by the
+    schema. From each resourceList a valid resource MUST be found.
+  release: v1.28
+  file: test/e2e/apimachinery/discovery.go
 - testname: Discovery, confirm the PreferredVersion for each api group
   codename: '[sig-api-machinery] Discovery should validate PreferredVersion for each
     APIGroup [Conformance]'
@@ -487,8 +495,7 @@
     be found. Patching the hard status values MUST succeed. The reported hard status
     values MUST equal the new spec hard values. Getting the /status MUST succeed and
     the reported hard status values MUST equal the spec hard values. Repatching the
-    hard status values MUST succeed. The spec spec MUST NOT be changed when patching
-    /status.
+    hard status values MUST succeed. The spec MUST NOT be changed when patching /status.
   release: v1.26
   file: test/e2e/apimachinery/resource_quota.go
 - testname: ResourceQuota, update and delete
@@ -630,6 +637,38 @@
     of 'Terminating' scoped ResourceQuota.
   release: v1.16
   file: test/e2e/apimachinery/resource_quota.go
+- testname: API Chunking, server should return chunks of results for list calls
+  codename: '[sig-api-machinery] Servers with support for API chunking should return
+    chunks of results for list calls [Conformance]'
+  description: Create a large number of PodTemplates. Attempt to retrieve the first
+    chunk with limit set; the server MUST return the chunk of the size not exceeding
+    the limit with RemainingItems set in the response. Attempt to retrieve the remaining
+    items by providing the received continuation token and limit; the server MUST
+    return the remaining items in chunks of the size not exceeding the limit, with
+    appropriately set RemainingItems field in the response and with the ResourceVersion
+    returned in the first response. Attempt to list all objects at once without setting
+    the limit; the server MUST return all items in a single response.
+  release: v1.29
+  file: test/e2e/apimachinery/chunking.go
+- testname: API Chunking, server should support continue listing from the last key
+    even if the original version has been compacted away
+  codename: '[sig-api-machinery] Servers with support for API chunking should support
+    continue listing from the last key if the original version has been compacted
+    away, though the list is inconsistent [Slow] [Conformance]'
+  description: Create a large number of PodTemplates. Attempt to retrieve the first
+    chunk with limit set; the server MUST return the chunk of the size not exceeding
+    the limit with RemainingItems set in the response. Attempt to retrieve the second
+    page until the continuation token expires; the server MUST return a continuation
+    token for inconsistent list continuation. Attempt to retrieve the second page
+    with the received inconsistent list continuation token; the server MUST return
+    the number of items not exceeding the limit, a new continuation token and appropriately
+    set RemainingItems field in the response. Attempt to retrieve the remaining pages
+    by passing the received continuation token; the server MUST return the remaining
+    items in chunks of the size not exceeding the limit, with appropriately set RemainingItems
+    field in the response and with the ResourceVersion returned as part of the inconsistent
+    list.
+  release: v1.29
+  file: test/e2e/apimachinery/chunking.go
 - testname: API metadata HTTP return
   codename: '[sig-api-machinery] Servers with support for Table transformation should
     return a 406 for a backend which does not implement metadata [Conformance]'
@@ -1738,6 +1777,16 @@
     pods are deleted the endpoints from the service MUST be empty.
   release: v1.9
   file: test/e2e/network/service.go
+- testname: Service, should serve endpoints on same port and different protocols.
+  codename: '[sig-network] Services should serve endpoints on same port and different
+    protocols [Conformance]'
+  description: Create one service with two ports, same port number and different protocol
+    TCP and UDP. It MUST be able to forward traffic to both ports. Update the Service
+    to expose only the TCP port, it MUST succeed to connect to the TCP port and fail
+    to connect to the UDP port. Update the Service to expose only the UDP port, it
+    MUST succeed to connect to the UDP port and fail to connect to the TCP port.
+  release: v1.29
+  file: test/e2e/network/service.go
 - testname: Service, endpoints with multiple ports
   codename: '[sig-network] Services should serve multiport endpoints from pods  [Conformance]'
   description: Create a service with two ports but no Pods are added to the service
@@ -1942,6 +1991,15 @@
     visible at runtime in the container.
   release: v1.9
   file: test/e2e/common/node/downwardapi.go
+- testname: Ephemeral Container, update ephemeral containers
+  codename: '[sig-node] Ephemeral Containers [NodeConformance] should update the ephemeral
+    containers in an existing pod [Conformance]'
+  description: Adding an ephemeral container to pod.spec MUST result in the container
+    running. There MUST now be only one ephermal container found. Updating the pod
+    with another ephemeral container MUST succeed. There MUST now be two ephermal
+    containers found.
+  release: v1.28
+  file: test/e2e/common/node/ephemeral_containers.go
 - testname: Ephemeral Container Creation
   codename: '[sig-node] Ephemeral Containers [NodeConformance] will start an ephemeral
     container in an existing pod [Conformance]'
@@ -2548,18 +2606,20 @@
     pod.
   release: v1.19
   file: test/e2e/scheduling/preemption.go
+- testname: CSIDriver, lifecycle
+  codename: '[sig-storage] CSIInlineVolumes should run through the lifecycle of a
+    CSIDriver [Conformance]'
+  description: Creating two CSIDrivers MUST succeed. Patching a CSIDriver MUST succeed
+    with its new label found. Updating a CSIDriver MUST succeed with its new label
+    found. Two CSIDrivers MUST be found when listed. Deleting the first CSIDriver
+    MUST succeed. Deleting the second CSIDriver via deleteCollection MUST succeed.
+  release: v1.28
+  file: test/e2e/storage/csi_inline.go
 - testname: CSIInlineVolumes should support Pods with inline volumes
   codename: '[sig-storage] CSIInlineVolumes should support CSIVolumeSource in Pod
     API [Conformance]'
   description: Pod resources with CSIVolumeSource should support create, get, list,
     patch, and delete operations.
-  release: v1.26
-  file: test/e2e/storage/csi_inline.go
-- testname: CSIInlineVolumes should support ephemeral CSIDrivers
-  codename: '[sig-storage] CSIInlineVolumes should support ephemeral VolumeLifecycleMode
-    in CSIDriver API [Conformance]'
-  description: CSIDriver resources with ephemeral VolumeLifecycleMode should support
-    create, get, list, and delete operations.
   release: v1.26
   file: test/e2e/storage/csi_inline.go
 - testname: CSIStorageCapacity API
@@ -2939,6 +2999,19 @@
     able to start with Secret and ConfigMap volumes mounted into the container.
   release: v1.13
   file: test/e2e/storage/empty_dir_wrapper.go
+- testname: PersistentVolumes(Claims), lifecycle
+  codename: '[sig-storage] PersistentVolumes CSI Conformance should run through the
+    lifecycle of a PV and a PVC [Conformance]'
+  description: Creating PV and PVC MUST succeed. Listing PVs with a labelSelector
+    MUST succeed. Listing PVCs in a namespace MUST succeed. Patching a PV MUST succeed
+    with its new label found. Patching a PVC MUST succeed with its new label found.
+    Reading a PV and PVC MUST succeed with required UID retrieved. Deleting a PVC
+    and PV MUST succeed and it MUST be confirmed. Replacement PV and PVC MUST be created.
+    Updating a PV MUST succeed with its new label found. Updating a PVC MUST succeed
+    with its new label found. Deleting the PVC and PV via deleteCollection MUST succeed
+    and it MUST be confirmed.
+  release: v1.29
+  file: test/e2e/storage/persistent_volumes.go
 - testname: Projected Volume, multiple projections
   codename: '[sig-storage] Projected combined should project all components that make
     up the projection API [Projection][NodeConformance] [Conformance]'
@@ -3292,6 +3365,16 @@
     to delete the secret, the deletion must succeed.
   release: v1.21
   file: test/e2e/common/storage/secrets_volume.go
+- testname: StorageClass, lifecycle
+  codename: '[sig-storage] StorageClasses CSI Conformance should run through the lifecycle
+    of a StorageClass [Conformance]'
+  description: Creating a StorageClass MUST succeed. Reading the StorageClass MUST
+    succeed. Patching the StorageClass MUST succeed with its new label found. Deleting
+    the StorageClass MUST succeed and it MUST be confirmed. Replacement StorageClass
+    MUST be created. Updating the StorageClass MUST succeed with its new label found.
+    Deleting the StorageClass via deleteCollection MUST succeed and it MUST be confirmed.
+  release: v1.29
+  file: test/e2e/storage/storageclass.go
 - testname: 'SubPath: Reading content from a configmap volume.'
   codename: '[sig-storage] Subpath Atomic writer volumes should support subpaths with
     configmap pod [Conformance]'

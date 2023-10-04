@@ -26,6 +26,7 @@ import (
 	"strings"
 	"time"
 
+	apiv1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/fields"
@@ -47,7 +48,7 @@ import (
 	corevalidation "k8s.io/kubernetes/pkg/apis/core/validation"
 	"k8s.io/kubernetes/pkg/features"
 	"k8s.io/kubernetes/pkg/kubelet/client"
-	proxyutil "k8s.io/kubernetes/pkg/proxy/util"
+	netutils "k8s.io/utils/net"
 	"sigs.k8s.io/structured-merge-diff/v4/fieldpath"
 )
 
@@ -398,8 +399,8 @@ func ResourceLocation(ctx context.Context, getter ResourceGetter, rt http.RoundT
 		}
 	}
 	podIP := getPodIP(pod)
-	if err := proxyutil.IsProxyableIP(podIP); err != nil {
-		return nil, nil, errors.NewBadRequest(err.Error())
+	if ip := netutils.ParseIPSloppy(podIP); ip == nil || !ip.IsGlobalUnicast() {
+		return nil, nil, errors.NewBadRequest("address not allowed")
 	}
 
 	loc := &url.URL{
@@ -686,7 +687,7 @@ func applyWaitingForSchedulingGatesCondition(pod *api.Pod) {
 	pod.Status.Conditions = append(pod.Status.Conditions, api.PodCondition{
 		Type:    api.PodScheduled,
 		Status:  api.ConditionFalse,
-		Reason:  api.PodReasonSchedulingGated,
+		Reason:  apiv1.PodReasonSchedulingGated,
 		Message: "Scheduling is blocked due to non-empty scheduling gates",
 	})
 }

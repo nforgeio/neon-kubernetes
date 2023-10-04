@@ -109,21 +109,22 @@ func TestQueueWaitTimeLatencyTracker(t *testing.T) {
 		InformerFactory:        informerFactory,
 		FlowcontrolClient:      flowcontrolClient,
 		ServerConcurrencyLimit: 24,
-		RequestWaitLimit:       time.Minute,
 		ReqsGaugeVec:           metrics.PriorityLevelConcurrencyGaugeVec,
 		ExecSeatsGaugeVec:      metrics.PriorityLevelExecutionSeatsGaugeVec,
 		QueueSetFactory:        fqs.NewQueueSetFactory(clk),
 	})
 
-	informerFactory.Start(nil)
+	stopCh := make(chan struct{})
+	defer close(stopCh)
 
-	status := informerFactory.WaitForCacheSync(nil)
+	informerFactory.Start(stopCh)
+	status := informerFactory.WaitForCacheSync(stopCh)
 	if names := unsynced(status); len(names) > 0 {
 		t.Fatalf("WaitForCacheSync did not successfully complete, resources=%#v", names)
 	}
 
 	go func() {
-		controller.Run(nil)
+		controller.Run(stopCh)
 	}()
 
 	// ensure that the controller has run its first loop.

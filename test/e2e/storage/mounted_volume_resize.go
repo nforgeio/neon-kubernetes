@@ -57,7 +57,7 @@ var _ = utils.SIGDescribe("Mounted volume expand [Feature:StorageProvider]", fun
 	)
 
 	f := framework.NewDefaultFramework("mounted-volume-expand")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 	ginkgo.BeforeEach(func(ctx context.Context) {
 		e2eskipper.SkipUnlessProviderIs("aws", "gce")
 		c = f.ClientSet
@@ -111,7 +111,7 @@ var _ = utils.SIGDescribe("Mounted volume expand [Feature:StorageProvider]", fun
 		// Keeping pod on same node reproduces the scenario that volume might already be mounted when resize is attempted.
 		// We should consider adding a unit test that exercises this better.
 		ginkgo.By("Creating a deployment with selected PVC")
-		deployment, err := e2edeployment.CreateDeployment(ctx, c, int32(1), map[string]string{"test": "app"}, nodeKeyValueLabel, ns, pvcClaims, "")
+		deployment, err := e2edeployment.CreateDeployment(ctx, c, int32(1), map[string]string{"test": "app"}, nodeKeyValueLabel, ns, pvcClaims, admissionapi.LevelRestricted, "")
 		framework.ExpectNoError(err, "Failed creating deployment %v", err)
 		ginkgo.DeferCleanup(c.AppsV1().Deployments(ns).Delete, deployment.Name, metav1.DeleteOptions{})
 
@@ -119,7 +119,7 @@ var _ = utils.SIGDescribe("Mounted volume expand [Feature:StorageProvider]", fun
 		ginkgo.By("Checking for bound PVC")
 		pvs, err := e2epv.WaitForPVClaimBoundPhase(ctx, c, pvcClaims, framework.ClaimProvisionTimeout)
 		framework.ExpectNoError(err, "Failed waiting for PVC to be bound %v", err)
-		framework.ExpectEqual(len(pvs), 1)
+		gomega.Expect(pvs).To(gomega.HaveLen(1))
 
 		ginkgo.By("Wait for a pod from deployment to be running")
 		podList, err := e2edeployment.GetPodsForDeployment(ctx, c, deployment)
@@ -164,7 +164,7 @@ var _ = utils.SIGDescribe("Mounted volume expand [Feature:StorageProvider]", fun
 		framework.ExpectNoError(err, "while waiting for fs resize to finish")
 
 		pvcConditions := pvc.Status.Conditions
-		framework.ExpectEqual(len(pvcConditions), 0, "pvc should not have conditions")
+		gomega.Expect(pvcConditions).To(gomega.BeEmpty(), "pvc should not have conditions")
 	})
 })
 

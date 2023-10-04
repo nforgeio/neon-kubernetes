@@ -944,9 +944,9 @@ func hostPrecheck() (int, int) {
 }
 
 // Serial because the test updates kubelet configuration.
-var _ = SIGDescribe("Topology Manager [Serial] [NodeFeature:TopologyManager]", func() {
+var _ = SIGDescribe("Topology Manager [Serial] [Feature:TopologyManager]", func() {
 	f := framework.NewDefaultFramework("topology-manager-test")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 
 	ginkgo.Context("With kubeconfig updated to static CPU Manager policy run the Topology Manager tests", func() {
 		runTopologyManagerTests(f)

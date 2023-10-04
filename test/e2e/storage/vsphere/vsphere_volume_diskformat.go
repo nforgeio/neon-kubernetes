@@ -58,7 +58,7 @@ import (
 
 var _ = utils.SIGDescribe("Volume Disk Format [Feature:vsphere]", func() {
 	f := framework.NewDefaultFramework("volume-disk-format")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 	const (
 		NodeLabelKey = "vsphere_e2e_label_volume_diskformat"
 	)
@@ -147,7 +147,9 @@ func invokeTest(ctx context.Context, f *framework.Framework, client clientset.In
 	framework.ExpectNoError(err)
 
 	ginkgo.By("Verify Disk Format")
-	framework.ExpectEqual(verifyDiskFormat(ctx, client, nodeName, pv.Spec.VsphereVolume.VolumePath, diskFormat), true, "DiskFormat Verification Failed")
+	if !verifyDiskFormat(ctx, client, nodeName, pv.Spec.VsphereVolume.VolumePath, diskFormat) {
+		framework.Failf("DiskFormat Verification Failed. Node: %s, VolumePath: %s, Expected Format: %s", nodeName, pv.Spec.VsphereVolume.VolumePath, diskFormat)
+	}
 
 	var volumePaths []string
 	volumePaths = append(volumePaths, pv.Spec.VsphereVolume.VolumePath)

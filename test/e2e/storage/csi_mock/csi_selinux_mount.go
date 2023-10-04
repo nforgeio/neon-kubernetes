@@ -42,22 +42,22 @@ import (
 
 var _ = utils.SIGDescribe("CSI Mock selinux on mount", func() {
 	f := framework.NewDefaultFramework("csi-mock-volumes-selinux")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 	m := newMockDriverSetup(f)
 
 	ginkgo.Context("SELinuxMount [LinuxOnly][Feature:SELinux]", func() {
 		// Make sure all options are set so system specific defaults are not used.
 		seLinuxOpts1 := v1.SELinuxOptions{
 			User:  "system_u",
-			Role:  "object_r",
-			Type:  "container_file_t",
+			Role:  "system_r",
+			Type:  "container_t",
 			Level: "s0:c0,c1",
 		}
 		seLinuxMountOption1 := "context=\"system_u:object_r:container_file_t:s0:c0,c1\""
 		seLinuxOpts2 := v1.SELinuxOptions{
 			User:  "system_u",
-			Role:  "object_r",
-			Type:  "container_file_t",
+			Role:  "system_r",
+			Type:  "container_t",
 			Level: "s0:c98,c99",
 		}
 		seLinuxMountOption2 := "context=\"system_u:object_r:container_file_t:s0:c98,c99\""
@@ -160,8 +160,8 @@ var _ = utils.SIGDescribe("CSI Mock selinux on mount", func() {
 
 				// Assert
 				ginkgo.By("Checking the initial pod mount options")
-				framework.ExpectEqual(nodeStageMountOpts, t.expectedFirstMountOptions, "NodeStage MountFlags for the initial pod")
-				framework.ExpectEqual(nodePublishMountOpts, t.expectedFirstMountOptions, "NodePublish MountFlags for the initial pod")
+				gomega.Expect(nodeStageMountOpts).To(gomega.Equal(t.expectedFirstMountOptions), "NodeStage MountFlags for the initial pod")
+				gomega.Expect(nodePublishMountOpts).To(gomega.Equal(t.expectedFirstMountOptions), "NodePublish MountFlags for the initial pod")
 
 				ginkgo.By("Checking the CSI driver calls for the initial pod")
 				gomega.Expect(unstageCalls.Load()).To(gomega.BeNumerically("==", 0), "NodeUnstage call count for the initial pod")
@@ -229,7 +229,7 @@ var _ = utils.SIGDescribe("CSI Mock selinux on mount", func() {
 					gomega.Expect(unstageCalls.Load()).To(gomega.BeNumerically(">", 0), "NodeUnstage calls after the first pod is deleted")
 					gomega.Expect(stageCalls.Load()).To(gomega.BeNumerically(">", 0), "NodeStage calls for the second pod")
 					// The second pod got the right mount option
-					framework.ExpectEqual(nodeStageMountOpts, t.expectedSecondMountOptions, "NodeStage MountFlags for the second pod")
+					gomega.Expect(nodeStageMountOpts).To(gomega.Equal(t.expectedSecondMountOptions), "NodeStage MountFlags for the second pod")
 				} else {
 					// Volume should not be fully unstaged between the first and the second pod
 					gomega.Expect(unstageCalls.Load()).To(gomega.BeNumerically("==", 0), "NodeUnstage calls after the first pod is deleted")
@@ -238,7 +238,7 @@ var _ = utils.SIGDescribe("CSI Mock selinux on mount", func() {
 				// In both cases, Unublish and Publish is called, with the right mount opts
 				gomega.Expect(unpublishCalls.Load()).To(gomega.BeNumerically(">", 0), "NodeUnpublish calls after the first pod is deleted")
 				gomega.Expect(publishCalls.Load()).To(gomega.BeNumerically(">", 0), "NodePublish calls for the second pod")
-				framework.ExpectEqual(nodePublishMountOpts, t.expectedSecondMountOptions, "NodePublish MountFlags for the second pod")
+				gomega.Expect(nodePublishMountOpts).To(gomega.Equal(t.expectedSecondMountOptions), "NodePublish MountFlags for the second pod")
 			})
 		}
 	})
@@ -246,7 +246,7 @@ var _ = utils.SIGDescribe("CSI Mock selinux on mount", func() {
 
 var _ = utils.SIGDescribe("CSI Mock selinux on mount metrics", func() {
 	f := framework.NewDefaultFramework("csi-mock-volumes-selinux-metrics")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 	m := newMockDriverSetup(f)
 
 	// [Serial]: the tests read global kube-controller-manager metrics, so no other test changes them in parallel.
@@ -267,14 +267,14 @@ var _ = utils.SIGDescribe("CSI Mock selinux on mount metrics", func() {
 		// Make sure all options are set so system specific defaults are not used.
 		seLinuxOpts1 := v1.SELinuxOptions{
 			User:  "system_u",
-			Role:  "object_r",
-			Type:  "container_file_t",
+			Role:  "system_r",
+			Type:  "container_t",
 			Level: "s0:c0,c1",
 		}
 		seLinuxOpts2 := v1.SELinuxOptions{
 			User:  "system_u",
-			Role:  "object_r",
-			Type:  "container_file_t",
+			Role:  "system_r",
+			Type:  "container_t",
 			Level: "s0:c98,c99",
 		}
 

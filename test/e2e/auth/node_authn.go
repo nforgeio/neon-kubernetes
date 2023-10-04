@@ -38,7 +38,7 @@ import (
 var _ = SIGDescribe("[Feature:NodeAuthenticator]", func() {
 
 	f := framework.NewDefaultFramework("node-authn")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelBaseline
+	f.NamespacePodSecurityLevel = admissionapi.LevelBaseline
 	var ns string
 	var nodeIPs []string
 	ginkgo.BeforeEach(func(ctx context.Context) {
@@ -53,7 +53,7 @@ var _ = SIGDescribe("[Feature:NodeAuthenticator]", func() {
 		}
 
 		nodeIPs := e2enode.GetAddressesByTypeAndFamily(&nodes.Items[0], v1.NodeInternalIP, family)
-		framework.ExpectNotEqual(len(nodeIPs), 0)
+		gomega.Expect(nodeIPs).NotTo(gomega.BeEmpty())
 	})
 
 	ginkgo.It("The kubelet's main port 10250 should reject requests with no credentials", func(ctx context.Context) {

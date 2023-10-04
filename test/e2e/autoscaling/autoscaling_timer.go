@@ -30,12 +30,13 @@ import (
 	admissionapi "k8s.io/pod-security-admission/api"
 
 	"github.com/onsi/ginkgo/v2"
+	"github.com/onsi/gomega"
 	"github.com/onsi/gomega/gmeasure"
 )
 
 var _ = SIGDescribe("[Feature:ClusterSizeAutoscalingScaleUp] [Slow] Autoscaling", func() {
 	f := framework.NewDefaultFramework("autoscaling")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 	var experiment *gmeasure.Experiment
 
 	ginkgo.Describe("Autoscaling a service", func() {
@@ -72,8 +73,7 @@ var _ = SIGDescribe("[Feature:ClusterSizeAutoscalingScaleUp] [Slow] Autoscaling"
 				// Make sure all nodes are schedulable, otherwise we are in some kind of a problem state.
 				nodes, err = e2enode.GetReadySchedulableNodes(ctx, f.ClientSet)
 				framework.ExpectNoError(err)
-				schedulableCount := len(nodes.Items)
-				framework.ExpectEqual(schedulableCount, nodeGroupSize, "not all nodes are schedulable")
+				gomega.Expect(nodes.Items).To(gomega.HaveLen(nodeGroupSize), "not all nodes are schedulable")
 			})
 
 			ginkgo.AfterEach(func(ctx context.Context) {

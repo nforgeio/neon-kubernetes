@@ -34,9 +34,9 @@ import (
 	admissionapi "k8s.io/pod-security-admission/api"
 )
 
-var _ = SIGDescribe("Topology Manager Metrics [Serial][NodeFeature:TopologyManager]", func() {
+var _ = SIGDescribe("Topology Manager Metrics [Serial] [Feature:TopologyManager]", func() {
 	f := framework.NewDefaultFramework("topologymanager-metrics")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 
 	ginkgo.Context("when querying /metrics", func() {
 		var oldCfg *kubeletconfig.KubeletConfiguration
@@ -92,9 +92,9 @@ var _ = SIGDescribe("Topology Manager Metrics [Serial][NodeFeature:TopologyManag
 			})
 
 			ginkgo.By("Giving the Kubelet time to start up and produce metrics")
-			gomega.Eventually(ctx, getKubeletMetrics, 1*time.Minute, 15*time.Second).Should(matchResourceMetrics)
+			gomega.Eventually(ctx, getKubeletMetrics, 2*time.Minute, 10*time.Second).Should(matchResourceMetrics)
 			ginkgo.By("Ensuring the metrics match the expectations a few more times")
-			gomega.Consistently(ctx, getKubeletMetrics, 1*time.Minute, 15*time.Second).Should(matchResourceMetrics)
+			gomega.Consistently(ctx, getKubeletMetrics, 2*time.Minute, 10*time.Second).Should(matchResourceMetrics)
 		})
 
 		ginkgo.It("should report admission failures when the topology manager alignment is known to fail", func(ctx context.Context) {
@@ -118,9 +118,9 @@ var _ = SIGDescribe("Topology Manager Metrics [Serial][NodeFeature:TopologyManag
 			})
 
 			ginkgo.By("Giving the Kubelet time to start up and produce metrics")
-			gomega.Eventually(ctx, getKubeletMetrics, 1*time.Minute, 15*time.Second).Should(matchResourceMetrics)
+			gomega.Eventually(ctx, getKubeletMetrics, 2*time.Minute, 10*time.Second).Should(matchResourceMetrics)
 			ginkgo.By("Ensuring the metrics match the expectations a few more times")
-			gomega.Consistently(ctx, getKubeletMetrics, 1*time.Minute, 15*time.Second).Should(matchResourceMetrics)
+			gomega.Consistently(ctx, getKubeletMetrics, 2*time.Minute, 10*time.Second).Should(matchResourceMetrics)
 		})
 
 		ginkgo.It("should not report any admission failures when the topology manager alignment is expected to succeed", func(ctx context.Context) {
@@ -144,9 +144,9 @@ var _ = SIGDescribe("Topology Manager Metrics [Serial][NodeFeature:TopologyManag
 			})
 
 			ginkgo.By("Giving the Kubelet time to start up and produce metrics")
-			gomega.Eventually(ctx, getKubeletMetrics, 1*time.Minute, 15*time.Second).Should(matchResourceMetrics)
+			gomega.Eventually(ctx, getKubeletMetrics, 2*time.Minute, 10*time.Second).Should(matchResourceMetrics)
 			ginkgo.By("Ensuring the metrics match the expectations a few more times")
-			gomega.Consistently(ctx, getKubeletMetrics, 1*time.Minute, 15*time.Second).Should(matchResourceMetrics)
+			gomega.Consistently(ctx, getKubeletMetrics, 2*time.Minute, 10*time.Second).Should(matchResourceMetrics)
 		})
 	})
 })
@@ -174,5 +174,6 @@ func checkMetricValueGreaterThan(value interface{}) types.GomegaMatcher {
 		"Metric":    gstruct.Ignore(),
 		"Value":     gomega.BeNumerically(">", value),
 		"Timestamp": gstruct.Ignore(),
+		"Histogram": gstruct.Ignore(),
 	}))
 }

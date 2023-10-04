@@ -574,11 +574,6 @@
           {
             "group": "flowcontrol.apiserver.k8s.io",
             "kind": "DeleteOptions",
-            "version": "v1alpha1"
-          },
-          {
-            "group": "flowcontrol.apiserver.k8s.io",
-            "kind": "DeleteOptions",
             "version": "v1beta1"
           },
           {
@@ -730,9 +725,7 @@
           "key": {
             "default": "",
             "description": "key is the label key that the selector applies to.",
-            "type": "string",
-            "x-kubernetes-patch-merge-key": "key",
-            "x-kubernetes-patch-strategy": "merge"
+            "type": "string"
           },
           "operator": {
             "default": "",
@@ -1300,11 +1293,6 @@
             "group": "extensions",
             "kind": "WatchEvent",
             "version": "v1beta1"
-          },
-          {
-            "group": "flowcontrol.apiserver.k8s.io",
-            "kind": "WatchEvent",
-            "version": "v1alpha1"
           },
           {
             "group": "flowcontrol.apiserver.k8s.io",

@@ -73,7 +73,7 @@ func checkGCEPD(volume *v1.PersistentVolume, volumeType string) error {
 
 var _ = utils.SIGDescribe("Dynamic Provisioning", func() {
 	f := framework.NewDefaultFramework("volume-provisioning")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 
 	// filled in BeforeEach
 	var c clientset.Interface
@@ -275,7 +275,7 @@ var _ = utils.SIGDescribe("Dynamic Provisioning", func() {
 				}
 
 				if zone, ok := test.Parameters["zone"]; ok {
-					framework.ExpectNotEqual(len(zone), 0, "expect at least one zone")
+					gomega.Expect(zone).ToNot(gomega.BeEmpty(), "expect at least one zone")
 				}
 
 				ginkgo.By("Testing " + test.Name)
@@ -580,7 +580,7 @@ var _ = utils.SIGDescribe("Dynamic Provisioning", func() {
 			framework.Logf(err.Error())
 			claim, err = c.CoreV1().PersistentVolumeClaims(ns).Get(ctx, claim.Name, metav1.GetOptions{})
 			framework.ExpectNoError(err)
-			framework.ExpectEqual(claim.Status.Phase, v1.ClaimPending)
+			gomega.Expect(claim.Status.Phase).To(gomega.Equal(v1.ClaimPending))
 		})
 
 		// Modifying the default storage class can be disruptive to other tests that depend on it
@@ -619,7 +619,7 @@ var _ = utils.SIGDescribe("Dynamic Provisioning", func() {
 			framework.Logf(err.Error())
 			claim, err = c.CoreV1().PersistentVolumeClaims(ns).Get(ctx, claim.Name, metav1.GetOptions{})
 			framework.ExpectNoError(err)
-			framework.ExpectEqual(claim.Status.Phase, v1.ClaimPending)
+			gomega.Expect(claim.Status.Phase).To(gomega.Equal(v1.ClaimPending))
 		})
 	})
 
@@ -680,7 +680,7 @@ var _ = utils.SIGDescribe("Dynamic Provisioning", func() {
 
 				return false, nil
 			})
-			if err == wait.ErrWaitTimeout {
+			if wait.Interrupted(err) {
 				framework.Logf("The test missed event about failed provisioning, but checked that no volume was provisioned for %v", framework.ClaimProvisionTimeout)
 				err = nil
 			}
@@ -692,7 +692,7 @@ var _ = utils.SIGDescribe("Dynamic Provisioning", func() {
 func verifyDefaultStorageClass(ctx context.Context, c clientset.Interface, scName string, expectedDefault bool) {
 	sc, err := c.StorageV1().StorageClasses().Get(ctx, scName, metav1.GetOptions{})
 	framework.ExpectNoError(err)
-	framework.ExpectEqual(storageutil.IsDefaultAnnotation(sc.ObjectMeta), expectedDefault)
+	gomega.Expect(storageutil.IsDefaultAnnotation(sc.ObjectMeta)).To(gomega.Equal(expectedDefault))
 }
 
 func updateDefaultStorageClass(ctx context.Context, c clientset.Interface, scName string, defaultStr string) {

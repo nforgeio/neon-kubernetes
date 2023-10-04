@@ -351,6 +351,7 @@ type loadBalancerOperation int
 const (
 	deleteLoadBalancer loadBalancerOperation = iota
 	ensureLoadBalancer
+	maxNodeNamesToLog = 20
 )
 
 // syncLoadBalancerIfNeeded ensures that service's status is synced up with loadbalancer
@@ -678,6 +679,15 @@ func nodeNames(nodes []*v1.Node) sets.String {
 	return ret
 }
 
+func loggableNodeNames(nodes []*v1.Node) []string {
+	if len(nodes) > maxNodeNamesToLog {
+		skipped := len(nodes) - maxNodeNamesToLog
+		names := nodeNames(nodes[:maxNodeNamesToLog]).List()
+		return append(names, fmt.Sprintf("<%d more>", skipped))
+	}
+	return nodeNames(nodes).List()
+}
+
 func shouldSyncUpdatedNode(oldNode, newNode *v1.Node) bool {
 	// Evaluate the individual node exclusion predicate before evaluating the
 	// compounded result of all predicates. We don't sync changes on the
@@ -693,8 +703,8 @@ func shouldSyncUpdatedNode(oldNode, newNode *v1.Node) bool {
 	if respectsPredicates(oldNode, nodeIncludedPredicate) != respectsPredicates(newNode, nodeIncludedPredicate) {
 		return true
 	}
-	// For the same reason as above, also check for changes to the providerID
-	if respectsPredicates(oldNode, nodeHasProviderIDPredicate) != respectsPredicates(newNode, nodeHasProviderIDPredicate) {
+	// For the same reason as above, also check for any change to the providerID
+	if oldNode.Spec.ProviderID != newNode.Spec.ProviderID {
 		return true
 	}
 	if !utilfeature.DefaultFeatureGate.Enabled(features.StableLoadBalancerNodeSet) {
@@ -735,9 +745,11 @@ func (c *Controller) nodeSyncService(svc *v1.Service, oldNodes, newNodes []*v1.N
 	}
 	newNodes = filterWithPredicates(newNodes, getNodePredicatesForService(svc)...)
 	oldNodes = filterWithPredicates(oldNodes, getNodePredicatesForService(svc)...)
-	if nodeNames(newNodes).Equal(nodeNames(oldNodes)) {
+
+	if nodesSufficientlyEqual(oldNodes, newNodes) {
 		return retSuccess
 	}
+
 	klog.V(4).Infof("nodeSyncService started for service %s/%s", svc.Namespace, svc.Name)
 	if err := c.lockedUpdateLoadBalancerHosts(svc, newNodes); err != nil {
 		runtime.HandleError(fmt.Errorf("failed to update load balancer hosts for service %s/%s: %v", svc.Namespace, svc.Name, err))
@@ -746,6 +758,34 @@ func (c *Controller) nodeSyncService(svc *v1.Service, oldNodes, newNodes []*v1.N
 	}
 	klog.V(4).Infof("nodeSyncService finished successfully for service %s/%s", svc.Namespace, svc.Name)
 	return retSuccess
+}
+
+func nodesSufficientlyEqual(oldNodes, newNodes []*v1.Node) bool {
+	if len(oldNodes) != len(newNodes) {
+		return false
+	}
+
+	// This holds the Node fields which trigger a sync when changed.
+	type protoNode struct {
+		providerID string
+	}
+	distill := func(n *v1.Node) protoNode {
+		return protoNode{
+			providerID: n.Spec.ProviderID,
+		}
+	}
+
+	mOld := map[string]protoNode{}
+	for _, n := range oldNodes {
+		mOld[n.Name] = distill(n)
+	}
+
+	mNew := map[string]protoNode{}
+	for _, n := range newNodes {
+		mNew[n.Name] = distill(n)
+	}
+
+	return reflect.DeepEqual(mOld, mNew)
 }
 
 // updateLoadBalancerHosts updates all existing load balancers so that
@@ -791,8 +831,8 @@ func (c *Controller) lockedUpdateLoadBalancerHosts(service *v1.Service, hosts []
 		klog.V(4).Infof("It took %v seconds to update load balancer hosts for service %s/%s", latency, service.Namespace, service.Name)
 		updateLoadBalancerHostLatency.Observe(latency)
 	}()
+	klog.V(2).Infof("Updating backends for load balancer %s/%s with %d nodes: %v", service.Namespace, service.Name, len(hosts), loggableNodeNames(hosts))
 
-	klog.V(2).Infof("Updating backends for load balancer %s/%s with node set: %v", service.Namespace, service.Name, nodeNames(hosts))
 	// This operation doesn't normally take very long (and happens pretty often), so we only record the final event
 	err := c.balancer.UpdateLoadBalancer(context.TODO(), c.clusterName, service, hosts)
 	if err == nil {
@@ -817,7 +857,7 @@ func (c *Controller) lockedUpdateLoadBalancerHosts(service *v1.Service, hosts []
 		return nil
 	}
 
-	c.eventRecorder.Eventf(service, v1.EventTypeWarning, "UpdateLoadBalancerFailed", "Error updating load balancer with new hosts %v: %v", nodeNames(hosts), err)
+	c.eventRecorder.Eventf(service, v1.EventTypeWarning, "UpdateLoadBalancerFailed", "Error updating load balancer with new hosts %v [node names limited, total number of nodes: %d], error: %v", loggableNodeNames(hosts), len(hosts), err)
 	return err
 }
 
@@ -958,17 +998,14 @@ var (
 		nodeIncludedPredicate,
 		nodeUnTaintedPredicate,
 		nodeReadyPredicate,
-		nodeHasProviderIDPredicate,
 	}
 	etpLocalNodePredicates []NodeConditionPredicate = []NodeConditionPredicate{
 		nodeIncludedPredicate,
 		nodeUnTaintedPredicate,
-		nodeHasProviderIDPredicate,
 	}
 	stableNodeSetPredicates []NodeConditionPredicate = []NodeConditionPredicate{
 		nodeNotDeletedPredicate,
 		nodeIncludedPredicate,
-		nodeHasProviderIDPredicate,
 		// This is not perfect, but probably good enough. We won't update the
 		// LBs just because the taint was added (see shouldSyncUpdatedNode) but
 		// if any other situation causes an LB sync, tainted nodes will be
@@ -992,10 +1029,6 @@ func getNodePredicatesForService(service *v1.Service) []NodeConditionPredicate {
 func nodeIncludedPredicate(node *v1.Node) bool {
 	_, hasExcludeBalancerLabel := node.Labels[v1.LabelNodeExcludeBalancers]
 	return !hasExcludeBalancerLabel
-}
-
-func nodeHasProviderIDPredicate(node *v1.Node) bool {
-	return node.Spec.ProviderID != ""
 }
 
 // We consider the node for load balancing only when its not tainted for deletion by the cluster autoscaler.

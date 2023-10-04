@@ -30,6 +30,7 @@ import (
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2eskipper "k8s.io/kubernetes/test/e2e/framework/skipper"
 	"k8s.io/kubernetes/test/utils/crd"
+	"k8s.io/kubernetes/test/utils/format"
 	admissionapi "k8s.io/pod-security-admission/api"
 
 	"github.com/onsi/ginkgo/v2"
@@ -39,7 +40,7 @@ import (
 var storageVersionServerVersion = utilversion.MustParseSemantic("v1.13.99")
 var _ = SIGDescribe("Discovery", func() {
 	f := framework.NewDefaultFramework("discovery")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 
 	var namespaceName string
 
@@ -155,11 +156,20 @@ var _ = SIGDescribe("Discovery", func() {
 					break
 				}
 			}
-			framework.ExpectEqual(true, match, "failed to find a valid version for PreferredVersion")
+			if !match {
+				framework.Failf("Failed to find a valid version for PreferredVersion %s in versions:\n%s", checkGroup.PreferredVersion.GroupVersion, format.Object(checkGroup.Versions, 1))
+			}
 		}
 	})
 
-	ginkgo.It("should locate the groupVersion and a resource within each APIGroup", func(ctx context.Context) {
+	/*
+		Release: v1.28
+		Testname: Discovery, confirm the groupVerion and a resourcefrom each apiGroup
+		Description: A resourceList MUST be found for each apiGroup that is retrieved.
+		For each apiGroup the groupVersion MUST equal the groupVersion as reported by
+		the schema. From each resourceList a valid resource MUST be found.
+	*/
+	framework.ConformanceIt("should locate the groupVersion and a resource within each APIGroup", func(ctx context.Context) {
 
 		tests := []struct {
 			apiBasePath   string

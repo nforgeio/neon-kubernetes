@@ -20,6 +20,7 @@ import (
 	"context"
 
 	"github.com/onsi/ginkgo/v2"
+	"github.com/onsi/gomega"
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -35,7 +36,7 @@ import (
 
 var _ = utils.SIGDescribe("GenericPersistentVolume[Disruptive]", func() {
 	f := framework.NewDefaultFramework("generic-disruptive-pv")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 	var (
 		c  clientset.Interface
 		ns string
@@ -110,7 +111,7 @@ func createPodPVCFromSC(ctx context.Context, f *framework.Framework, c clientset
 	pvcClaims := []*v1.PersistentVolumeClaim{pvc}
 	pvs, err := e2epv.WaitForPVClaimBoundPhase(ctx, c, pvcClaims, framework.ClaimProvisionTimeout)
 	framework.ExpectNoError(err, "Failed waiting for PVC to be bound %v", err)
-	framework.ExpectEqual(len(pvs), 1)
+	gomega.Expect(pvs).To(gomega.HaveLen(1))
 
 	ginkgo.By("Creating a pod with dynamically provisioned volume")
 	podConfig := e2epod.Config{

@@ -1645,17 +1645,20 @@ func (d *PersistentVolumeClaimDescriber) Describe(namespace, name string, descri
 
 	pc := d.CoreV1().Pods(namespace)
 
-	pods, err := getPodsForPVC(pc, pvc.Name, describerSettings)
+	pods, err := getPodsForPVC(pc, pvc, describerSettings)
 	if err != nil {
 		return "", err
 	}
 
-	events, _ := searchEvents(d.CoreV1(), pvc, describerSettings.ChunkSize)
+	var events *corev1.EventList
+	if describerSettings.ShowEvents {
+		events, _ = searchEvents(d.CoreV1(), pvc, describerSettings.ChunkSize)
+	}
 
 	return describePersistentVolumeClaim(pvc, events, pods)
 }
 
-func getPodsForPVC(c corev1client.PodInterface, pvcName string, settings DescriberSettings) ([]corev1.Pod, error) {
+func getPodsForPVC(c corev1client.PodInterface, pvc *corev1.PersistentVolumeClaim, settings DescriberSettings) ([]corev1.Pod, error) {
 	nsPods, err := getPodsInChunks(c, metav1.ListOptions{Limit: settings.ChunkSize})
 	if err != nil {
 		return []corev1.Pod{}, err
@@ -1665,10 +1668,38 @@ func getPodsForPVC(c corev1client.PodInterface, pvcName string, settings Describ
 
 	for _, pod := range nsPods.Items {
 		for _, volume := range pod.Spec.Volumes {
-			if volume.VolumeSource.PersistentVolumeClaim != nil && volume.VolumeSource.PersistentVolumeClaim.ClaimName == pvcName {
+			if volume.VolumeSource.PersistentVolumeClaim != nil && volume.VolumeSource.PersistentVolumeClaim.ClaimName == pvc.Name {
 				pods = append(pods, pod)
 			}
 		}
+	}
+
+ownersLoop:
+	for _, ownerRef := range pvc.ObjectMeta.OwnerReferences {
+		if ownerRef.Kind != "Pod" {
+			continue
+		}
+
+		podIndex := -1
+		for i, pod := range nsPods.Items {
+			if pod.UID == ownerRef.UID {
+				podIndex = i
+				break
+			}
+		}
+		if podIndex == -1 {
+			// Maybe the pod has been deleted
+			continue
+		}
+
+		for _, pod := range pods {
+			if pod.UID == nsPods.Items[podIndex].UID {
+				// This owner pod is already recorded, look for pods between other owners
+				continue ownersLoop
+			}
+		}
+
+		pods = append(pods, nsPods.Items[podIndex])
 	}
 
 	return pods, nil
@@ -5030,8 +5061,12 @@ func (fn typeFunc) Matches(types []reflect.Type) bool {
 // Describe invokes the nested function with the exact number of arguments.
 func (fn typeFunc) Describe(exact interface{}, extra ...interface{}) (string, error) {
 	values := []reflect.Value{reflect.ValueOf(exact)}
-	for _, obj := range extra {
-		values = append(values, reflect.ValueOf(obj))
+	for i, obj := range extra {
+		if obj != nil {
+			values = append(values, reflect.ValueOf(obj))
+		} else {
+			values = append(values, reflect.New(fn.Extra[i]).Elem())
+		}
 	}
 	out := fn.Fn.Call(values)
 	s := out[0].Interface().(string)
@@ -5205,8 +5240,7 @@ func tabbedString(f func(io.Writer) error) (string, error) {
 	}
 
 	out.Flush()
-	str := string(buf.String())
-	return str, nil
+	return buf.String(), nil
 }
 
 type SortableResourceNames []corev1.ResourceName

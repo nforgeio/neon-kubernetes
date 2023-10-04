@@ -26,7 +26,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	internalapi "k8s.io/cri-api/pkg/apis"
 	runtimeapi "k8s.io/cri-api/pkg/apis/runtime/v1"
-	"k8s.io/kubernetes/pkg/kubelet/types"
+	"k8s.io/kubelet/pkg/types"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
 	admissionapi "k8s.io/pod-security-admission/api"
@@ -74,7 +74,7 @@ type testRun struct {
 // http://kubernetes.io/docs/admin/garbage-collection/
 var _ = SIGDescribe("GarbageCollect [Serial][NodeFeature:GarbageCollect]", func() {
 	f := framework.NewDefaultFramework("garbage-collect-test")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 	containerNamePrefix := "gc-test-container-"
 	podNamePrefix := "gc-test-pod-"
 

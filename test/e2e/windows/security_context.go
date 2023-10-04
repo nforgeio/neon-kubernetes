@@ -42,7 +42,7 @@ const runAsUserNameContainerName = "run-as-username-container"
 
 var _ = SIGDescribe("[Feature:Windows] SecurityContext", func() {
 	f := framework.NewDefaultFramework("windows-run-as-username")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 
 	ginkgo.It("should be able create pods and run containers with a given username", func(ctx context.Context) {
 		ginkgo.By("Creating 2 pods: 1 with the default user, and one with a custom one.")
@@ -170,7 +170,7 @@ var _ = SIGDescribe("[Feature:Windows] SecurityContext", func() {
 		framework.ExpectNotEqual(event, nil, "event should not be empty")
 		framework.Logf("Got event: %v", event)
 		expectedEventError := "container's runAsUserName (ContainerAdministrator) which will be regarded as root identity and will break non-root policy"
-		framework.ExpectEqual(true, strings.Contains(event.Message, expectedEventError), "Event error should indicate non-root policy caused container to not start")
+		gomega.Expect(event.Message).Should(gomega.ContainSubstring(expectedEventError), "Event error should indicate non-root policy caused container to not start")
 	})
 
 	ginkgo.It("should not be able to create pods with containers running as CONTAINERADMINISTRATOR when runAsNonRoot is true", func(ctx context.Context) {
@@ -188,7 +188,7 @@ var _ = SIGDescribe("[Feature:Windows] SecurityContext", func() {
 		framework.ExpectNotEqual(event, nil, "event should not be empty")
 		framework.Logf("Got event: %v", event)
 		expectedEventError := "container's runAsUserName (CONTAINERADMINISTRATOR) which will be regarded as root identity and will break non-root policy"
-		framework.ExpectEqual(true, strings.Contains(event.Message, expectedEventError), "Event error should indicate non-root policy caused container to not start")
+		gomega.Expect(event.Message).Should(gomega.ContainSubstring(expectedEventError), "Event error should indicate non-root policy caused container to not start")
 	})
 })
 

@@ -101,9 +101,6 @@ func (o *RecommendedOptions) AddFlags(fs *pflag.FlagSet) {
 // ApplyTo adds RecommendedOptions to the server configuration.
 // pluginInitializers can be empty, it is only need for additional initializers.
 func (o *RecommendedOptions) ApplyTo(config *server.RecommendedConfig) error {
-	if err := o.Etcd.Complete(config.Config.StorageObjectCountTracker, config.Config.DrainedNotify(), config.Config.AddPostStartHook); err != nil {
-		return err
-	}
 	if err := o.Etcd.ApplyTo(&config.Config); err != nil {
 		return err
 	}
@@ -157,7 +154,6 @@ func (o *RecommendedOptions) ApplyTo(config *server.RecommendedConfig) error {
 				config.SharedInformerFactory,
 				kubernetes.NewForConfigOrDie(config.ClientConfig).FlowcontrolV1beta3(),
 				config.MaxRequestsInFlight+config.MaxMutatingRequestsInFlight,
-				config.RequestTimeout/4,
 			)
 		} else {
 			klog.Warningf("Neither kubeconfig is provided nor service-account is mounted, so APIPriorityAndFairness will be disabled")

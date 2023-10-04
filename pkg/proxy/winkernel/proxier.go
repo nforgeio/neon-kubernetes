@@ -47,7 +47,7 @@ import (
 	"k8s.io/kubernetes/pkg/proxy/healthcheck"
 	"k8s.io/kubernetes/pkg/proxy/metaproxier"
 	"k8s.io/kubernetes/pkg/proxy/metrics"
-	utilproxy "k8s.io/kubernetes/pkg/proxy/util"
+	proxyutil "k8s.io/kubernetes/pkg/proxy/util"
 	"k8s.io/kubernetes/pkg/util/async"
 	netutils "k8s.io/utils/net"
 )
@@ -152,11 +152,13 @@ const (
 	MAX_COUNT_STALE_LOADBALANCERS = 20
 )
 
-func newHostNetworkService() (HostNetworkService, hcn.SupportedFeatures) {
+func newHostNetworkService(hcnImpl HcnService) (HostNetworkService, hcn.SupportedFeatures) {
 	var h HostNetworkService
-	supportedFeatures := hcn.GetSupportedFeatures()
+	supportedFeatures := hcnImpl.GetSupportedFeatures()
 	if supportedFeatures.Api.V2 {
-		h = hns{}
+		h = hns{
+			hcn: hcnImpl,
+		}
 	} else {
 		panic("Windows HNS Api V2 required. This version of windows does not support API V2")
 	}
@@ -234,8 +236,9 @@ type StackCompatTester interface {
 type DualStackCompatTester struct{}
 
 func (t DualStackCompatTester) DualStackCompatible(networkName string) bool {
+	hcnImpl := newHcnImpl()
 	// First tag of hcsshim that has a proper check for dual stack support is v0.8.22 due to a bug.
-	if err := hcn.IPv6DualStackSupported(); err != nil {
+	if err := hcnImpl.Ipv6DualStackSupported(); err != nil {
 		// Hcn *can* fail the query to grab the version of hcn itself (which this call will do internally before parsing
 		// to see if dual stack is supported), but the only time this can happen, at least that can be discerned, is if the host
 		// is pre-1803 and hcn didn't exist. hcsshim should truthfully return a known error if this happened that we can
@@ -248,7 +251,7 @@ func (t DualStackCompatTester) DualStackCompatible(networkName string) bool {
 	}
 
 	// check if network is using overlay
-	hns, _ := newHostNetworkService()
+	hns, _ := newHostNetworkService(hcnImpl)
 	networkName, err := getNetworkName(networkName)
 	if err != nil {
 		klog.ErrorS(err, "Unable to determine dual-stack status, falling back to single-stack")
@@ -535,7 +538,8 @@ func (proxier *Proxier) newServiceInfo(port *v1.ServicePort, service *v1.Service
 	if service.Spec.InternalTrafficPolicy != nil {
 		internalTrafficLocal = *service.Spec.InternalTrafficPolicy == v1.ServiceInternalTrafficPolicyLocal
 	}
-	err := hcn.DSRSupported()
+	hcnImpl := proxier.hcn
+	err := hcnImpl.DsrSupported()
 	if err != nil {
 		preserveDIP = false
 		localTrafficDSR = false
@@ -621,6 +625,7 @@ type Proxier struct {
 	healthzServer       healthcheck.ProxierHealthUpdater
 
 	hns               HostNetworkService
+	hcn               HcnService
 	network           hnsNetworkInfo
 	sourceVip         string
 	hostMac           string
@@ -692,17 +697,18 @@ func NewProxier(
 	}
 
 	// windows listens to all node addresses
-	nodePortAddresses := utilproxy.NewNodePortAddresses(ipFamily, nil)
+	nodePortAddresses := proxyutil.NewNodePortAddresses(ipFamily, nil)
 	serviceHealthServer := healthcheck.NewServiceHealthServer(hostname, recorder, nodePortAddresses, healthzServer)
 
-	hns, supportedFeatures := newHostNetworkService()
+	hcnImpl := newHcnImpl()
+	hns, supportedFeatures := newHostNetworkService(hcnImpl)
 	hnsNetworkName, err := getNetworkName(config.NetworkName)
 	if err != nil {
 		return nil, err
 	}
 
 	klog.V(3).InfoS("Cleaning up old HNS policy lists")
-	deleteAllHnsLoadBalancerPolicy()
+	hcnImpl.DeleteAllHnsLoadBalancerPolicy()
 
 	// Get HNS network information
 	hnsNetworkInfo, err := getNetworkInfo(hns, hnsNetworkName)
@@ -725,7 +731,8 @@ func NewProxier(
 	if isDSR && !utilfeature.DefaultFeatureGate.Enabled(kubefeatures.WinDSR) {
 		return nil, fmt.Errorf("WinDSR feature gate not enabled")
 	}
-	err = hcn.DSRSupported()
+
+	err = hcnImpl.DsrSupported()
 	if isDSR && err != nil {
 		return nil, err
 	}
@@ -781,6 +788,7 @@ func NewProxier(
 		serviceHealthServer:   serviceHealthServer,
 		healthzServer:         healthzServer,
 		hns:                   hns,
+		hcn:                   hcnImpl,
 		network:               *hnsNetworkInfo,
 		sourceVip:             sourceVip,
 		hostMac:               hostMac,
@@ -809,7 +817,7 @@ func NewDualStackProxier(
 	minSyncPeriod time.Duration,
 	clusterCIDR string,
 	hostname string,
-	nodeIP [2]net.IP,
+	nodeIPs map[v1.IPFamily]net.IP,
 	recorder events.EventRecorder,
 	healthzServer healthcheck.ProxierHealthUpdater,
 	config config.KubeProxyWinkernelConfiguration,
@@ -818,16 +826,18 @@ func NewDualStackProxier(
 
 	// Create an ipv4 instance of the single-stack proxier
 	ipv4Proxier, err := NewProxier(syncPeriod, minSyncPeriod,
-		clusterCIDR, hostname, nodeIP[0], recorder, healthzServer, config, healthzPort)
+		clusterCIDR, hostname, nodeIPs[v1.IPv4Protocol], recorder, healthzServer,
+		config, healthzPort)
 
 	if err != nil {
-		return nil, fmt.Errorf("unable to create ipv4 proxier: %v, hostname: %s, clusterCIDR : %s, nodeIP:%v", err, hostname, clusterCIDR, nodeIP[0])
+		return nil, fmt.Errorf("unable to create ipv4 proxier: %v, hostname: %s, clusterCIDR : %s, nodeIP:%v", err, hostname, clusterCIDR, nodeIPs[v1.IPv4Protocol])
 	}
 
 	ipv6Proxier, err := NewProxier(syncPeriod, minSyncPeriod,
-		clusterCIDR, hostname, nodeIP[1], recorder, healthzServer, config, healthzPort)
+		clusterCIDR, hostname, nodeIPs[v1.IPv6Protocol], recorder, healthzServer,
+		config, healthzPort)
 	if err != nil {
-		return nil, fmt.Errorf("unable to create ipv6 proxier: %v, hostname: %s, clusterCIDR : %s, nodeIP:%v", err, hostname, clusterCIDR, nodeIP[1])
+		return nil, fmt.Errorf("unable to create ipv6 proxier: %v, hostname: %s, clusterCIDR : %s, nodeIP:%v", err, hostname, clusterCIDR, nodeIPs[v1.IPv6Protocol])
 	}
 
 	// Return a meta-proxier that dispatch calls between the two
@@ -839,7 +849,7 @@ func NewDualStackProxier(
 // It returns true if an error was encountered. Errors are logged.
 func CleanupLeftovers() (encounteredError bool) {
 	// Delete all Hns Load Balancer Policies
-	deleteAllHnsLoadBalancerPolicy()
+	newHcnImpl().DeleteAllHnsLoadBalancerPolicy()
 	// TODO
 	// Delete all Hns Remote endpoints
 
@@ -922,35 +932,6 @@ func (svcInfo *serviceInfo) deleteLoadBalancerPolicy(mapStaleLoadbalancer map[st
 			}
 		}
 	}
-}
-
-func deleteAllHnsLoadBalancerPolicy() {
-	plists, err := hcsshim.HNSListPolicyListRequest()
-	if err != nil {
-		return
-	}
-	for _, plist := range plists {
-		klog.V(3).InfoS("Remove policy", "policies", plist)
-		_, err = plist.Delete()
-		if err != nil {
-			klog.ErrorS(err, "Failed to delete policy list")
-		}
-	}
-
-}
-
-func getHnsNetworkInfo(hnsNetworkName string) (*hnsNetworkInfo, error) {
-	hnsnetwork, err := hcsshim.GetHNSNetworkByName(hnsNetworkName)
-	if err != nil {
-		klog.ErrorS(err, "Failed to get HNS Network by name")
-		return nil, err
-	}
-
-	return &hnsNetworkInfo{
-		id:          hnsnetwork.Id,
-		name:        hnsnetwork.Name,
-		networkType: hnsnetwork.Type,
-	}, nil
 }
 
 // Sync is called to synchronize the proxier state to hns as soon as possible.

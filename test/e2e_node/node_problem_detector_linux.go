@@ -47,10 +47,10 @@ var _ = SIGDescribe("NodeProblemDetector [NodeFeature:NodeProblemDetector] [Seri
 	const (
 		pollInterval   = 1 * time.Second
 		pollConsistent = 5 * time.Second
-		pollTimeout    = 1 * time.Minute
+		pollTimeout    = 5 * time.Minute
 	)
 	f := framework.NewDefaultFramework("node-problem-detector")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 	var c clientset.Interface
 	var uid string
 	var ns, name, configName, eventNamespace string

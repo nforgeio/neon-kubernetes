@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/onsi/ginkgo/v2"
+	"github.com/onsi/gomega"
 	"golang.org/x/crypto/cryptobyte"
 
 	v1 "k8s.io/api/core/v1"
@@ -81,7 +82,7 @@ func restartAPIServer(ctx context.Context, node *v1.Node) error {
 // This test requires that --feature-gates=APIServerIdentity=true be set on the apiserver
 var _ = SIGDescribe("kube-apiserver identity [Feature:APIServerIdentity]", func() {
 	f := framework.NewDefaultFramework("kube-apiserver-identity")
-	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
+	f.NamespacePodSecurityLevel = admissionapi.LevelPrivileged
 
 	ginkgo.It("kube-apiserver identity should persist after restart [Disruptive]", func(ctx context.Context) {
 		e2eskipper.SkipUnlessProviderIs("gce")
@@ -120,7 +121,7 @@ var _ = SIGDescribe("kube-apiserver identity [Feature:APIServerIdentity]", func(
 			LabelSelector: "apiserver.kubernetes.io/identity=kube-apiserver",
 		})
 		framework.ExpectNoError(err)
-		framework.ExpectEqual(len(leases.Items), len(controlPlaneNodes), "unexpected number of leases")
+		gomega.Expect(leases.Items).To(gomega.HaveLen(len(controlPlaneNodes)), "unexpected number of leases")
 
 		for _, node := range controlPlaneNodes {
 			hostname, err := getControlPlaneHostname(ctx, &node)
@@ -176,6 +177,6 @@ var _ = SIGDescribe("kube-apiserver identity [Feature:APIServerIdentity]", func(
 			LabelSelector: "apiserver.kubernetes.io/identity=kube-apiserver",
 		})
 		framework.ExpectNoError(err)
-		framework.ExpectEqual(len(leases.Items), len(controlPlaneNodes), "unexpected number of leases")
+		gomega.Expect(leases.Items).To(gomega.HaveLen(len(controlPlaneNodes)), "unexpected number of leases")
 	})
 })

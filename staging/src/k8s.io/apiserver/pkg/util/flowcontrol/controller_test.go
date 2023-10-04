@@ -221,17 +221,12 @@ func (cts *ctlrTestState) popHeldRequest() (plName string, hr *heldRequest, nCou
 	}
 }
 
-var mandQueueSetNames, exclQueueSetNames = func() (sets.String, sets.String) {
+var mandQueueSetNames = func() sets.String {
 	mandQueueSetNames := sets.NewString()
-	exclQueueSetNames := sets.NewString()
 	for _, mpl := range fcboot.MandatoryPriorityLevelConfigurations {
-		if mpl.Spec.Type == flowcontrol.PriorityLevelEnablementExempt {
-			exclQueueSetNames.Insert(mpl.Name)
-		} else {
-			mandQueueSetNames.Insert(mpl.Name)
-		}
+		mandQueueSetNames.Insert(mpl.Name)
 	}
-	return mandQueueSetNames, exclQueueSetNames
+	return mandQueueSetNames
 }()
 
 func TestConfigConsumer(t *testing.T) {
@@ -256,8 +251,7 @@ func TestConfigConsumer(t *testing.T) {
 				FoundToDangling:        func(found bool) bool { return !found },
 				InformerFactory:        informerFactory,
 				FlowcontrolClient:      flowcontrolClient,
-				ServerConcurrencyLimit: 100,         // server concurrency limit
-				RequestWaitLimit:       time.Minute, // request wait limit
+				ServerConcurrencyLimit: 100, // server concurrency limit
 				ReqsGaugeVec:           metrics.PriorityLevelConcurrencyGaugeVec,
 				ExecSeatsGaugeVec:      metrics.PriorityLevelExecutionSeatsGaugeVec,
 				QueueSetFactory:        cts,
@@ -280,7 +274,7 @@ func TestConfigConsumer(t *testing.T) {
 					}
 				}
 				persistingPLNames = nextPLNames.Union(desiredPLNames)
-				expectedQueueSetNames := persistingPLNames.Union(mandQueueSetNames).Difference(exclQueueSetNames)
+				expectedQueueSetNames := persistingPLNames.Union(mandQueueSetNames)
 				allQueueSetNames := cts.getQueueSetNames()
 				missingQueueSetNames := expectedQueueSetNames.Difference(allQueueSetNames)
 				if len(missingQueueSetNames) > 0 {
@@ -389,7 +383,6 @@ func TestAPFControllerWithGracefulShutdown(t *testing.T) {
 		InformerFactory:        informerFactory,
 		FlowcontrolClient:      flowcontrolClient,
 		ServerConcurrencyLimit: 100,
-		RequestWaitLimit:       time.Minute,
 		ReqsGaugeVec:           metrics.PriorityLevelConcurrencyGaugeVec,
 		ExecSeatsGaugeVec:      metrics.PriorityLevelExecutionSeatsGaugeVec,
 		QueueSetFactory:        cts,

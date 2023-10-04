@@ -24,6 +24,7 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/klog/v2/ktesting"
 	"k8s.io/kubernetes/pkg/scheduler/apis/config"
 	"k8s.io/kubernetes/pkg/scheduler/framework"
 	"k8s.io/kubernetes/pkg/scheduler/framework/runtime"
@@ -895,6 +896,7 @@ func TestNodeAffinity(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
+			_, ctx := ktesting.NewTestContext(t)
 			node := v1.Node{ObjectMeta: metav1.ObjectMeta{
 				Name:   test.nodeName,
 				Labels: test.labels,
@@ -902,7 +904,7 @@ func TestNodeAffinity(t *testing.T) {
 			nodeInfo := framework.NewNodeInfo()
 			nodeInfo.SetNode(&node)
 
-			p, err := New(&test.args, nil)
+			p, err := New(ctx, &test.args, nil)
 			if err != nil {
 				t.Fatalf("Creating plugin: %v", err)
 			}
@@ -1134,12 +1136,13 @@ func TestNodeAffinityPriority(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			ctx, cancel := context.WithCancel(context.Background())
+			_, ctx := ktesting.NewTestContext(t)
+			ctx, cancel := context.WithCancel(ctx)
 			defer cancel()
 
 			state := framework.NewCycleState()
-			fh, _ := runtime.NewFramework(nil, nil, ctx.Done(), runtime.WithSnapshotSharedLister(cache.NewSnapshot(nil, test.nodes)))
-			p, err := New(&test.args, fh)
+			fh, _ := runtime.NewFramework(ctx, nil, nil, runtime.WithSnapshotSharedLister(cache.NewSnapshot(nil, test.nodes)))
+			p, err := New(ctx, &test.args, fh)
 			if err != nil {
 				t.Fatalf("Creating plugin: %v", err)
 			}

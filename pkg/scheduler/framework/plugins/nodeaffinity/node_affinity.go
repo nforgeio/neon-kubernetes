@@ -81,9 +81,9 @@ func (s *preFilterState) Clone() framework.StateData {
 
 // EventsToRegister returns the possible events that may make a Pod
 // failed by this plugin schedulable.
-func (pl *NodeAffinity) EventsToRegister() []framework.ClusterEvent {
-	return []framework.ClusterEvent{
-		{Resource: framework.Node, ActionType: framework.Add | framework.Update},
+func (pl *NodeAffinity) EventsToRegister() []framework.ClusterEventWithHint {
+	return []framework.ClusterEventWithHint{
+		{Event: framework.ClusterEvent{Resource: framework.Node, ActionType: framework.Add | framework.Update}},
 	}
 }
 
@@ -243,7 +243,7 @@ func (pl *NodeAffinity) ScoreExtensions() framework.ScoreExtensions {
 }
 
 // New initializes a new plugin and returns it.
-func New(plArgs runtime.Object, h framework.Handle) (framework.Plugin, error) {
+func New(_ context.Context, plArgs runtime.Object, h framework.Handle) (framework.Plugin, error) {
 	args, err := getArgs(plArgs)
 	if err != nil {
 		return nil, err

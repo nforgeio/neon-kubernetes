@@ -347,6 +347,8 @@ func newISCSIServer(ctx context.Context, cs clientset.Interface, namespace strin
 			"/sys/kernel": "/sys/kernel",
 			// iSCSI source "block devices" must be available on the host
 			"/srv/iscsi": "/srv/iscsi",
+			// targetcli uses dbus
+			"/run/dbus": "/run/dbus",
 		},
 		ServerReadyMessage: "iscsi target started",
 		ServerHostNetwork:  true,
@@ -1281,6 +1283,7 @@ func (v *vSphereDriver) GetDynamicProvisionStorageClass(ctx context.Context, con
 }
 
 func (v *vSphereDriver) PrepareTest(ctx context.Context, f *framework.Framework) *storageframework.PerTestConfig {
+	vspheretest.Bootstrap(f)
 	ginkgo.DeferCleanup(func(ctx context.Context) {
 		// Driver Cleanup function
 		// Logout each vSphere client connection to prevent session leakage
@@ -1300,7 +1303,6 @@ func (v *vSphereDriver) PrepareTest(ctx context.Context, f *framework.Framework)
 
 func (v *vSphereDriver) CreateVolume(ctx context.Context, config *storageframework.PerTestConfig, volType storageframework.TestVolType) storageframework.TestVolume {
 	f := config.Framework
-	vspheretest.Bootstrap(f)
 	nodeInfo := vspheretest.GetReadySchedulableRandomNodeInfo(ctx, f.ClientSet)
 	volumePath, err := nodeInfo.VSphere.CreateVolume(&vspheretest.VolumeOptions{}, nodeInfo.DataCenterRef)
 	framework.ExpectNoError(err)
