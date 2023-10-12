@@ -45,7 +45,6 @@ type flags struct {
 	quiet        bool
 	uploadCharts bool
 	useStaged    string
-	usePreview   bool
 }
 
 // NewCmdNeonClusterDeploy returns a Command instance for NEON-CLI 'cluster delete' sub command
@@ -90,9 +89,6 @@ func NewCmdNeonClusterDeploy(f cmdutil.Factory, streams genericclioptions.IOStre
 			if flags.uploadCharts {
 				neonCliArgs = append(neonCliArgs, "--upload-charts")
 			}
-			if flags.usePreview {
-				neonCliArgs = append(neonCliArgs, "--use-preview")
-			}
 			if flags.useStaged != "" {
 				if flags.useStaged == neon_utility.NoFlagValue {
 					neonCliArgs = append(neonCliArgs, "--use-staged")
@@ -122,12 +118,6 @@ func NewCmdNeonClusterDeploy(f cmdutil.Factory, streams genericclioptions.IOStre
 	cmd.Flags().StringVarP(&flags.useStaged, "use-staged", "", "",
 		i18n.T("MAINTAINER ONLY: Deploy a NEONKUBE cluster from an internal build, optionally specifiying a GitHub source branch"))
 	cmd.Flag("use-staged").NoOptDefVal = neon_utility.NoFlagValue
-	cmd.Flags().BoolVarP(&flags.usePreview, "use-preview", "", false,
-		templates.LongDesc(i18n.T(`
-			Uses the preview VM image from the Azure Marketplace to
-			provision the cluster.  Note that a project maintainer
-			must specifically grant access to each user, generally
-			to work with users to solve NEONKUBE problems.`)))
 
 	return cmd
 }
