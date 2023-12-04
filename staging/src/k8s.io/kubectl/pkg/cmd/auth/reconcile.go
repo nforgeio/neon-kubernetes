@@ -72,7 +72,7 @@ var (
 
 	reconcileExample = templates.Examples(`
 		# Reconcile RBAC resources from a file
-		kubectl auth reconcile -f my-rbac-rules.yaml`)
+		neon auth reconcile -f my-rbac-rules.yaml`)
 )
 
 // NewReconcileOptions returns a new ReconcileOptions instance
