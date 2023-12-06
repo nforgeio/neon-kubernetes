@@ -45,7 +45,7 @@ var (
 
 	pluginExample = templates.Examples(i18n.T(`
 		# List all available plugins
-		kubectl plugin list`))
+		neon plugin list`))
 
 	pluginListLong = templates.LongDesc(i18n.T(`
 		List all available plugin files on a user's PATH.

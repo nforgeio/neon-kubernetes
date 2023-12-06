@@ -39,11 +39,11 @@ import (
 var (
 	longDescr = templates.LongDesc(i18n.T(`
   Display addresses of the control plane and services with label kubernetes.io/cluster-service=true.
-  To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.`))
+  To further debug and diagnose cluster problems, use 'neon cluster-info dump'.`))
 
 	clusterinfoExample = templates.Examples(i18n.T(`
 		# Print the address of the control plane and cluster services
-		kubectl cluster-info`))
+		neon cluster-info`))
 )
 
 type ClusterInfoOptions struct {
@@ -148,7 +148,7 @@ func (o *ClusterInfoOptions) Run() error {
 		}
 		return nil
 	})
-	o.Out.Write([]byte("\nTo further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.\n"))
+	o.Out.Write([]byte("\nTo further debug and diagnose cluster problems, use 'neon cluster-info dump'.\n"))
 	return err
 
 	// TODO consider printing more information about cluster
