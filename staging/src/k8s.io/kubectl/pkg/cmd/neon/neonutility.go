@@ -158,16 +158,16 @@ func getNeonCliPath() string {
 	// that exists at these locations andf use that.
 	//
 	// $(NC_ROOT)/Build/neon-cli/neon-cli.exe
-	// $(NC_ROOT)/Tools/neon-cli/bin/Debug/net7.0-windows10.0.17763.0/win10-x64/neon-cli.exe
-	// $(NC_ROOT)/Tools/neon-cli/bin/Release/net7.0-windows10.0.17763.0/win10-x64/neon-cli.exe
-	// $(NK_ROOT)/Tools/neon-cli/bin/Debug/net7.0-windows10.0.17763.0/win10-x64/neon-cli.exe
-	// $(NK_ROOT)/Tools/neon-cli/bin/Debug/net7.0-windows10.0.17763.0/win10-x64/neon-cli.exe
+	// $(NC_ROOT)/Tools/neon-cli/bin/Debug/net8.0-windows/win-x64/neon-cli.exe
+	// $(NC_ROOT)/Tools/neon-cli/bin/Release/net8.0-windows/win-x64/neon-cli.exe
+	// $(NK_ROOT)/Tools/neon-cli/bin/Debug/net8.0-windows/win-x64/neon-cli.exe
+	// $(NK_ROOT)/Tools/neon-cli/bin/Debug/net8.0-windows/win-x64/neon-cli.exe
 	//
 	// NOTE: We'll need to update the hardcoded subfolder paths when we
 	//       update .NET SDKs or we target another version of Windows.
 
-	const frameworkMoniker = "net7.0-windows10.0.17763.0"
-	const architecture = "win10-x64"
+	const frameworkMoniker = "net8.0-windows"
+	const architecture = "win-x64"
 
 	// Create a slice with information about the candidate executables.
 
