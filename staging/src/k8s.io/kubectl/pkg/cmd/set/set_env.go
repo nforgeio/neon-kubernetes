@@ -63,39 +63,39 @@ var (
 		`) + envResources)
 
 	envExample = templates.Examples(`
-          # Update deployment 'registry' with a new environment variable
-	  kubectl set env deployment/registry STORAGE_DIR=/local
+      # Update deployment 'registry' with a new environment variable
+	  neon set env deployment/registry STORAGE_DIR=/local
 
 	  # List the environment variables defined on a deployments 'sample-build'
-	  kubectl set env deployment/sample-build --list
+	  neon set env deployment/sample-build --list
 
 	  # List the environment variables defined on all pods
-	  kubectl set env pods --all --list
+	  neon set env pods --all --list
 
 	  # Output modified deployment in YAML, and does not alter the object on the server
-	  kubectl set env deployment/sample-build STORAGE_DIR=/data -o yaml
+	  neon set env deployment/sample-build STORAGE_DIR=/data -o yaml
 
 	  # Update all containers in all replication controllers in the project to have ENV=prod
-	  kubectl set env rc --all ENV=prod
+	  neon set env rc --all ENV=prod
 
 	  # Import environment from a secret
-	  kubectl set env --from=secret/mysecret deployment/myapp
+	  neon set env --from=secret/mysecret deployment/myapp
 
 	  # Import environment from a config map with a prefix
 	  kubectl set env --from=configmap/myconfigmap --prefix=MYSQL_ deployment/myapp
 
-          # Import specific keys from a config map
-          kubectl set env --keys=my-example-key --from=configmap/myconfigmap deployment/myapp
+      # Import specific keys from a config map
+      neon set env --keys=my-example-key --from=configmap/myconfigmap deployment/myapp
 
 	  # Remove the environment variable ENV from container 'c1' in all deployment configs
-	  kubectl set env deployments --all --containers="c1" ENV-
+	  neon set env deployments --all --containers="c1" ENV-
 
 	  # Remove the environment variable ENV from a deployment definition on disk and
 	  # update the deployment config on the server
-	  kubectl set env -f deploy.json ENV-
+	  neon set env -f deploy.json ENV-
 
 	  # Set some of the local shell environment into a deployment config on the server
-	  env | grep RAILS_ | kubectl set env -e - deployment/registry`)
+	  env | grep RAILS_ | neon set env -e - deployment/registry`)
 )
 
 // EnvOptions holds values for 'set env' command-lone options
@@ -167,7 +167,7 @@ func NewCmdEnv(f cmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Co
 	cmd.Flags().StringVarP(&o.Prefix, "prefix", "", "", "Prefix to append to variable names")
 	cmd.Flags().StringArrayVarP(&o.EnvParams, "env", "e", o.EnvParams, "Specify a key-value pair for an environment variable to set into each container.")
 	cmd.Flags().StringSliceVarP(&o.Keys, "keys", "", o.Keys, "Comma-separated list of keys to import from specified resource")
-	cmd.Flags().BoolVar(&o.List, "list", o.List, "If true, display the environment and any changes in the standard format. this flag will removed when we have kubectl view env.")
+	cmd.Flags().BoolVar(&o.List, "list", o.List, "If true, display the environment and any changes in the standard format. this flag will removed when we have neon view env.")
 	cmd.Flags().BoolVar(&o.Resolve, "resolve", o.Resolve, "If true, show secret or configmap references when listing variables")
 	cmd.Flags().BoolVar(&o.Local, "local", o.Local, "If true, set env will NOT contact api-server but run locally.")
 	cmd.Flags().BoolVar(&o.All, "all", o.All, "If true, select all resources in the namespace of the specified resource types")

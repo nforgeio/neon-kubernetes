@@ -74,16 +74,16 @@ var (
 
 	topPodExample = templates.Examples(i18n.T(`
 		# Show metrics for all pods in the default namespace
-		kubectl top pod
+		neon top pod
 
 		# Show metrics for all pods in the given namespace
-		kubectl top pod --namespace=NAMESPACE
+		neon top pod --namespace=NAMESPACE
 
 		# Show metrics for a given pod and its containers
-		kubectl top pod POD_NAME --containers
+		neon top pod POD_NAME --containers
 
 		# Show metrics for the pods defined by label name=myLabel
-		kubectl top pod -l name=myLabel`))
+		neon top pod -l name=myLabel`))
 )
 
 func NewCmdTopPod(f cmdutil.Factory, o *TopPodOptions, streams genericclioptions.IOStreams) *cobra.Command {
