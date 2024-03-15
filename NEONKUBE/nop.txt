@@ -1,0 +1,3 @@
+# This file is used by [neon-kube] tools to create a NOP commit.
+
+2dd03c40-39a4-4864-97da-f0a3743e37f0
