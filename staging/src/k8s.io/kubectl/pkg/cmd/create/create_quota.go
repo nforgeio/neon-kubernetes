@@ -44,10 +44,10 @@ var (
 
 	quotaExample = templates.Examples(i18n.T(`
 		# Create a new resource quota named my-quota
-		kubectl create quota my-quota --hard=cpu=1,memory=1G,pods=2,services=3,replicationcontrollers=2,resourcequotas=1,secrets=5,persistentvolumeclaims=10
+		neon create quota my-quota --hard=cpu=1,memory=1G,pods=2,services=3,replicationcontrollers=2,resourcequotas=1,secrets=5,persistentvolumeclaims=10
 
 		# Create a new resource quota named best-effort
-		kubectl create quota best-effort --hard=pods=100 --scopes=BestEffort`))
+		neon create quota best-effort --hard=pods=100 --scopes=BestEffort`))
 )
 
 // QuotaOpts holds the command-line options for 'create quota' sub command

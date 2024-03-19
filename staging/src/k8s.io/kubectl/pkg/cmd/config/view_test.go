@@ -53,7 +53,7 @@ func TestViewCluster(t *testing.T) {
 	}
 
 	test := viewClusterTest{
-		description: "Testing for kubectl config view",
+		description: "Testing for neon config view",
 		config:      conf,
 		expected: `apiVersion: v1
 clusters:
@@ -114,7 +114,7 @@ func TestViewClusterMinify(t *testing.T) {
 		expected    string
 	}{
 		{
-			description: "Testing for kubectl config view --minify=true",
+			description: "Testing for neon config view --minify=true",
 			config:      conf,
 			flags:       []string{"--minify=true"},
 			expected: `apiVersion: v1
@@ -136,7 +136,7 @@ users:
     token: REDACTED` + "\n",
 		},
 		{
-			description: "Testing for kubectl config view --minify=true --context=my-cluster",
+			description: "Testing for neon config view --minify=true --context=my-cluster",
 			config:      conf,
 			flags:       []string{"--minify=true", "--context=my-cluster"},
 			expected: `apiVersion: v1
@@ -190,7 +190,7 @@ func (test viewClusterTest) run(t *testing.T) {
 	cmd.Flags().Parse(test.flags)
 
 	if err := cmd.Execute(); err != nil {
-		t.Fatalf("unexpected error executing command: %v,kubectl config view flags: %v", err, test.flags)
+		t.Fatalf("unexpected error executing command: %v,neon config view flags: %v", err, test.flags)
 	}
 	if len(test.expected) != 0 {
 		if buf.String() != test.expected {

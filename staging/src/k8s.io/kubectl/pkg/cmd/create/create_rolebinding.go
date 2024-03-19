@@ -42,7 +42,7 @@ var (
 
 	roleBindingExample = templates.Examples(i18n.T(`
 		  # Create a role binding for user1, user2, and group1 using the admin cluster role
-		  kubectl create rolebinding admin --clusterrole=admin --user=user1 --user=user2 --group=group1`))
+		  neon create rolebinding admin --clusterrole=admin --user=user1 --user=user2 --group=group1`))
 )
 
 // RoleBindingOptions holds the options for 'create rolebinding' sub command
