@@ -51,7 +51,7 @@ func TestDescribeUnknownSchemaObject(t *testing.T) {
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
 
-	cmd := NewCmdDescribe("kubectl", tf, streams)
+	cmd := NewCmdDescribe("neon", tf, streams)
 	cmd.Run(cmd, []string{"type", "foo"})
 
 	if d.Name != "foo" || d.Namespace != "" {
@@ -84,7 +84,7 @@ func TestDescribeUnknownNamespacedSchemaObject(t *testing.T) {
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
 
-	cmd := NewCmdDescribe("kubectl", tf, streams)
+	cmd := NewCmdDescribe("neon", tf, streams)
 	cmd.Run(cmd, []string{"namespacedtype", "foo"})
 
 	if d.Name != "foo" || d.Namespace != "non-default" {
@@ -124,7 +124,7 @@ func TestDescribeObject(t *testing.T) {
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
 
-	cmd := NewCmdDescribe("kubectl", tf, streams)
+	cmd := NewCmdDescribe("neon", tf, streams)
 	cmd.Flags().Set("filename", "../../../testdata/redis-master-controller.yaml")
 	cmd.Run(cmd, []string{})
 
@@ -157,7 +157,7 @@ func TestDescribeListObjects(t *testing.T) {
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
 
-	cmd := NewCmdDescribe("kubectl", tf, streams)
+	cmd := NewCmdDescribe("neon", tf, streams)
 	cmd.Run(cmd, []string{"pods"})
 	if buf.String() != fmt.Sprintf("%s\n\n%s", d.Output, d.Output) {
 		t.Errorf("unexpected output: %s", buf.String())
@@ -182,7 +182,7 @@ func TestDescribeObjectShowEvents(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: cmdtesting.ObjBody(codec, pods)},
 	}
 
-	cmd := NewCmdDescribe("kubectl", tf, genericclioptions.NewTestIOStreamsDiscard())
+	cmd := NewCmdDescribe("neon", tf, genericclioptions.NewTestIOStreamsDiscard())
 	cmd.Flags().Set("show-events", "true")
 	cmd.Run(cmd, []string{"pods"})
 	if d.Settings.ShowEvents != true {
@@ -208,7 +208,7 @@ func TestDescribeObjectSkipEvents(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: cmdtesting.ObjBody(codec, pods)},
 	}
 
-	cmd := NewCmdDescribe("kubectl", tf, genericclioptions.NewTestIOStreamsDiscard())
+	cmd := NewCmdDescribe("neon", tf, genericclioptions.NewTestIOStreamsDiscard())
 	cmd.Flags().Set("show-events", "false")
 	cmd.Run(cmd, []string{"pods"})
 	if d.Settings.ShowEvents != false {
@@ -234,7 +234,7 @@ func TestDescribeObjectChunkSize(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: cmdtesting.ObjBody(codec, pods)},
 	}
 
-	cmd := NewCmdDescribe("kubectl", tf, genericclioptions.NewTestIOStreamsDiscard())
+	cmd := NewCmdDescribe("neon", tf, genericclioptions.NewTestIOStreamsDiscard())
 	cmd.Flags().Set("chunk-size", "100")
 	cmd.Run(cmd, []string{"pods"})
 	if d.Settings.ChunkSize != 100 {
@@ -248,7 +248,7 @@ func TestDescribeHelpMessage(t *testing.T) {
 
 	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
 
-	cmd := NewCmdDescribe("kubectl", tf, streams)
+	cmd := NewCmdDescribe("neon", tf, streams)
 	cmd.SetArgs([]string{"-h"})
 	cmd.SetOutput(buf)
 	_, err := cmd.ExecuteC()
@@ -307,7 +307,7 @@ func TestDescribeNoResourcesFound(t *testing.T) {
 
 			streams, _, buf, errbuf := genericclioptions.NewTestIOStreams()
 
-			cmd := NewCmdDescribe("kubectl", tf, streams)
+			cmd := NewCmdDescribe("neon", tf, streams)
 			for name, value := range testCase.flags {
 				_ = cmd.Flags().Set(name, value)
 			}

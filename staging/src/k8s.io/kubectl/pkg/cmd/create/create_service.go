@@ -239,10 +239,10 @@ var (
 
 	serviceClusterIPExample = templates.Examples(i18n.T(`
     # Create a new ClusterIP service named my-cs
-    kubectl create service clusterip my-cs --tcp=5678:8080
+    neon create service clusterip my-cs --tcp=5678:8080
 
     # Create a new ClusterIP service named my-cs (in headless mode)
-    kubectl create service clusterip my-cs --clusterip="None"`))
+    neon create service clusterip my-cs --clusterip="None"`))
 )
 
 // NewCmdCreateServiceClusterIP is a command to create a ClusterIP service
@@ -280,7 +280,7 @@ var (
 
 	serviceNodePortExample = templates.Examples(i18n.T(`
     # Create a new NodePort service named my-ns
-    kubectl create service nodeport my-ns --tcp=5678:8080`))
+    neon create service nodeport my-ns --tcp=5678:8080`))
 )
 
 // NewCmdCreateServiceNodePort is a macro command for creating a NodePort service
@@ -317,7 +317,7 @@ var (
 
 	serviceLoadBalancerExample = templates.Examples(i18n.T(`
     # Create a new LoadBalancer service named my-lbs
-    kubectl create service loadbalancer my-lbs --tcp=5678:8080`))
+    neon create service loadbalancer my-lbs --tcp=5678:8080`))
 )
 
 // NewCmdCreateServiceLoadBalancer is a macro command for creating a LoadBalancer service
@@ -357,7 +357,7 @@ var (
 
 	serviceExternalNameExample = templates.Examples(i18n.T(`
 	# Create a new ExternalName service named my-ns
-	kubectl create service externalname my-ns --external-name bar.com`))
+	neon create service externalname my-ns --external-name bar.com`))
 )
 
 // NewCmdCreateServiceExternalName is a macro command for creating an ExternalName service
