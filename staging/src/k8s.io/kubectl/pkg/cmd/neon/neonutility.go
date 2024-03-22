@@ -144,18 +144,18 @@ func getNeonCliPath() string {
 
 	// Locate the [neon-cli.exe] binary, handling two possible scenarios:
 	//
-	// neon-cli/neon-desktop is installed on the current machine:
+	// neon-cli/neon-desktop IS installed on the current machine:
 	// ----------------------------------------------------------
 	// In this scenario, the NEON_INSTALL_FOLDER environment variable will
 	// be present and will reference the folder holding the application
 	// binaries, including [neon-cli], so we'll execute [neon-cli] from
 	// there.
 	//
-	// neon-cli/neon-desktop is not installed:
+	// neon-cli/neon-desktop IS NOT installed:
 	// ---------------------------------------
 	// The NEON_INSTALL_FOLDER environment variable will not be present for
 	// this case.  We're going to look for the most recently built binary
-	// that exists at these locations andf use that.
+	// that exists at these locations and use that.
 	//
 	// $(NC_ROOT)/Build/neon-cli/neon-cli.exe
 	// $(NC_ROOT)/Tools/neon-cli/bin/Debug/net8.0-windows/win-x64/neon-cli.exe
@@ -175,9 +175,9 @@ func getNeonCliPath() string {
 
 	neonInstallFolder := os.Getenv("NEON_INSTALL_FOLDER")
 	if neonInstallFolder != "" {
-		candidates = appendPathInfo(candidates, path.Join(neonInstallFolder, "neon-cli.exe"))
+		return appendPathInfo(candidates, path.Join(neonInstallFolder, "neon-cli.exe"))
 	}
-
+    
 	ncRoot := os.Getenv("NC_ROOT")
 	if ncRoot != "" {
 
