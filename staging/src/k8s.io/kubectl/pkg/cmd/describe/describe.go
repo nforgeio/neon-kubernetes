@@ -43,30 +43,30 @@ var (
 		as events or controllers. You may select a single object by name, all objects of that
 		type, provide a name prefix, or label selector. For example:
 
-		    $ kubectl describe TYPE NAME_PREFIX
+		    $ neon describe TYPE NAME_PREFIX
 
 		will first check for an exact match on TYPE and NAME_PREFIX. If no such resource
 		exists, it will output details for every resource that has a name prefixed with NAME_PREFIX.`))
 
 	describeExample = templates.Examples(i18n.T(`
 		# Describe a node
-		kubectl describe nodes kubernetes-node-emt8.c.myproject.internal
+		neon describe nodes kubernetes-node-emt8.c.myproject.internal
 
 		# Describe a pod
-		kubectl describe pods/nginx
+		neon describe pods/nginx
 
 		# Describe a pod identified by type and name in "pod.json"
-		kubectl describe -f pod.json
+		neon describe -f pod.json
 
 		# Describe all pods
-		kubectl describe pods
+		neon describe pods
 
 		# Describe pods by label name=myLabel
-		kubectl describe po -l name=myLabel
+		neon describe po -l name=myLabel
 
 		# Describe all pods managed by the 'frontend' replication controller 
 		# (rc-created pods get the name of the rc as a prefix in the pod name)
-		kubectl describe pods frontend`))
+		neon describe pods frontend`))
 )
 
 type DescribeOptions struct {

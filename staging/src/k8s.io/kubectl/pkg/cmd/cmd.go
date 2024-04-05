@@ -56,6 +56,10 @@ import (
 	"k8s.io/kubectl/pkg/cmd/get"
 	"k8s.io/kubectl/pkg/cmd/label"
 	"k8s.io/kubectl/pkg/cmd/logs"
+	neon_cluster "k8s.io/kubectl/pkg/cmd/neon/cluster"
+	neon_helm "k8s.io/kubectl/pkg/cmd/neon/helm"
+	neon_login "k8s.io/kubectl/pkg/cmd/neon/login"
+	neon_logout "k8s.io/kubectl/pkg/cmd/neon/logout"
 	"k8s.io/kubectl/pkg/cmd/options"
 	"k8s.io/kubectl/pkg/cmd/patch"
 	"k8s.io/kubectl/pkg/cmd/plugin"
@@ -269,10 +273,10 @@ func NewKubectlCommand(o KubectlOptions) *cobra.Command {
 	warningsAsErrors := false
 	// Parent command to which all subcommands are added.
 	cmds := &cobra.Command{
-		Use:   "kubectl",
-		Short: i18n.T("kubectl controls the Kubernetes cluster manager"),
+		Use:   "neon",
+		Short: i18n.T("neon controls the Kubernetes cluster manager"),
 		Long: templates.LongDesc(`
-      kubectl controls the Kubernetes cluster manager.
+      neon controls the Kubernetes cluster manager.  This modifies kubectl by adding NEONKUBE commands.
 
       Find more information at:
             https://kubernetes.io/docs/reference/kubectl/overview/`),
@@ -338,7 +342,7 @@ func NewKubectlCommand(o KubectlOptions) *cobra.Command {
 	}
 
 	// Avoid import cycle by setting ValidArgsFunction here instead of in NewCmdGet()
-	getCmd := get.NewCmdGet("kubectl", f, o.IOStreams)
+	getCmd := get.NewCmdGet("neon", f, o.IOStreams)
 	getCmd.ValidArgsFunction = utilcomp.ResourceTypeAndNameCompletionFunc(f)
 
 	groups := templates.CommandGroups{
@@ -354,7 +358,7 @@ func NewKubectlCommand(o KubectlOptions) *cobra.Command {
 		{
 			Message: "Basic Commands (Intermediate):",
 			Commands: []*cobra.Command{
-				explain.NewCmdExplain("kubectl", f, o.IOStreams),
+				explain.NewCmdExplain("neon", f, o.IOStreams),
 				getCmd,
 				edit.NewCmdEdit(f, o.IOStreams),
 				delete.NewCmdDelete(f, o.IOStreams),
@@ -366,6 +370,15 @@ func NewKubectlCommand(o KubectlOptions) *cobra.Command {
 				rollout.NewCmdRollout(f, o.IOStreams),
 				scale.NewCmdScale(f, o.IOStreams),
 				autoscale.NewCmdAutoscale(f, o.IOStreams),
+			},
+		},
+		{
+			Message: "NEONKUBE Commands:",
+			Commands: []*cobra.Command{
+				neon_cluster.NewCmdNeonCluster(f, o.IOStreams),
+				neon_helm.NewCmdNeonHelm(f, o.IOStreams),
+				neon_login.NewCmdNeonLogin(f, o.IOStreams),
+				neon_logout.NewCmdNeonLogout(f, o.IOStreams),
 			},
 		},
 		{
@@ -383,7 +396,7 @@ func NewKubectlCommand(o KubectlOptions) *cobra.Command {
 		{
 			Message: "Troubleshooting and Debugging Commands:",
 			Commands: []*cobra.Command{
-				describe.NewCmdDescribe("kubectl", f, o.IOStreams),
+				describe.NewCmdDescribe("neon", f, o.IOStreams),
 				logs.NewCmdLogs(f, o.IOStreams),
 				attach.NewCmdAttach(f, o.IOStreams),
 				cmdexec.NewCmdExec(f, o.IOStreams),
@@ -398,7 +411,7 @@ func NewKubectlCommand(o KubectlOptions) *cobra.Command {
 			Message: "Advanced Commands:",
 			Commands: []*cobra.Command{
 				diff.NewCmdDiff(f, o.IOStreams),
-				apply.NewCmdApply("kubectl", f, o.IOStreams),
+				apply.NewCmdApply("neon", f, o.IOStreams),
 				patch.NewCmdPatch(f, o.IOStreams),
 				replace.NewCmdReplace(f, o.IOStreams),
 				wait.NewCmdWait(f, o.IOStreams),
@@ -409,7 +422,7 @@ func NewKubectlCommand(o KubectlOptions) *cobra.Command {
 			Message: "Settings Commands:",
 			Commands: []*cobra.Command{
 				label.NewCmdLabel(f, o.IOStreams),
-				annotate.NewCmdAnnotate("kubectl", f, o.IOStreams),
+				annotate.NewCmdAnnotate("neon", f, o.IOStreams),
 				completion.NewCmdCompletion(o.IOStreams.Out, ""),
 			},
 		},
@@ -460,11 +473,11 @@ func addCmdHeaderHooks(cmds *cobra.Command, kubeConfigFlags *genericclioptions.C
 	// If the feature gate env var is set to "false", then do no add kubectl command headers.
 	if value, exists := os.LookupEnv(kubectlCmdHeaders); exists {
 		if value == "false" || value == "0" {
-			klog.V(5).Infoln("kubectl command headers turned off")
+			klog.V(5).Infoln("neon command headers turned off")
 			return
 		}
 	}
-	klog.V(5).Infoln("kubectl command headers turned on")
+	klog.V(5).Infoln("neon command headers turned on")
 	crt := &genericclioptions.CommandHeaderRoundTripper{}
 	existingPreRunE := cmds.PersistentPreRunE
 	// Add command parsing to the existing persistent pre-run function.
