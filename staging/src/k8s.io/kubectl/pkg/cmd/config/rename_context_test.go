@@ -74,7 +74,7 @@ func TestRenameNonexistentContext(t *testing.T) {
 		Contexts:       map[string]*clientcmdapi.Context{currentContext: contextData}}
 
 	test := renameContextTest{
-		description:    "Testing for kubectl config rename-context whose context to be renamed no exists",
+		description:    "Testing for neon config rename-context whose context to be renamed no exists",
 		initialConfig:  initialConfig,
 		expectedConfig: initialConfig,
 		args:           []string{nonexistentCurrentContext, newContext},
@@ -92,7 +92,7 @@ func TestRenameToAlreadyExistingContext(t *testing.T) {
 			existentNewContext: contextData}}
 
 	test := renameContextTest{
-		description:    "Testing for kubectl config rename-context whose the new name is already in another context.",
+		description:    "Testing for neon config rename-context whose the new name is already in another context.",
 		initialConfig:  initialConfig,
 		expectedConfig: initialConfig,
 		args:           []string{currentContext, existentNewContext},
