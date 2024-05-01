@@ -90,7 +90,7 @@ func TestApplyExtraArgsFail(t *testing.T) {
 	f := cmdtesting.NewTestFactory()
 	defer f.Cleanup()
 
-	c := NewCmdApply("kubectl", f, genericclioptions.NewTestIOStreamsDiscard())
+	c := NewCmdApply("neon", f, genericclioptions.NewTestIOStreamsDiscard())
 	if validateApplyArgs(c, []string{"rc"}) == nil {
 		t.Fatalf("unexpected non-error")
 	}
@@ -330,7 +330,7 @@ func TestRunApplyPrintsValidObjectList(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	ioStreams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdApply("kubectl", tf, ioStreams)
+	cmd := NewCmdApply("neon", tf, ioStreams)
 	cmd.Flags().Set("filename", filenameCM)
 	cmd.Flags().Set("output", "json")
 	cmd.Flags().Set("dry-run", "client")
@@ -516,14 +516,14 @@ func TestApplyObjectWithoutAnnotation(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdApply("kubectl", tf, ioStreams)
+	cmd := NewCmdApply("neon", tf, ioStreams)
 	cmd.Flags().Set("filename", filenameRC)
 	cmd.Flags().Set("output", "name")
 	cmd.Run(cmd, []string{})
 
 	// uses the name from the file, not the response
 	expectRC := "replicationcontroller/" + nameRC + "\n"
-	expectWarning := fmt.Sprintf(warningNoLastAppliedConfigAnnotation, "replicationcontrollers/test-rc", corev1.LastAppliedConfigAnnotation, "kubectl")
+	expectWarning := fmt.Sprintf(warningNoLastAppliedConfigAnnotation, "replicationcontrollers/test-rc", corev1.LastAppliedConfigAnnotation, "neon")
 	if errBuf.String() != expectWarning {
 		t.Fatalf("unexpected non-warning: %s\nexpected: %s", errBuf.String(), expectWarning)
 	}
@@ -564,7 +564,7 @@ func TestApplyObject(t *testing.T) {
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
-			cmd := NewCmdApply("kubectl", tf, ioStreams)
+			cmd := NewCmdApply("neon", tf, ioStreams)
 			cmd.Flags().Set("filename", filenameRC)
 			cmd.Flags().Set("output", "name")
 			cmd.Run(cmd, []string{})
@@ -613,7 +613,7 @@ func TestApplyPruneObjects(t *testing.T) {
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
-			cmd := NewCmdApply("kubectl", tf, ioStreams)
+			cmd := NewCmdApply("neon", tf, ioStreams)
 			cmd.Flags().Set("filename", filenameRC)
 			cmd.Flags().Set("prune", "true")
 			cmd.Flags().Set("namespace", "test")
@@ -679,7 +679,7 @@ func TestApplyObjectOutput(t *testing.T) {
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
-			cmd := NewCmdApply("kubectl", tf, ioStreams)
+			cmd := NewCmdApply("neon", tf, ioStreams)
 			cmd.Flags().Set("filename", filenameRC)
 			cmd.Flags().Set("output", "yaml")
 			cmd.Run(cmd, []string{})
@@ -741,7 +741,7 @@ func TestApplyRetry(t *testing.T) {
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
-			cmd := NewCmdApply("kubectl", tf, ioStreams)
+			cmd := NewCmdApply("neon", tf, ioStreams)
 			cmd.Flags().Set("filename", filenameRC)
 			cmd.Flags().Set("output", "name")
 			cmd.Run(cmd, []string{})
@@ -790,7 +790,7 @@ func TestApplyNonExistObject(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	ioStreams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdApply("kubectl", tf, ioStreams)
+	cmd := NewCmdApply("neon", tf, ioStreams)
 	cmd.Flags().Set("filename", filenameRC)
 	cmd.Flags().Set("output", "name")
 	cmd.Run(cmd, []string{})
@@ -843,7 +843,7 @@ func TestApplyEmptyPatch(t *testing.T) {
 
 	// 1. apply non exist object
 	ioStreams, _, buf, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdApply("kubectl", tf, ioStreams)
+	cmd := NewCmdApply("neon", tf, ioStreams)
 	cmd.Flags().Set("filename", filenameRC)
 	cmd.Flags().Set("output", "name")
 	cmd.Run(cmd, []string{})
@@ -858,7 +858,7 @@ func TestApplyEmptyPatch(t *testing.T) {
 
 	// 2. test apply already exist object, will not send empty patch request
 	ioStreams, _, buf, _ = genericclioptions.NewTestIOStreams()
-	cmd = NewCmdApply("kubectl", tf, ioStreams)
+	cmd = NewCmdApply("neon", tf, ioStreams)
 	cmd.Flags().Set("filename", filenameRC)
 	cmd.Flags().Set("output", "name")
 	cmd.Run(cmd, []string{})
@@ -917,7 +917,7 @@ func testApplyMultipleObjects(t *testing.T, asList bool) {
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
-			cmd := NewCmdApply("kubectl", tf, ioStreams)
+			cmd := NewCmdApply("neon", tf, ioStreams)
 			if asList {
 				cmd.Flags().Set("filename", filenameRCSVC)
 			} else {
@@ -1013,7 +1013,7 @@ func TestApplyNULLPreservation(t *testing.T) {
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
-			cmd := NewCmdApply("kubectl", tf, ioStreams)
+			cmd := NewCmdApply("neon", tf, ioStreams)
 			cmd.Flags().Set("filename", filenameDeployObjClientside)
 			cmd.Flags().Set("output", "name")
 
@@ -1080,7 +1080,7 @@ func TestUnstructuredApply(t *testing.T) {
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
-			cmd := NewCmdApply("kubectl", tf, ioStreams)
+			cmd := NewCmdApply("neon", tf, ioStreams)
 			cmd.Flags().Set("filename", filenameWidgetClientside)
 			cmd.Flags().Set("output", "name")
 			cmd.Run(cmd, []string{})
@@ -1146,7 +1146,7 @@ func TestUnstructuredIdempotentApply(t *testing.T) {
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
-			cmd := NewCmdApply("kubectl", tf, ioStreams)
+			cmd := NewCmdApply("neon", tf, ioStreams)
 			cmd.Flags().Set("filename", filenameWidgetClientside)
 			cmd.Flags().Set("output", "name")
 			cmd.Run(cmd, []string{})
@@ -1390,7 +1390,7 @@ func TestForceApply(t *testing.T) {
 			tf.ClientConfigVal = &restclient.Config{}
 
 			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
-			cmd := NewCmdApply("kubectl", tf, ioStreams)
+			cmd := NewCmdApply("neon", tf, ioStreams)
 			cmd.Flags().Set("filename", filenameRC)
 			cmd.Flags().Set("output", "name")
 			cmd.Flags().Set("force", "true")
@@ -1431,7 +1431,7 @@ func TestDontAllowForceApplyWithServerDryRun(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	ioStreams, _, _, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdApply("kubectl", tf, ioStreams)
+	cmd := NewCmdApply("neon", tf, ioStreams)
 	cmd.Flags().Set("filename", filenameRC)
 	cmd.Flags().Set("dry-run", "server")
 	cmd.Flags().Set("force", "true")
@@ -1459,7 +1459,7 @@ func TestDontAllowForceApplyWithServerSide(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	ioStreams, _, _, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdApply("kubectl", tf, ioStreams)
+	cmd := NewCmdApply("neon", tf, ioStreams)
 	cmd.Flags().Set("filename", filenameRC)
 	cmd.Flags().Set("server-side", "true")
 	cmd.Flags().Set("force", "true")
@@ -1481,7 +1481,7 @@ func TestDontAllowApplyWithPodGeneratedName(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	ioStreams, _, _, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdApply("kubectl", tf, ioStreams)
+	cmd := NewCmdApply("neon", tf, ioStreams)
 	cmd.Flags().Set("filename", filenamePodGeneratedName)
 	cmd.Flags().Set("dry-run", "client")
 	cmd.Run(cmd, []string{})
