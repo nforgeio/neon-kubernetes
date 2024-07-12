@@ -151,23 +151,23 @@ var (
 
 	applyExample = templates.Examples(i18n.T(`
 		# Apply the configuration in pod.json to a pod
-		kubectl apply -f ./pod.json
+		neon apply -f ./pod.json
 
 		# Apply resources from a directory containing kustomization.yaml - e.g. dir/kustomization.yaml
-		kubectl apply -k dir/
+		neon apply -k dir/
 
 		# Apply the JSON passed into stdin to a pod
-		cat pod.json | kubectl apply -f -
+		cat pod.json | neon apply -f -
 
 		# Apply the configuration from all files that end with '.json'
-		kubectl apply -f '*.json'
+		neon apply -f '*.json'
 
 		# Note: --prune is still in Alpha
 		# Apply the configuration in manifest.yaml that matches label app=nginx and delete all other resources that are not in the file and match label app=nginx
-		kubectl apply --prune -f manifest.yaml -l app=nginx
+		neon apply --prune -f manifest.yaml -l app=nginx
 
 		# Apply the configuration in manifest.yaml and delete all the other config maps that are not in the file
-		kubectl apply --prune -f manifest.yaml --all --prune-allowlist=core/v1/ConfigMap`))
+		neon apply --prune -f manifest.yaml --all --prune-allowlist=core/v1/ConfigMap`))
 
 	warningNoLastAppliedConfigAnnotation = "Warning: resource %[1]s is missing the %[2]s annotation which is required by %[3]s apply. %[3]s apply should only be used on resources created declaratively by either %[3]s create --save-config or %[3]s apply. The missing annotation will be patched automatically.\n"
 	warningChangesOnDeletingResource     = "Warning: Detected changes to resource %[1]s which is currently being deleted.\n"
@@ -1052,7 +1052,7 @@ const (
 	// instead of a field manager like `kubectl-server-side-apply`
 	// for backward compatibility to not conflict with old versions
 	// of kubectl server-side apply where `kubectl` has already been the field manager.
-	fieldManagerServerSideApply = "kubectl"
+	fieldManagerServerSideApply = "neon"
 
 	fieldManagerLastAppliedAnnotation = "kubectl-last-applied"
 )
@@ -1065,7 +1065,7 @@ var (
 	)
 )
 
-// GetApplyFieldManagerFlag gets the field manager for kubectl apply
+// GetApplyFieldManagerFlag gets the field manager for neon apply
 // if it is not set.
 //
 // The default field manager is not `kubectl-apply` to distinguish between

@@ -46,7 +46,7 @@ func TestGetFirstPod(t *testing.T) {
 		expectedErr bool
 	}{
 		{
-			name:    "kubectl logs - two ready pods",
+			name:    "neon logs - two ready pods",
 			podList: newPodList(2, -1, -1, labelSet),
 			sortBy:  func(pods []*corev1.Pod) sort.Interface { return podutils.ByLogging(pods) },
 			expected: &corev1.Pod{
@@ -68,7 +68,7 @@ func TestGetFirstPod(t *testing.T) {
 			expectedNum: 2,
 		},
 		{
-			name:    "kubectl logs - one unhealthy, one healthy",
+			name:    "neon logs - one unhealthy, one healthy",
 			podList: newPodList(2, -1, 1, labelSet),
 			sortBy:  func(pods []*corev1.Pod) sort.Interface { return podutils.ByLogging(pods) },
 			expected: &corev1.Pod{
@@ -91,7 +91,7 @@ func TestGetFirstPod(t *testing.T) {
 			expectedNum: 2,
 		},
 		{
-			name:    "kubectl attach - two ready pods",
+			name:    "neon attach - two ready pods",
 			podList: newPodList(2, -1, -1, labelSet),
 			sortBy:  func(pods []*corev1.Pod) sort.Interface { return sort.Reverse(podutils.ActivePods(pods)) },
 			expected: &corev1.Pod{
@@ -113,7 +113,7 @@ func TestGetFirstPod(t *testing.T) {
 			expectedNum: 2,
 		},
 		{
-			name:    "kubectl attach - wait for ready pod",
+			name:    "neon attach - wait for ready pod",
 			podList: newPodList(1, 1, -1, labelSet),
 			watching: []watch.Event{
 				{

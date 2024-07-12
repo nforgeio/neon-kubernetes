@@ -46,22 +46,16 @@ var (
 
 	explainExamples = templates.Examples(i18n.T(`
 		# Get the documentation of the resource and its fields
-		kubectl explain pods
+		neon explain pods
 
 		# Get all the fields in the resource
-		kubectl explain pods --recursive
+		neon explain pods --recursive
 
 		# Get the explanation for deployment in supported api versions
-		kubectl explain deployments --api-version=apps/v1
+		neon explain deployments --api-version=apps/v1
 
 		# Get the documentation of a specific field of a resource
-		kubectl explain pods.spec.containers
-		
-		# Get the documentation of resources in different format
-		kubectl explain deployment --output=plaintext-openapiv2`))
-
-	plaintextTemplateName          = "plaintext"
-	plaintextOpenAPIV2TemplateName = "plaintext-openapiv2"
+		neon explain pods.spec.containers`))
 )
 
 type ExplainOptions struct {

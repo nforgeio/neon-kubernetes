@@ -28,7 +28,7 @@ import (
 
 // NewCmdKustomize returns an adapted kustomize build command.
 func NewCmdKustomize(streams genericiooptions.IOStreams) *cobra.Command {
-	h := build.MakeHelp("kubectl", "kustomize")
+	h := build.MakeHelp("neon", "kustomize")
 	return build.NewCmdBuild(
 		filesys.MakeFsOnDisk(),
 		&build.Help{

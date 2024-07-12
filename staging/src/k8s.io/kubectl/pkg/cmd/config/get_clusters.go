@@ -29,8 +29,8 @@ import (
 
 var (
 	getClustersExample = templates.Examples(`
-		# List the clusters that kubectl knows about
-		kubectl config get-clusters`)
+		# List the clusters that neon knows about
+		neon config get-clusters`)
 )
 
 // NewCmdConfigGetClusters creates a command object for the "get-clusters" action, which

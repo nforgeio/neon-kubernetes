@@ -67,18 +67,18 @@ func TestKubectlSubcommandShadowPlugin(t *testing.T) {
 	}{
 		{
 			name:             "test that a plugin executable is found based on command args when builtin subcommand does not exist",
-			args:             []string{"kubectl", "create", "foo", "--bar", "--bar2", "--namespace", "test-namespace"},
+			args:             []string{"neon", "create", "foo", "--bar", "--bar2", "--namespace", "test-namespace"},
 			expectPlugin:     "plugin/testdata/kubectl-create-foo",
 			expectPluginArgs: []string{"--bar", "--bar2", "--namespace", "test-namespace"},
 		},
 		{
 			name:              "test that a plugin executable is not found based on command args when also builtin subcommand does not exist",
-			args:              []string{"kubectl", "create", "foo2", "--bar", "--bar2", "--namespace", "test-namespace"},
+			args:              []string{"neon", "create", "foo2", "--bar", "--bar2", "--namespace", "test-namespace"},
 			expectLookupError: "unable to find a plugin executable \"kubectl-create-foo2\"",
 		},
 		{
 			name:             "test that normal commands are able to be executed, when builtin subcommand exists",
-			args:             []string{"kubectl", "create", "job", "foo", "--image=busybox", "--dry-run=client", "--namespace", "test-namespace"},
+			args:             []string{"neon", "create", "job", "foo", "--image=busybox", "--dry-run=client", "--namespace", "test-namespace"},
 			expectPlugin:     "",
 			expectPluginArgs: []string{},
 		},
@@ -86,43 +86,43 @@ func TestKubectlSubcommandShadowPlugin(t *testing.T) {
 		// just to retest them also when feature is enabled.
 		{
 			name:             "test that normal commands are able to be executed, when no plugin overshadows them",
-			args:             []string{"kubectl", "config", "get-clusters"},
+			args:             []string{"neon", "config", "get-clusters"},
 			expectPlugin:     "",
 			expectPluginArgs: []string{},
 		},
 		{
 			name:             "test that a plugin executable is found based on command args",
-			args:             []string{"kubectl", "foo", "--bar"},
+			args:             []string{"neon", "foo", "--bar"},
 			expectPlugin:     "plugin/testdata/kubectl-foo",
 			expectPluginArgs: []string{"--bar"},
 		},
 		{
 			name: "test that a plugin does not execute over an existing command by the same name",
-			args: []string{"kubectl", "version", "--client=true"},
+			args: []string{"neon", "version", "--client=true"},
 		},
 		{
 			name: "test that a plugin does not execute over Cobra's help command",
-			args: []string{"kubectl", "help"},
+			args: []string{"neon", "help"},
 		},
 		{
 			name: "test that a plugin does not execute over Cobra's __complete command",
-			args: []string{"kubectl", cobra.ShellCompRequestCmd, "de"},
+			args: []string{"neon", cobra.ShellCompRequestCmd, "de"},
 		},
 		{
 			name: "test that a plugin does not execute over Cobra's __completeNoDesc command",
-			args: []string{"kubectl", cobra.ShellCompNoDescRequestCmd, "de"},
+			args: []string{"neon", cobra.ShellCompNoDescRequestCmd, "de"},
 		},
 		{
 			name: "test that a flag does not break Cobra's help command",
-			args: []string{"kubectl", "--kubeconfig=/path/to/kubeconfig", "help"},
+			args: []string{"neon", "--kubeconfig=/path/to/kubeconfig", "help"},
 		},
 		{
 			name: "test that a flag does not break Cobra's __complete command",
-			args: []string{"kubectl", "--kubeconfig=/path/to/kubeconfig", cobra.ShellCompRequestCmd},
+			args: []string{"neon", "--kubeconfig=/path/to/kubeconfig", cobra.ShellCompRequestCmd},
 		},
 		{
 			name: "test that a flag does not break Cobra's __completeNoDesc command",
-			args: []string{"kubectl", "--kubeconfig=/path/to/kubeconfig", cobra.ShellCompNoDescRequestCmd},
+			args: []string{"neon", "--kubeconfig=/path/to/kubeconfig", cobra.ShellCompNoDescRequestCmd},
 		},
 	}
 
@@ -180,69 +180,69 @@ func TestKubectlCommandHandlesPlugins(t *testing.T) {
 	}{
 		{
 			name:             "test that normal commands are able to be executed, when no plugin overshadows them",
-			args:             []string{"kubectl", "config", "get-clusters"},
+			args:             []string{"neon", "config", "get-clusters"},
 			expectPlugin:     "",
 			expectPluginArgs: []string{},
 		},
 		{
 			name:             "test that normal commands are able to be executed, when no plugin overshadows them and shadowing feature is not enabled",
-			args:             []string{"kubectl", "create", "job", "foo", "--image=busybox", "--dry-run=client"},
+			args:             []string{"neon", "create", "job", "foo", "--image=busybox", "--dry-run=client"},
 			expectPlugin:     "",
 			expectPluginArgs: []string{},
 		},
 		{
 			name:             "test that a plugin executable is found based on command args",
-			args:             []string{"kubectl", "foo", "--bar"},
+			args:             []string{"neon", "foo", "--bar"},
 			expectPlugin:     "plugin/testdata/kubectl-foo",
 			expectPluginArgs: []string{"--bar"},
 		},
 		{
 			name: "test that a plugin does not execute over an existing command by the same name",
-			args: []string{"kubectl", "version", "--client=true"},
+			args: []string{"neon", "version", "--client=true"},
 		},
 		// The following tests make sure that commands added by Cobra cannot be shadowed by a plugin
 		// See https://github.com/kubernetes/kubectl/issues/1116
 		{
 			name: "test that a plugin does not execute over Cobra's help command",
-			args: []string{"kubectl", "help"},
+			args: []string{"neon", "help"},
 		},
 		{
 			name: "test that a plugin does not execute over Cobra's __complete command",
-			args: []string{"kubectl", cobra.ShellCompRequestCmd, "de"},
+			args: []string{"neon", cobra.ShellCompRequestCmd, "de"},
 		},
 		{
 			name: "test that a plugin does not execute over Cobra's __completeNoDesc command",
-			args: []string{"kubectl", cobra.ShellCompNoDescRequestCmd, "de"},
+			args: []string{"neon", cobra.ShellCompNoDescRequestCmd, "de"},
 		},
 		// The following tests make sure that commands added by Cobra cannot be shadowed by a plugin
 		// even when a flag is specified first.  This can happen when using aliases.
 		// See https://github.com/kubernetes/kubectl/issues/1119
 		{
 			name: "test that a flag does not break Cobra's help command",
-			args: []string{"kubectl", "--kubeconfig=/path/to/kubeconfig", "help"},
+			args: []string{"neon", "--kubeconfig=/path/to/kubeconfig", "help"},
 		},
 		{
 			name: "test that a flag does not break Cobra's __complete command",
-			args: []string{"kubectl", "--kubeconfig=/path/to/kubeconfig", cobra.ShellCompRequestCmd},
+			args: []string{"neon", "--kubeconfig=/path/to/kubeconfig", cobra.ShellCompRequestCmd},
 		},
 		{
 			name: "test that a flag does not break Cobra's __completeNoDesc command",
-			args: []string{"kubectl", "--kubeconfig=/path/to/kubeconfig", cobra.ShellCompNoDescRequestCmd},
+			args: []string{"neon", "--kubeconfig=/path/to/kubeconfig", cobra.ShellCompNoDescRequestCmd},
 		},
 		// As for the previous tests, an alias could add a flag without using the = form.
 		// We don't support this case as parsing the flags becomes quite complicated (flags
 		// that take a value, versus flags that don't)
 		// {
 		// 	name: "test that a flag with a space does not break Cobra's help command",
-		// 	args: []string{"kubectl", "--kubeconfig", "/path/to/kubeconfig", "help"},
+		// 	args: []string{"neon", "--kubeconfig", "/path/to/kubeconfig", "help"},
 		// },
 		// {
 		// 	name: "test that a flag with a space does not break Cobra's __complete command",
-		// 	args: []string{"kubectl", "--kubeconfig", "/path/to/kubeconfig", cobra.ShellCompRequestCmd},
+		// 	args: []string{"neon", "--kubeconfig", "/path/to/kubeconfig", cobra.ShellCompRequestCmd},
 		// },
 		// {
 		// 	name: "test that a flag with a space does not break Cobra's __completeNoDesc command",
-		// 	args: []string{"kubectl", "--kubeconfig", "/path/to/kubeconfig", cobra.ShellCompNoDescRequestCmd},
+		// 	args: []string{"neon", "--kubeconfig", "/path/to/kubeconfig", cobra.ShellCompNoDescRequestCmd},
 		// },
 	}
 
@@ -385,7 +385,7 @@ func TestKubectlCommandHeadersHooks(t *testing.T) {
 			addCmdHeaderHooks(cmds, kubeConfigFlags)
 			// Valdidate whether the hooks were added.
 			if testCase.addsHooks && kubeConfigFlags.WrapConfigFn == nil {
-				t.Error("after adding kubectl command header, expecting non-nil WrapConfigFn")
+				t.Error("after adding neon command header, expecting non-nil WrapConfigFn")
 			}
 			if !testCase.addsHooks && kubeConfigFlags.WrapConfigFn != nil {
 				t.Error("env var feature gate should have blocked setting WrapConfigFn")

@@ -172,7 +172,7 @@ func CompGetContainers(f cmdutil.Factory, podName string, toComplete string) []s
 func CompGetFromTemplate(template *string, f cmdutil.Factory, namespace string, args []string, toComplete string) []string {
 	buf := new(bytes.Buffer)
 	streams := genericiooptions.IOStreams{In: os.Stdin, Out: buf, ErrOut: io.Discard}
-	o := get.NewGetOptions("kubectl", streams)
+	o := get.NewGetOptions("neon", streams)
 
 	// Get the list of names of the specified resource
 	o.PrintFlags.TemplateFlags.GoTemplatePrintFlags.TemplateArgument = template

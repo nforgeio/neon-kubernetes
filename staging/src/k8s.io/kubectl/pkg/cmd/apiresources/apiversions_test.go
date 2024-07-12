@@ -30,7 +30,7 @@ func TestAPIVersionsComplete(t *testing.T) {
 	tf := cmdtesting.NewTestFactory()
 	defer tf.Cleanup()
 	cmd := NewCmdAPIVersions(tf, genericiooptions.NewTestIOStreamsDiscard())
-	parentCmd := &cobra.Command{Use: "kubectl"}
+	parentCmd := &cobra.Command{Use: "neon"}
 	parentCmd.AddCommand(cmd)
 	o := NewAPIVersionsOptions(genericiooptions.NewTestIOStreamsDiscard())
 
@@ -44,7 +44,7 @@ func TestAPIVersionsComplete(t *testing.T) {
 		t.Fatalf("An error was expected but not returned")
 	}
 	expectedError := `unexpected arguments: [foo]
-See 'kubectl api-versions -h' for help and examples`
+See 'neon api-versions -h' for help and examples`
 	if err.Error() != expectedError {
 		t.Fatalf("Unexpected error: %v\n expected: %v", err, expectedError)
 	}

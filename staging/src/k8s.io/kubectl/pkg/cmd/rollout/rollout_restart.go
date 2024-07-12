@@ -64,16 +64,16 @@ var (
 
 	restartExample = templates.Examples(`
 		# Restart all deployments in test-namespace namespace
-		kubectl rollout restart deployment -n test-namespace
+		neon rollout restart deployment -n test-namespace
 
 		# Restart a deployment
-		kubectl rollout restart deployment/nginx
+		neon rollout restart deployment/nginx
 
 		# Restart a daemon set
-		kubectl rollout restart daemonset/abc
+		neon rollout restart daemonset/abc
 
 		# Restart deployments with the app=nginx label
-		kubectl rollout restart deployment --selector=app=nginx`)
+		neon rollout restart deployment --selector=app=nginx`)
 )
 
 // NewRolloutRestartOptions returns an initialized RestartOptions instance

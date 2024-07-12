@@ -1334,7 +1334,7 @@
         "required": ["plural", "kind"],
         "properties": {
           "categories": {
-            "description": "categories is a list of grouped resources this custom resource belongs to (e.g. 'all'). This is published in API discovery documents, and used by clients to support invocations like `kubectl get all`.",
+            "description": "categories is a list of grouped resources this custom resource belongs to (e.g. 'all'). This is published in API discovery documents, and used by clients to support invocations like `neon get all`.",
             "type": "array",
             "items": { "type": "string", "default": "" }
           },
@@ -1353,7 +1353,7 @@
             "default": ""
           },
           "shortNames": {
-            "description": "shortNames are short names for the resource, exposed in API discovery documents, and used by clients to support invocations like `kubectl get \u003cshortname\u003e`. It must be all lowercase.",
+            "description": "shortNames are short names for the resource, exposed in API discovery documents, and used by clients to support invocations like `neon get \u003cshortname\u003e`. It must be all lowercase.",
             "type": "array",
             "items": { "type": "string", "default": "" }
           },
@@ -1895,7 +1895,7 @@
             "items": { "type": "string", "default": "" }
           },
           "singularName": {
-            "description": "singularName is the singular name of the resource.  This allows clients to handle plural and singular opaquely. The singularName is more correct for reporting status on a single item and both singular and plural are allowed from the kubectl CLI interface.",
+            "description": "singularName is the singular name of the resource.  This allows clients to handle plural and singular opaquely. The singularName is more correct for reporting status on a single item and both singular and plural are allowed from the neon CLI interface.",
             "type": "string",
             "default": ""
           },
