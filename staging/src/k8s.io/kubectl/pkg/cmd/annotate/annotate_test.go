@@ -441,7 +441,7 @@ func TestAnnotateErrors(t *testing.T) {
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 			iostreams, _, bufOut, bufErr := genericiooptions.NewTestIOStreams()
-			cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+			cmd := NewCmdAnnotate("neon", tf, iostreams)
 			cmd.SetOut(bufOut)
 			cmd.SetErr(bufOut)
 
@@ -499,7 +499,7 @@ func TestAnnotateObject(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	iostreams, _, bufOut, _ := genericiooptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	cmd.SetOut(bufOut)
 	cmd.SetErr(bufOut)
 	flags := NewAnnotateFlags(iostreams)
@@ -565,7 +565,7 @@ func TestAnnotateResourceVersion(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	iostreams, _, bufOut, _ := genericiooptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	cmd.SetOut(bufOut)
 	cmd.SetErr(bufOut)
 	//options := NewAnnotateOptions(iostreams)
@@ -620,7 +620,7 @@ func TestAnnotateObjectFromFile(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	iostreams, _, bufOut, _ := genericiooptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	cmd.SetOut(bufOut)
 	cmd.SetErr(bufOut)
 	flags := NewAnnotateFlags(iostreams)
@@ -652,7 +652,7 @@ func TestAnnotateLocal(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	iostreams, _, _, _ := genericiooptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	flags := NewAnnotateFlags(iostreams)
 	flags.Local = true
 	flags.Filenames = []string{"../../../testdata/controller.yaml"}
@@ -708,7 +708,7 @@ func TestAnnotateMultipleObjects(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	iostreams, _, _, _ := genericiooptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	cmd.SetOut(iostreams.Out)
 	cmd.SetErr(iostreams.Out)
 	flags := NewAnnotateFlags(iostreams)

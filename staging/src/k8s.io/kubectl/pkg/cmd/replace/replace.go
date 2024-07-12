@@ -52,20 +52,20 @@ var (
 		JSON and YAML formats are accepted. If replacing an existing resource, the
 		complete resource spec must be provided. This can be obtained by
 
-		    $ kubectl get TYPE NAME -o yaml`))
+		    $ neon get TYPE NAME -o yaml`))
 
 	replaceExample = templates.Examples(i18n.T(`
 		# Replace a pod using the data in pod.json
-		kubectl replace -f ./pod.json
+		neon replace -f ./pod.json
 
 		# Replace a pod based on the JSON passed into stdin
-		cat pod.json | kubectl replace -f -
+		cat pod.json | neon replace -f -
 
 		# Update a single-container pod's image version (tag) to v4
-		kubectl get pod mypod -o yaml | sed 's/\(image: myimage\):.*$/\1:v4/' | kubectl replace -f -
+		neon get pod mypod -o yaml | sed 's/\(image: myimage\):.*$/\1:v4/' | neon replace -f -
 
 		# Force replace, delete and then re-create the resource
-		kubectl replace --force -f ./pod.json`))
+		neon replace --force -f ./pod.json`))
 )
 
 var supportedSubresources = []string{"status", "scale"}

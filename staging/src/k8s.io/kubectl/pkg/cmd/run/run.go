@@ -62,31 +62,31 @@ var (
 
 	runExample = templates.Examples(i18n.T(`
 		# Start a nginx pod
-		kubectl run nginx --image=nginx
+		neon run nginx --image=nginx
 
 		# Start a hazelcast pod and let the container expose port 5701
-		kubectl run hazelcast --image=hazelcast/hazelcast --port=5701
+		neon run hazelcast --image=hazelcast/hazelcast --port=5701
 
 		# Start a hazelcast pod and set environment variables "DNS_DOMAIN=cluster" and "POD_NAMESPACE=default" in the container
-		kubectl run hazelcast --image=hazelcast/hazelcast --env="DNS_DOMAIN=cluster" --env="POD_NAMESPACE=default"
+		neon run hazelcast --image=hazelcast/hazelcast --env="DNS_DOMAIN=cluster" --env="POD_NAMESPACE=default"
 
 		# Start a hazelcast pod and set labels "app=hazelcast" and "env=prod" in the container
-		kubectl run hazelcast --image=hazelcast/hazelcast --labels="app=hazelcast,env=prod"
+		neon run hazelcast --image=hazelcast/hazelcast --labels="app=hazelcast,env=prod"
 
 		# Dry run; print the corresponding API objects without creating them
-		kubectl run nginx --image=nginx --dry-run=client
+		neon run nginx --image=nginx --dry-run=client
 
 		# Start a nginx pod, but overload the spec with a partial set of values parsed from JSON
-		kubectl run nginx --image=nginx --overrides='{ "apiVersion": "v1", "spec": { ... } }'
+		neon run nginx --image=nginx --overrides='{ "apiVersion": "v1", "spec": { ... } }'
 
 		# Start a busybox pod and keep it in the foreground, don't restart it if it exits
-		kubectl run -i -t busybox --image=busybox --restart=Never
+		neon run -i -t busybox --image=busybox --restart=Never
 
 		# Start the nginx pod using the default command, but use custom arguments (arg1 .. argN) for that command
-		kubectl run nginx --image=nginx -- <arg1> <arg2> ... <argN>
+		neon run nginx --image=nginx -- <arg1> <arg2> ... <argN>
 
 		# Start the nginx pod using a different command and custom arguments
-		kubectl run nginx --image=nginx --command -- <cmd> <arg1> ... <argN>`))
+		neon run nginx --image=nginx --command -- <cmd> <arg1> ... <argN>`))
 )
 
 const (
@@ -198,7 +198,7 @@ func addRunFlags(cmd *cobra.Command, opt *RunOptions) {
 	cmd.Flags().StringP("labels", "l", "", "Comma separated labels to apply to the pod. Will override previous values.")
 	cmd.Flags().BoolVarP(&opt.Interactive, "stdin", "i", opt.Interactive, "Keep stdin open on the container in the pod, even if nothing is attached.")
 	cmd.Flags().BoolVarP(&opt.TTY, "tty", "t", opt.TTY, "Allocate a TTY for the container in the pod.")
-	cmd.Flags().BoolVar(&opt.Attach, "attach", opt.Attach, "If true, wait for the Pod to start running, and then attach to the Pod as if 'kubectl attach ...' were called.  Default false, unless '-i/--stdin' is set, in which case the default is true. With '--restart=Never' the exit code of the container process is returned.")
+	cmd.Flags().BoolVar(&opt.Attach, "attach", opt.Attach, "If true, wait for the Pod to start running, and then attach to the Pod as if 'neon attach ...' were called.  Default false, unless '-i/--stdin' is set, in which case the default is true. With '--restart=Never' the exit code of the container process is returned.")
 	cmd.Flags().BoolVar(&opt.LeaveStdinOpen, "leave-stdin-open", opt.LeaveStdinOpen, "If the pod is started in interactive mode or with stdin, leave stdin open after the first attach completes. By default, stdin will be closed after the first attach completes.")
 	cmd.Flags().String("restart", "Always", i18n.T("The restart policy for this Pod.  Legal values [Always, OnFailure, Never]."))
 	cmd.Flags().Bool("command", false, "If true and extra arguments are present, use them as the 'command' field in the container, rather than the 'args' field which is the default.")

@@ -78,30 +78,30 @@ var (
 
 	canIExample = templates.Examples(`
 		# Check to see if I can create pods in any namespace
-		kubectl auth can-i create pods --all-namespaces
+		neon auth can-i create pods --all-namespaces
 
 		# Check to see if I can list deployments in my current namespace
-		kubectl auth can-i list deployments.apps
+		neon auth can-i list deployments.apps
 
 		# Check to see if service account "foo" of namespace "dev" can list pods
 		# in the namespace "prod".
 		# You must be allowed to use impersonation for the global option "--as".
-		kubectl auth can-i list pods --as=system:serviceaccount:dev:foo -n prod
+		neon auth can-i list pods --as=system:serviceaccount:dev:foo -n prod
 
 		# Check to see if I can do everything in my current namespace ("*" means all)
-		kubectl auth can-i '*' '*'
+		neon auth can-i '*' '*'
 
 		# Check to see if I can get the job named "bar" in namespace "foo"
-		kubectl auth can-i list jobs.batch/bar -n foo
+		neon auth can-i list jobs.batch/bar -n foo
 
 		# Check to see if I can read pod logs
-		kubectl auth can-i get pods --subresource=log
+		neon auth can-i get pods --subresource=log
 
 		# Check to see if I can access the URL /logs/
-		kubectl auth can-i get /logs/
+		neon auth can-i get /logs/
 
 		# List all allowed actions in namespace "foo"
-		kubectl auth can-i --list --namespace=foo`)
+		neon auth can-i --list --namespace=foo`)
 
 	resourceVerbs       = sets.NewString("get", "list", "watch", "create", "update", "patch", "delete", "deletecollection", "use", "bind", "impersonate", "*")
 	nonResourceURLVerbs = sets.NewString("get", "put", "post", "head", "options", "delete", "patch", "*")
@@ -182,7 +182,7 @@ func (o *CanIOptions) Complete(f cmdutil.Factory, args []string) error {
 			}
 		default:
 			errString := "you must specify two arguments: verb resource or verb resource/resourceName."
-			usageString := "See 'kubectl auth can-i -h' for help and examples."
+			usageString := "See 'neon auth can-i -h' for help and examples."
 			return errors.New(fmt.Sprintf("%s\n%s", errString, usageString))
 		}
 	}

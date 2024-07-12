@@ -55,10 +55,10 @@ var (
 
 	secretForDockerRegistryExample = templates.Examples(i18n.T(`
 		  # If you do not already have a .dockercfg file, create a dockercfg secret directly
-		  kubectl create secret docker-registry my-secret --docker-server=DOCKER_REGISTRY_SERVER --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAIL
+		  neon create secret docker-registry my-secret --docker-server=DOCKER_REGISTRY_SERVER --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAIL
 
 		  # Create a new secret named my-secret from ~/.docker/config.json
-		  kubectl create secret docker-registry my-secret --from-file=.dockerconfigjson=path/to/.docker/config.json`))
+		  neon create secret docker-registry my-secret --from-file=.dockerconfigjson=path/to/.docker/config.json`))
 )
 
 // DockerConfigJSON represents a local docker auth config file

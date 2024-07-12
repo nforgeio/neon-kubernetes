@@ -57,19 +57,19 @@ var (
 
 	eventsExample = templates.Examples(i18n.T(`
 	# List recent events in the default namespace
-	kubectl events
+	neon events
 
 	# List recent events in all namespaces
-	kubectl events --all-namespaces
+	neon events --all-namespaces
 
 	# List recent events for the specified pod, then wait for more events and list them as they arrive
-	kubectl events --for pod/web-pod-13je7 --watch
+	neon events --for pod/web-pod-13je7 --watch
 
 	# List recent events in YAML format
-	kubectl events -oyaml
+	neon events -oyaml
 
 	# List recent only events of type 'Warning' or 'Normal'
-	kubectl events --types=Warning,Normal`))
+	neon events --types=Warning,Normal`))
 )
 
 // EventsFlags directly reflect the information that CLI is gathering via flags.  They will be converted to Options, which

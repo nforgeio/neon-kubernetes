@@ -77,30 +77,30 @@ var (
 
 	debugExample = templates.Examples(i18n.T(`
 		# Create an interactive debugging session in pod mypod and immediately attach to it.
-		kubectl debug mypod -it --image=busybox
+		neon debug mypod -it --image=busybox
 
 		# Create an interactive debugging session for the pod in the file pod.yaml and immediately attach to it.
 		# (requires the EphemeralContainers feature to be enabled in the cluster)
-		kubectl debug -f pod.yaml -it --image=busybox
+		neon debug -f pod.yaml -it --image=busybox
 
 		# Create a debug container named debugger using a custom automated debugging image.
-		kubectl debug --image=myproj/debug-tools -c debugger mypod
+		neon debug --image=myproj/debug-tools -c debugger mypod
 
 		# Create a copy of mypod adding a debug container and attach to it
-		kubectl debug mypod -it --image=busybox --copy-to=my-debugger
+		neon debug mypod -it --image=busybox --copy-to=my-debugger
 
 		# Create a copy of mypod changing the command of mycontainer
-		kubectl debug mypod -it --copy-to=my-debugger --container=mycontainer -- sh
+		neon debug mypod -it --copy-to=my-debugger --container=mycontainer -- sh
 
 		# Create a copy of mypod changing all container images to busybox
-		kubectl debug mypod --copy-to=my-debugger --set-image=*=busybox
+		neon debug mypod --copy-to=my-debugger --set-image=*=busybox
 
 		# Create a copy of mypod adding a debug container and changing container images
-		kubectl debug mypod -it --copy-to=my-debugger --image=debian --set-image=app=app:debug,sidecar=sidecar:debug
+		neon debug mypod -it --copy-to=my-debugger --image=debian --set-image=app=app:debug,sidecar=sidecar:debug
 
 		# Create an interactive debugging session on a node and immediately attach to it.
 		# The container will run in the host namespaces and the host's filesystem will be mounted at /host
-		kubectl debug node/mynode -it --image=busybox
+		neon debug node/mynode -it --image=busybox
 `))
 )
 
@@ -178,7 +178,7 @@ func (o *DebugOptions) AddFlags(cmd *cobra.Command) {
 	cmdutil.AddJsonFilenameFlag(cmd.Flags(), &o.FilenameOptions.Filenames, "identifying the resource to debug")
 
 	cmd.Flags().BoolVar(&o.ArgsOnly, "arguments-only", o.ArgsOnly, i18n.T("If specified, everything after -- will be passed to the new container as Args instead of Command."))
-	cmd.Flags().BoolVar(&o.Attach, "attach", o.Attach, i18n.T("If true, wait for the container to start running, and then attach as if 'kubectl attach ...' were called.  Default false, unless '-i/--stdin' is set, in which case the default is true."))
+	cmd.Flags().BoolVar(&o.Attach, "attach", o.Attach, i18n.T("If true, wait for the container to start running, and then attach as if 'neon attach ...' were called.  Default false, unless '-i/--stdin' is set, in which case the default is true."))
 	cmd.Flags().StringVarP(&o.Container, "container", "c", o.Container, i18n.T("Container name to use for debug container."))
 	cmd.Flags().StringVar(&o.CopyTo, "copy-to", o.CopyTo, i18n.T("Create a copy of the target Pod with this name."))
 	cmd.Flags().BoolVar(&o.Replace, "replace", o.Replace, i18n.T("When used with '--copy-to', delete the original Pod."))

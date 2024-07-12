@@ -51,19 +51,19 @@ func TestBashCompletions(t *testing.T) {
 			name: "no args",
 			args: []string{},
 			expectedError: `Shell not specified.
-See 'kubectl completion -h' for help and examples`,
+See 'neon completion -h' for help and examples`,
 		},
 		{
 			name: "too many args",
 			args: []string{"bash", "zsh"},
 			expectedError: `Too many arguments. Expected only the shell type.
-See 'kubectl completion -h' for help and examples`,
+See 'neon completion -h' for help and examples`,
 		},
 		{
 			name: "unsupported shell",
 			args: []string{"foo"},
 			expectedError: `Unsupported shell type "foo".
-See 'kubectl completion -h' for help and examples`,
+See 'neon completion -h' for help and examples`,
 		},
 	}
 
@@ -71,7 +71,7 @@ See 'kubectl completion -h' for help and examples`,
 		t.Run(tc.name, func(tt *testing.T) {
 			_, _, out, _ := genericiooptions.NewTestIOStreams()
 			parentCmd := &cobra.Command{
-				Use: "kubectl",
+				Use: "neon",
 			}
 			cmd := NewCmdCompletion(out, defaultBoilerPlate)
 			parentCmd.AddCommand(cmd)

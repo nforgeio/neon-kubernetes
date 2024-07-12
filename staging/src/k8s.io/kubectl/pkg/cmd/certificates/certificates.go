@@ -130,7 +130,7 @@ func NewCmdCertificateApprove(restClientGetter genericclioptions.RESTClientGette
 		Long: templates.LongDesc(i18n.T(`
 		Approve a certificate signing request.
 
-		kubectl certificate approve allows a cluster admin to approve a certificate
+		neon certificate approve allows a cluster admin to approve a certificate
 		signing request (CSR). This action tells a certificate signing controller to
 		issue a certificate to the requester with the attributes requested in the CSR.
 
@@ -141,7 +141,7 @@ func NewCmdCertificateApprove(restClientGetter genericclioptions.RESTClientGette
 		`)),
 		Example: templates.Examples(i18n.T(`
 			# Approve CSR 'csr-sqgzp'
-			kubectl certificate approve csr-sqgzp
+			neon certificate approve csr-sqgzp
 		`)),
 		Run: func(cmd *cobra.Command, args []string) {
 			cmdutil.CheckErr(o.Complete(restClientGetter, cmd, args))
@@ -163,7 +163,7 @@ func (o *CertificateOptions) RunCertificateApprove(force bool) error {
 	return o.modifyCertificateCondition(
 		o.builder,
 		force,
-		addConditionIfNeeded(string(certificatesv1.CertificateDenied), string(certificatesv1.CertificateApproved), "KubectlApprove", "This CSR was approved by kubectl certificate approve."),
+		addConditionIfNeeded(string(certificatesv1.CertificateDenied), string(certificatesv1.CertificateApproved), "KubectlApprove", "This CSR was approved by neon certificate approve."),
 	)
 }
 
@@ -178,13 +178,13 @@ func NewCmdCertificateDeny(restClientGetter genericclioptions.RESTClientGetter, 
 		Long: templates.LongDesc(i18n.T(`
 		Deny a certificate signing request.
 
-		kubectl certificate deny allows a cluster admin to deny a certificate
+		neon certificate deny allows a cluster admin to deny a certificate
 		signing request (CSR). This action tells a certificate signing controller to
 		not to issue a certificate to the requester.
 		`)),
 		Example: templates.Examples(i18n.T(`
 			# Deny CSR 'csr-sqgzp'
-			kubectl certificate deny csr-sqgzp
+			neon certificate deny csr-sqgzp
 		`)),
 		Run: func(cmd *cobra.Command, args []string) {
 			cmdutil.CheckErr(o.Complete(restClientGetter, cmd, args))
@@ -206,7 +206,7 @@ func (o *CertificateOptions) RunCertificateDeny(force bool) error {
 	return o.modifyCertificateCondition(
 		o.builder,
 		force,
-		addConditionIfNeeded(string(certificatesv1.CertificateApproved), string(certificatesv1.CertificateDenied), "KubectlDeny", "This CSR was denied by kubectl certificate deny."),
+		addConditionIfNeeded(string(certificatesv1.CertificateApproved), string(certificatesv1.CertificateDenied), "KubectlDeny", "This CSR was denied by neon certificate deny."),
 	)
 }
 

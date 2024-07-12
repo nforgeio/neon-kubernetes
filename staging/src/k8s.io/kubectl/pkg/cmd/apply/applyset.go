@@ -359,7 +359,7 @@ func parseKindAnnotation(annotations map[string]string, mapper meta.RESTMapper) 
 
 		// The spec does not require this annotation. However, 'missing' means 'perform discovery'.
 		// We return an error because we do not currently support dynamic discovery in kubectl apply.
-		return nil, fmt.Errorf("kubectl requires the %q annotation to be set on all ApplySet parent objects", ApplySetGKsAnnotation)
+		return nil, fmt.Errorf("neon requires the %q annotation to be set on all ApplySet parent objects", ApplySetGKsAnnotation)
 	}
 	mappings := make(map[schema.GroupKind]*kindInfo)
 	// Annotation present but empty means that this is currently an empty set.

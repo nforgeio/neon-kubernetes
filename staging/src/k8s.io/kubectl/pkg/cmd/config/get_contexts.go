@@ -54,10 +54,10 @@ var (
 
 	getContextsExample = templates.Examples(`
 		# List all the contexts in your kubeconfig file
-		kubectl config get-contexts
+		neon config get-contexts
 
 		# Describe one context in your kubeconfig file
-		kubectl config get-contexts my-context`)
+		neon config get-contexts my-context`)
 )
 
 // NewCmdConfigGetContexts creates a command object for the "get-contexts" action, which
@@ -91,7 +91,7 @@ func NewCmdConfigGetContexts(streams genericiooptions.IOStreams, configAccess cl
 func (o *GetContextsOptions) Complete(cmd *cobra.Command, args []string) error {
 	supportedOutputTypes := sets.NewString("", "name")
 	if !supportedOutputTypes.Has(o.outputFormat) {
-		return fmt.Errorf("--output %v is not available in kubectl config get-contexts; resetting to default output format", o.outputFormat)
+		return fmt.Errorf("--output %v is not available in neon config get-contexts; resetting to default output format", o.outputFormat)
 	}
 	o.contextNames = args
 	o.nameOnly = false

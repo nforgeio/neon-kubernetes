@@ -69,16 +69,16 @@ var (
 		 1
 		Differences were found.
 		 >1
-		Kubectl or diff failed with an error.
+		neon or diff failed with an error.
 
 		Note: KUBECTL_EXTERNAL_DIFF, if used, is expected to follow that convention.`))
 
 	diffExample = templates.Examples(i18n.T(`
 		# Diff resources included in pod.json
-		kubectl diff -f pod.json
+		neon diff -f pod.json
 
 		# Diff file read from stdin
-		cat service.yaml | kubectl diff -f -`))
+		cat service.yaml | neon diff -f -`))
 )
 
 // Number of times we try to diff before giving-up

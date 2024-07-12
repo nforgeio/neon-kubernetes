@@ -49,16 +49,16 @@ var (
 
 	resourcesExample = templates.Examples(`
 		# Set a deployments nginx container cpu limits to "200m" and memory to "512Mi"
-		kubectl set resources deployment nginx -c=nginx --limits=cpu=200m,memory=512Mi
+		neon set resources deployment nginx -c=nginx --limits=cpu=200m,memory=512Mi
 
 		# Set the resource request and limits for all containers in nginx
-		kubectl set resources deployment nginx --limits=cpu=200m,memory=512Mi --requests=cpu=100m,memory=256Mi
+		neon set resources deployment nginx --limits=cpu=200m,memory=512Mi --requests=cpu=100m,memory=256Mi
 
 		# Remove the resource requests for resources on containers in nginx
-		kubectl set resources deployment nginx --limits=cpu=0,memory=0 --requests=cpu=0,memory=0
+		neon set resources deployment nginx --limits=cpu=0,memory=0 --requests=cpu=0,memory=0
 
 		# Print the result (in yaml format) of updating nginx container limits from a local, without hitting the server
-		kubectl set resources -f path/to/file.yaml --limits=cpu=200m,memory=512Mi --local -o yaml`)
+		neon set resources -f path/to/file.yaml --limits=cpu=200m,memory=512Mi --local -o yaml`)
 )
 
 // SetResourcesOptions is the start of the data required to perform the operation. As new fields are added, add them here instead of
@@ -115,7 +115,7 @@ func NewCmdResources(f cmdutil.Factory, streams genericiooptions.IOStreams) *cob
 		Use:                   "resources (-f FILENAME | TYPE NAME)  ([--limits=LIMITS & --requests=REQUESTS]",
 		DisableFlagsInUseLine: true,
 		Short:                 i18n.T("Update resource requests/limits on objects with pod templates"),
-		Long:                  fmt.Sprintf(resourcesLong, cmdutil.SuggestAPIResources("kubectl")),
+		Long:                  fmt.Sprintf(resourcesLong, cmdutil.SuggestAPIResources("neon")),
 		Example:               resourcesExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmdutil.CheckErr(o.Complete(f, cmd, args))

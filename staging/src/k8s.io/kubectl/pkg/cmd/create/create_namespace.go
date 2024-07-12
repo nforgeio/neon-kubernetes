@@ -42,7 +42,7 @@ var (
 
 	namespaceExample = templates.Examples(i18n.T(`
 	  # Create a new namespace named my-namespace
-	  kubectl create namespace my-namespace`))
+	  neon create namespace my-namespace`))
 )
 
 // NamespaceOptions is the options for 'create namespace' sub command

@@ -45,7 +45,7 @@ var (
 
 	pluginExample = templates.Examples(i18n.T(`
 		# List all available plugins
-		kubectl plugin list`))
+		neon plugin list`))
 
 	pluginListLong = templates.LongDesc(i18n.T(`
 		List all available plugin files on a user's PATH.
@@ -120,7 +120,7 @@ func (o *PluginListOptions) Run() error {
 	if len(plugins) > 0 {
 		fmt.Fprintf(o.Out, "The following compatible plugins are available:\n\n")
 	} else {
-		pluginErrors = append(pluginErrors, fmt.Errorf("error: unable to find any kubectl plugins in your PATH"))
+		pluginErrors = append(pluginErrors, fmt.Errorf("error: unable to find any neon plugins in your PATH"))
 	}
 
 	pluginWarnings := 0
@@ -224,7 +224,7 @@ func (v *CommandOverrideVerifier) Verify(path string) []error {
 	errors := []error{}
 
 	if isExec, err := isExecutable(path); err == nil && !isExec {
-		errors = append(errors, fmt.Errorf("warning: %s identified as a kubectl plugin, but it is not executable", path))
+		errors = append(errors, fmt.Errorf("warning: %s identified as a neon/kubectl plugin, but it is not executable", path))
 	} else if err != nil {
 		errors = append(errors, fmt.Errorf("error: unable to identify %s as an executable file: %v", path, err))
 	}
