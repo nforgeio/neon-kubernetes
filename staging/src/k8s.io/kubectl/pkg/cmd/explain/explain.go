@@ -54,8 +54,11 @@ var (
 		# Get the explanation for deployment in supported api versions
 		neon explain deployments --api-version=apps/v1
 
-		# Get the documentation of a specific field of a resource
-		neon explain pods.spec.containers`))
+		# Get the documentation of resources in different format
+		neon explain deployment --output=plaintext-openapiv2`))
+
+	plaintextTemplateName          = "plaintext"
+	plaintextOpenAPIV2TemplateName = "plaintext-openapiv2"
 )
 
 type ExplainOptions struct {
