@@ -144,24 +144,13 @@ func (o *Options) Run() error {
 
 	switch o.Output {
 	case "":
-		if o.Short {
-			fmt.Fprintf(o.Out, "Client Version: %s\n", versionInfo.ClientVersion.GitVersion)
-			fmt.Fprintf(o.Out, "Kustomize Version: %s\n", versionInfo.KustomizeVersion)
-			if versionInfo.ServerVersion != nil {
-				fmt.Fprintf(o.Out, "Server Version: %s\n", versionInfo.ServerVersion.GitVersion)
-			}
-			fmt.Fprintf(o.Out, "neon-cli Version: %s\n", versionInfo.NeonCliVersion)
-			fmt.Fprintf(o.Out, "Helm Version: %s\n", versionInfo.HelmVersion)
-		} else {
-			fmt.Fprintf(o.ErrOut, "WARNING: This version information is deprecated and will be replaced with the output from neon version --short.  Use --output=yaml|json to get the full version.\n")
-			fmt.Fprintf(o.Out, "Client Version: %#v\n", *versionInfo.ClientVersion)
-			fmt.Fprintf(o.Out, "Kustomize Version: %s\n", versionInfo.KustomizeVersion)
-			if versionInfo.ServerVersion != nil {
-				fmt.Fprintf(o.Out, "Server Version: %#v\n", *versionInfo.ServerVersion)
-			}
-			fmt.Fprintf(o.Out, "neon-cli Version: %s\n", versionInfo.NeonCliVersion)
-			fmt.Fprintf(o.Out, "Helm Version: %s\n", versionInfo.HelmVersion)
+		fmt.Fprintf(o.Out, "Client Version: %s\n", versionInfo.ClientVersion.GitVersion)
+		fmt.Fprintf(o.Out, "Kustomize Version: %s\n", versionInfo.KustomizeVersion)
+		if versionInfo.ServerVersion != nil {
+			fmt.Fprintf(o.Out, "Server Version: %s\n", versionInfo.ServerVersion.GitVersion)
 		}
+		fmt.Fprintf(o.Out, "neon-cli Version: %s\n", versionInfo.NeonCliVersion)
+		fmt.Fprintf(o.Out, "Helm Version: %s\n", versionInfo.HelmVersion)
 	case "yaml":
 		marshalled, err := yaml.Marshal(&versionInfo)
 		if err != nil {
