@@ -29,12 +29,13 @@ import (
 
 var (
 	prepareLong = templates.LongDesc(i18n.T(`
-		MAINTAINER ONLY: Provisions local and/or cloud infrastructure required to host a 
-		NEONKUBE cluster.  This includes provisioning networks, load balancers, virtual
-		machines, etc.  Once the infrastructure is ready, you'll use the [neon cluster setup ...]
-		command to actually setup the cluster.
+		Provisions local and/or cloud infrastructure required to host a NEONKUBE cluster.
+		This includes provisioning networks, load balancers, virtual machines, etc.  Once 
+		the infrastructure is ready, you'll use the [neon cluster setup ...] command to 
+		actually setup the cluster.
 		
-		NOTE: This is used by maintainers while debugging cluster setup.`))
+		NOTE: Use the [neon cluster deploy ...] command to combine the prepare and
+		      deploy operations.`))
 
 	prepareExample = templates.Examples(i18n.T(`
 	# Step 1: Prepare cluster infrastructure
@@ -55,8 +56,9 @@ type flags struct {
 	noTelemetry    bool
 	packageCache   string
 	quiet          bool
-	unredacted     bool
+	test           bool
 	useStaged      string
+	unredacted     bool
 }
 
 // NewCmdNeonClusterPrepare returns a Command instance for NEON-CLI 'cluster prepare' sub command
@@ -106,6 +108,9 @@ func NewCmdNeonClusterPrepare(f cmdutil.Factory, streams genericclioptions.IOStr
 			}
 			if flags.packageCache != "" {
 				neonCliArgs = append(neonCliArgs, "--package-cache"+flags.packageCache)
+			}
+			if flags.test {
+				neonCliArgs = append(neonCliArgs, "--test")
 			}
 			if flags.quiet {
 				neonCliArgs = append(neonCliArgs, "--quiet")
@@ -180,6 +185,14 @@ func NewCmdNeonClusterPrepare(f cmdutil.Factory, streams genericclioptions.IOStr
 
 	cmd.Flags().BoolVarP(&flags.quiet, "quiet", "", false,
 		i18n.T("Only print the currently executing step rather than displaying detailed setup status"))
+
+	cmd.Flags().BoolVarP(&flags.test, "test", "", false,
+		templates.LongDesc(i18n.T(`
+			MAINTAINER ONLY: Optionally specifies that additional
+			tests should be performed during cluster prepare to
+			verify various cluster functions.  This is typically
+			used only by maintainers during development and unit
+			testing.`)))
 
 	cmd.Flags().BoolVarP(&flags.unredacted, "unredacted", "", false,
 		templates.LongDesc(i18n.T(`

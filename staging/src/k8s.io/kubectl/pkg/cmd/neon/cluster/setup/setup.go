@@ -52,6 +52,7 @@ type flags struct {
 	maxParallel    int
 	noTelemetry    bool
 	quiet          bool
+	test           bool
 	unredacted     bool
 	uploadCharts   bool
 	useStaged      string
@@ -98,6 +99,9 @@ func NewCmdNeonClusterSetup(f cmdutil.Factory, streams genericclioptions.IOStrea
 			}
 			if flags.quiet {
 				neonCliArgs = append(neonCliArgs, "--quiet")
+			}
+			if flags.test {
+				neonCliArgs = append(neonCliArgs, "--test")
 			}
 			if flags.uploadCharts {
 				neonCliArgs = append(neonCliArgs, "--upload-charts")
@@ -157,6 +161,14 @@ func NewCmdNeonClusterSetup(f cmdutil.Factory, streams genericclioptions.IOStrea
 
 	cmd.Flags().BoolVarP(&flags.quiet, "quiet", "", false,
 		i18n.T("Only print the currently executing step rather than displaying detailed setup status"))
+
+	cmd.Flags().BoolVarP(&flags.test, "test", "", false,
+	templates.LongDesc(i18n.T(`
+		MAINTAINER ONLY: Optionally specifies that additional
+		tests should be performed during cluster prepare to
+		verify various cluster functions.  This is typically
+		used only by maintainers during development and unit
+		testing.`)))
 
 	cmd.Flags().BoolVarP(&flags.unredacted, "unredacted", "", false,
 		templates.LongDesc(i18n.T(`
