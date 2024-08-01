@@ -58,10 +58,6 @@ import (
 	"k8s.io/kubectl/pkg/cmd/get"
 	"k8s.io/kubectl/pkg/cmd/label"
 	"k8s.io/kubectl/pkg/cmd/logs"
- 	neon_cluster "k8s.io/kubectl/pkg/cmd/neon/cluster"
-	neon_helm "k8s.io/kubectl/pkg/cmd/neon/helm"
-	neon_login "k8s.io/kubectl/pkg/cmd/neon/login"
-	neon_logout "k8s.io/kubectl/pkg/cmd/neon/logout"
 	"k8s.io/kubectl/pkg/cmd/options"
 	"k8s.io/kubectl/pkg/cmd/patch"
 	"k8s.io/kubectl/pkg/cmd/plugin"
@@ -84,6 +80,11 @@ import (
 
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/kubectl/pkg/cmd/kustomize"
+
+ 	neon_cluster "k8s.io/kubectl/pkg/cmd/neon/cluster"
+	neon_helm "k8s.io/kubectl/pkg/cmd/neon/helm"
+	neon_login "k8s.io/kubectl/pkg/cmd/neon/login"
+	neon_logout "k8s.io/kubectl/pkg/cmd/neon/logout"
 )
 
 const kubectlCmdHeaders = "KUBECTL_COMMAND_HEADERS"
