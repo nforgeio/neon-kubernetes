@@ -112,7 +112,7 @@ func main() {
 	//    You have two options to Update() this Deployment:
 	//
 	//    1. Modify the "deployment" variable and call: Update(deployment).
-	//       This works like the "kubectl replace" command and it overwrites/loses changes
+	//       This works like the "neon replace" command and it overwrites/loses changes
 	//       made by other clients between you Create() and Update() the object.
 	//    2. Modify the "result" returned by Get() and retry Update(result) until
 	//       you no longer get a conflict error. This way, you can preserve changes made

@@ -724,14 +724,14 @@ msgid "dummy restart flag)"
 msgstr "dummy restart flag)"
 
 #: staging/src/k8s.io/kubectl/pkg/cmd/cmd.go:227
-msgid "kubectl controls the Kubernetes cluster manager"
-msgstr "kubectl controla o gerenciador de cluster do Kubernetes"
+msgid "neon controls the Kubernetes cluster manager"
+msgstr "neon controla o gerenciador de cluster do Kubernetes"
 
 #~ msgid ""
 #~ "\n"
 #~ "\t\t  # Create a ClusterRoleBinding for user1, user2, and group1 using "
 #~ "the cluster-admin ClusterRole\n"
-#~ "\t\t  kubectl create clusterrolebinding cluster-admin --"
+#~ "\t\t  neon create clusterrolebinding cluster-admin --"
 #~ "clusterrole=cluster-admin --user=user1 --user=user2 --group=group1"
 #~ msgstr ""
 #~ "\n"

@@ -139,7 +139,7 @@ func (t *Transport) rewriteURL(url *url.URL, sourceURL *url.URL, sourceRequestHo
 	//      the sourceURL.Host (i.e. req.URL.Host) is the endpoint IP address of the service. The
 	//      sourceRequestHost (i.e. req.Host) is the Host header that specifies the host on which the
 	//      URL is sought, which can be different from sourceURL.Host. For example, if user sends the
-	//      request through "kubectl proxy" locally (i.e. localhost:8001/api/v1/namespace/foo/service/bar/proxy/),
+	//      request through "neon proxy" locally (i.e. localhost:8001/api/v1/namespace/foo/service/bar/proxy/),
 	//      sourceRequestHost is "localhost:8001".
 	//
 	//      If the service's response URL contains non-empty host, and url.Host is equal to either sourceURL.Host

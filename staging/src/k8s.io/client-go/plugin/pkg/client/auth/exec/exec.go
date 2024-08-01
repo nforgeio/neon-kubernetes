@@ -292,7 +292,7 @@ func (a *Authenticator) UpdateTransportConfig(c *transport.Config) error {
 	// If a bearer token is present in the request - avoid the GetCert callback when
 	// setting up the transport, as that triggers the exec action if the server is
 	// also configured to allow client certificates for authentication. For requests
-	// like "kubectl get --token (token) pods" we should assume the intention is to
+	// like "neon get --token (token) pods" we should assume the intention is to
 	// use the provided token for authentication. The same can be said for when the
 	// user specifies basic auth or cert auth.
 	if c.HasTokenAuth() || c.HasBasicAuth() || c.HasCertAuth() {
@@ -337,7 +337,7 @@ func (r *roundTripper) WrappedRoundTripper() http.RoundTripper {
 
 func (r *roundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	// If a user has already set credentials, use that. This makes commands like
-	// "kubectl get --token (token) pods" work.
+	// "neon get --token (token) pods" work.
 	if req.Header.Get("Authorization") != "" {
 		return r.base.RoundTrip(req)
 	}

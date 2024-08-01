@@ -51,7 +51,7 @@ func withAuditInit(handler http.Handler, newAuditIDFunc func() string) http.Hand
 
 		// We echo the Audit-ID in to the response header.
 		// It's not guaranteed Audit-ID http header is sent for all requests.
-		// For example, when user run "kubectl exec", apiserver uses a proxy handler
+		// For example, when user run "neon exec", apiserver uses a proxy handler
 		// to deal with the request, users can only get http headers returned by kubelet node.
 		//
 		// This filter will also be used by other aggregated api server(s). For an aggregated API

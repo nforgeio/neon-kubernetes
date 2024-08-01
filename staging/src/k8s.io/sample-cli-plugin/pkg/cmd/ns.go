@@ -41,7 +41,7 @@ var (
 	%[1]s ns foo
 `
 
-	errNoContext = fmt.Errorf("no context is currently set, use %q to select a new one", "kubectl config use-context <context>")
+	errNoContext = fmt.Errorf("no context is currently set, use %q to select a new one", "neon config use-context <context>")
 )
 
 // NamespaceOptions provides information required to update
@@ -80,7 +80,7 @@ func NewCmdNamespace(streams genericiooptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:          "ns [new-namespace] [flags]",
 		Short:        "View or set the current namespace",
-		Example:      fmt.Sprintf(namespaceExample, "kubectl"),
+		Example:      fmt.Sprintf(namespaceExample, "neon"),
 		SilenceUsage: true,
 		RunE: func(c *cobra.Command, args []string) error {
 			if err := o.Complete(c, args); err != nil {

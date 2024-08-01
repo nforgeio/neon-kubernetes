@@ -725,8 +725,8 @@ msgid "dummy restart flag)"
 msgstr "flag di riavvio finto)"
 
 #: staging/src/k8s.io/kubectl/pkg/cmd/cmd.go:227
-msgid "kubectl controls the Kubernetes cluster manager"
-msgstr "Kubectl controlla il gestore cluster di Kubernetes"
+msgid "neon controls the Kubernetes cluster manager"
+msgstr "neon controlla il gestore cluster di Kubernetes"
 
 #~ msgid ""
 #~ "\n"

@@ -113,7 +113,7 @@ func TLSConfigFor(c *Config) (*tls.Config, error) {
 					--certificate-authority='':
 						Path to a cert file for the certificate authority
 
-					(retrievable from "kubectl options" command)
+					(retrievable from "neon options" command)
 					(suggested by @deads2k)
 
 				see also:
@@ -167,7 +167,7 @@ func TLSConfigFor(c *Config) (*tls.Config, error) {
 						--client-key='':
 							Path to a client key file for TLS
 
-						(retrievable from "kubectl options" command)
+						(retrievable from "neon options" command)
 						(suggested by @deads2k)
 
 					see also:

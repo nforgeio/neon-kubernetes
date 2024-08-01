@@ -34,7 +34,7 @@ const (
 	// audit the events according to the audit policy, no Audit-ID is returned. Also, for request to
 	// pods/exec, pods/attach, pods/proxy, kube-apiserver works like a proxy and redirect the request
 	// to kubelet node, users will only get http headers sent from kubelet node, so no Audit-ID is
-	// sent when users run command like "kubectl exec" or "kubectl attach".
+	// sent when users run command like "neon exec" or "neon attach".
 	HeaderAuditID = "Audit-ID"
 )
 
