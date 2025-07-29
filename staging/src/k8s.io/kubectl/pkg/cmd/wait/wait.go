@@ -59,13 +59,21 @@ var (
 
 	waitExample = templates.Examples(i18n.T(`
 		# Wait for the pod "busybox1" to contain the status condition of type "Ready"
-		kubectl wait --for=condition=Ready pod/busybox1
+		neon wait --for=condition=Ready pod/busybox1
 
+<<<<<<< HEAD
 		# The default value of status condition is true; you can wait for other targets after an equal delimiter (compared after Unicode simple case folding, which is a more general form of case-insensitivity)
 		kubectl wait --for=condition=Ready=false pod/busybox1
 
 		# Wait for the pod "busybox1" to contain the status phase to be "Running"
 		kubectl wait --for=jsonpath='{.status.phase}'=Running pod/busybox1
+=======
+		# The default value of status condition is true; you can wait for other targets after an equal delimiter (compared after Unicode simple case folding, which is a more general form of case-insensitivity):
+		neon wait --for=condition=Ready=false pod/busybox1
+
+		# Wait for the pod "busybox1" to contain the status phase to be "Running".
+		neon wait --for=jsonpath='{.status.phase}'=Running pod/busybox1
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 		# Wait for pod "busybox1" to be Ready
 		kubectl wait --for='jsonpath={.status.conditions[?(@.type=="Ready")].status}=True' pod/busybox1
@@ -78,8 +86,8 @@ var (
 		kubectl wait --for=create secret/busybox1 --timeout=30s
 
 		# Wait for the pod "busybox1" to be deleted, with a timeout of 60s, after having issued the "delete" command
-		kubectl delete pod/busybox1
-		kubectl wait --for=delete pod/busybox1 --timeout=60s`))
+		neon delete pod/busybox1
+		neon wait --for=delete pod/busybox1 --timeout=60s`))
 )
 
 // errNoMatchingResources is returned when there is no resources matching a query.

@@ -31,8 +31,8 @@ import (
 
 var (
 	getUsersExample = templates.Examples(`
-		# List the users that kubectl knows about
-		kubectl config get-users`)
+		# List the users that neon knows about
+		neon config get-users`)
 )
 
 // GetUsersOptions holds the data needed to run the command

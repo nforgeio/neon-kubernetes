@@ -27,8 +27,13 @@ import (
 )
 
 // NewCmdKustomize returns an adapted kustomize build command.
+<<<<<<< HEAD
 func NewCmdKustomize(streams genericiooptions.IOStreams) *cobra.Command {
 	h := build.MakeHelp("kubectl", "kustomize")
+=======
+func NewCmdKustomize(streams genericclioptions.IOStreams) *cobra.Command {
+	h := build.MakeHelp("neon", "kustomize")
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	return build.NewCmdBuild(
 		filesys.MakeFsOnDisk(),
 		&build.Help{

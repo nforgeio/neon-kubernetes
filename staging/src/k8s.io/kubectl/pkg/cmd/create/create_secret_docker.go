@@ -55,11 +55,19 @@ var (
 		by creating a dockercfg secret and attaching it to your service account.`))
 
 	secretForDockerRegistryExample = templates.Examples(i18n.T(`
+<<<<<<< HEAD
 		  # If you do not already have a .dockercfg file, create a dockercfg secret directly
 		  kubectl create secret docker-registry my-secret --docker-server=DOCKER_REGISTRY_SERVER --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAIL
 
 		  # Create a new secret named my-secret from ~/.docker/config.json
 		  kubectl create secret docker-registry my-secret --from-file=path/to/.docker/config.json`))
+=======
+		  # If you don't already have a .dockercfg file, you can create a dockercfg secret directly by using:
+		  neon create secret docker-registry my-secret --docker-server=DOCKER_REGISTRY_SERVER --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAIL
+
+		  # Create a new secret named my-secret from ~/.docker/config.json
+		  neon create secret docker-registry my-secret --from-file=.dockerconfigjson=path/to/.docker/config.json`))
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 )
 
 // DockerConfigJSON represents a local docker auth config file

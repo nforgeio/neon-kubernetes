@@ -46,7 +46,7 @@ var (
 
 	explainExamples = templates.Examples(i18n.T(`
 		# Get the documentation of the resource and its fields
-		kubectl explain pods
+		neon explain pods
 
 		# Get all the fields in the resource
 		kubectl explain pods --recursive
@@ -55,10 +55,14 @@ var (
 		kubectl explain deployments --api-version=apps/v1
 
 		# Get the documentation of a specific field of a resource
+<<<<<<< HEAD
 		kubectl explain pods.spec.containers
 
 		# Get the documentation of resources in different format
 		kubectl explain deployment --output=plaintext-openapiv2`))
+=======
+		neon explain pods.spec.containers`))
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 )
 
 const (

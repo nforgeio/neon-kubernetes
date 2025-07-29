@@ -86,18 +86,23 @@ func TestKubectlSubcommandShadowPlugin(t *testing.T) {
 		// just to retest them also when feature is enabled.
 		{
 			name:             "test that normal commands are able to be executed, when no plugin overshadows them",
+<<<<<<< HEAD
 			args:             []string{"kubectl", "config", "get-clusters"},
+=======
+			args:             []string{"neon", "get", "foo"},
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 			expectPlugin:     "",
 			expectPluginArgs: []string{},
 		},
 		{
 			name:             "test that a plugin executable is found based on command args",
-			args:             []string{"kubectl", "foo", "--bar"},
+			args:             []string{"neon", "foo", "--bar"},
 			expectPlugin:     "plugin/testdata/kubectl-foo",
 			expectPluginArgs: []string{"--bar"},
 		},
 		{
 			name: "test that a plugin does not execute over an existing command by the same name",
+<<<<<<< HEAD
 			args: []string{"kubectl", "version", "--client=true"},
 		},
 		{
@@ -211,50 +216,61 @@ func TestKubectlCommandHandlesPlugins(t *testing.T) {
 		{
 			name: "test that a plugin does not execute over an existing command by the same name",
 			args: []string{"kubectl", "version", "--client=true"},
+=======
+			args: []string{"neon", "version"},
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 		},
 		// The following tests make sure that commands added by Cobra cannot be shadowed by a plugin
 		// See https://github.com/kubernetes/kubectl/issues/1116
 		{
 			name: "test that a plugin does not execute over Cobra's help command",
-			args: []string{"kubectl", "help"},
+			args: []string{"neon", "help"},
 		},
 		{
 			name: "test that a plugin does not execute over Cobra's __complete command",
+<<<<<<< HEAD
 			args: []string{"kubectl", cobra.ShellCompRequestCmd, "de"},
 		},
 		{
 			name: "test that a plugin does not execute over Cobra's __completeNoDesc command",
 			args: []string{"kubectl", cobra.ShellCompNoDescRequestCmd, "de"},
+=======
+			args: []string{"neon", cobra.ShellCompRequestCmd},
+		},
+		{
+			name: "test that a plugin does not execute over Cobra's __completeNoDesc command",
+			args: []string{"neon", cobra.ShellCompNoDescRequestCmd},
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 		},
 		// The following tests make sure that commands added by Cobra cannot be shadowed by a plugin
 		// even when a flag is specified first.  This can happen when using aliases.
 		// See https://github.com/kubernetes/kubectl/issues/1119
 		{
 			name: "test that a flag does not break Cobra's help command",
-			args: []string{"kubectl", "--kubeconfig=/path/to/kubeconfig", "help"},
+			args: []string{"neon", "--kubeconfig=/path/to/kubeconfig", "help"},
 		},
 		{
 			name: "test that a flag does not break Cobra's __complete command",
-			args: []string{"kubectl", "--kubeconfig=/path/to/kubeconfig", cobra.ShellCompRequestCmd},
+			args: []string{"neon", "--kubeconfig=/path/to/kubeconfig", cobra.ShellCompRequestCmd},
 		},
 		{
 			name: "test that a flag does not break Cobra's __completeNoDesc command",
-			args: []string{"kubectl", "--kubeconfig=/path/to/kubeconfig", cobra.ShellCompNoDescRequestCmd},
+			args: []string{"neon", "--kubeconfig=/path/to/kubeconfig", cobra.ShellCompNoDescRequestCmd},
 		},
 		// As for the previous tests, an alias could add a flag without using the = form.
 		// We don't support this case as parsing the flags becomes quite complicated (flags
 		// that take a value, versus flags that don't)
 		// {
 		// 	name: "test that a flag with a space does not break Cobra's help command",
-		// 	args: []string{"kubectl", "--kubeconfig", "/path/to/kubeconfig", "help"},
+		// 	args: []string{"neon", "--kubeconfig", "/path/to/kubeconfig", "help"},
 		// },
 		// {
 		// 	name: "test that a flag with a space does not break Cobra's __complete command",
-		// 	args: []string{"kubectl", "--kubeconfig", "/path/to/kubeconfig", cobra.ShellCompRequestCmd},
+		// 	args: []string{"neon", "--kubeconfig", "/path/to/kubeconfig", cobra.ShellCompRequestCmd},
 		// },
 		// {
 		// 	name: "test that a flag with a space does not break Cobra's __completeNoDesc command",
-		// 	args: []string{"kubectl", "--kubeconfig", "/path/to/kubeconfig", cobra.ShellCompNoDescRequestCmd},
+		// 	args: []string{"neon", "--kubeconfig", "/path/to/kubeconfig", cobra.ShellCompNoDescRequestCmd},
 		// },
 	}
 
@@ -318,7 +334,12 @@ type testPluginHandler struct {
 }
 
 func (h *testPluginHandler) Lookup(filename string) (string, bool) {
+<<<<<<< HEAD
 	h.lookedup = true
+=======
+	// append supported plugin prefix to the filename
+	filename = fmt.Sprintf("%s-%s", "neon", filename)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	dir, err := os.Stat(h.pluginsDirectory)
 	if err != nil {
@@ -398,7 +419,7 @@ func TestKubectlCommandHeadersHooks(t *testing.T) {
 			addCmdHeaderHooks(cmds, kubeConfigFlags)
 			// Valdidate whether the hooks were added.
 			if testCase.addsHooks && kubeConfigFlags.WrapConfigFn == nil {
-				t.Error("after adding kubectl command header, expecting non-nil WrapConfigFn")
+				t.Error("after adding neon command header, expecting non-nil WrapConfigFn")
 			}
 			if !testCase.addsHooks && kubeConfigFlags.WrapConfigFn != nil {
 				t.Error("env var feature gate should have blocked setting WrapConfigFn")

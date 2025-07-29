@@ -1,0 +1,211 @@
+/*
+Copyright 2023 NEONFORGE LLC.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package neon_utility
+
+import (
+	"errors"
+	"fmt"
+	"os"
+	"os/exec"
+	"path"
+	"strings"
+	"time"
+)
+
+// NoFlagValue returns a special value that is used as the default value
+// for a Cobra command string option so we can distinguish between flags
+// like [--use-staged] and [--use-staged=VALUE].
+const NoFlagValue = "__empty_flag__"
+
+// DefaultClusterDeployParallel specifies the default number of cluster deployment
+// node operations that will be performed in parallel.
+const DefaultClusterDeployParallel = 6
+
+// CommandError writes a command line related error to STDOUT and then
+// terminates the process with exitcode=-1.
+func CommandError(message string) {
+	fmt.Fprintf(os.Stderr, "error: %v", message)
+	os.Exit(-1)
+}
+
+// ExecNeonCli locates the [neon-cli] executable and then executes it, passing
+// the specified arguments.  The current process will be terminated with a (-1)
+// exit code if the executable couldn't be located.  The standard input, output,
+// and error streams for the current process are redirected to the subprocess.
+//
+// IMPORTANT:
+//
+// This function does not return.  The current process exits, returning the 
+// exitcode returned by the subprocess.
+func ExecNeonCli(args []string) {
+	execInheritStreams(getNeonCliPath(), args)
+}
+
+// ExecHelm locates the [helm] executable and then executes it, passing the
+// the specified arguments.  The current process will be terminated with a (-1)
+// exit code if the executable couldn't be located.  The standard input, output,
+// and error streams for the current process are redirected to the subprocess.
+//
+// This function does not return.  The current process exits, returning the
+// exitcode returned by the subprocess.
+func ExecHelm(args []string) {
+
+	// Locate the [neon-cli.exe] binary, handling two possible scenarios:
+	//
+	// neon-cli/neon-desktop is installed on the current machine:
+	// ----------------------------------------------------------
+	// In this scenario, the NEON_INSTALL_FOLDER environment variable will
+	// be present and will reference the folder holding the application
+	// binaries.  Tools like Helm will be located in the [tools] subfolder.
+	//
+	// neon-cli/neon-desktop is not installed:
+	// ---------------------------------------
+	// In this case, a maintainer is probably debugging or is otherwise using
+	// [neon-cli] without it being formally installed.  We're going to execute
+	// the [neon-cli toolpath helm] command which will attempt to locate the
+	// Helm binary and try to download it when it's not found, returning its
+	// full path as the command output.
+
+	helmPath := ""
+	neonInstallFolder := os.Getenv("NEON_INSTALL_FOLDER")
+
+	if neonInstallFolder != "" {
+		helmPath = path.Join(neonInstallFolder, "tools", "helm.exe")
+	} else {
+		// Note that we can't use [NeonCliExec()] here because that redirects
+		// the standard streams and never returns.
+
+		neonCliPath := getNeonCliPath()
+
+		neonCliToolPathCmd := exec.Command(neonCliPath, "toolpath", "helm")
+		neonCliToolPathCmd.Env = os.Environ()
+		bytes, err := neonCliToolPathCmd.Output()
+		if err != nil {
+			panic(err)
+		}
+
+		helmPath = string(bytes[:])
+
+		if helmPath == "" {
+			panic(errors.New("cannot locate the helm binary"))
+		}
+
+		helmPath = strings.TrimSpace(string(bytes[:]))
+	}
+
+	execInheritStreams(helmPath, args)
+}
+
+// fileExists returns TRUE when a specified file exists.
+func fileExists(path string) bool {
+	info, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+
+	return !info.IsDir()
+}
+
+type pathInfo struct {
+	path      string
+	timestamp time.Time
+}
+
+// appendPathInfo appends a [pathInfo] struct to the paths slice when the file
+// at the specified path exists, returning the new slice.  If the file doesn't
+// exist, the function returns the unmodified slice.
+func appendPathInfo(paths []pathInfo, path string) []pathInfo {
+
+	if !fileExists(path) {
+		return paths
+	}
+
+	info, _ := os.Stat(path)
+
+	return append(paths, pathInfo{path: path, timestamp: info.ModTime()})
+}
+
+// getNeonCliPath attempts to locate the [neon-cli] binary.
+func getNeonCliPath() string {
+
+	// Locate the [neon-cli.exe] binary, handling two possible scenarios:
+	//
+	// neon-cli/neon-desktop IS installed on the current machine:
+	// ----------------------------------------------------------
+	// In this scenario, the NEON_INSTALL_FOLDER environment variable will
+	// be present and will reference the folder holding the application
+	// binaries, including [neon-cli], so we'll execute [neon-cli] from
+	// there.
+	//
+	// neon-cli/neon-desktop IS NOT installed:
+	// ---------------------------------------
+	// The NEON_INSTALL_FOLDER environment variable will not be present for
+	// this case.  We're going to look for the most recently built binary
+	// that exists at these locations and use that.
+	//
+	// $(NC_ROOT)/Build/neon-cli/neon-cli.exe
+	// $(NC_ROOT)/Tools/neon-cli/bin/Debug/net8.0-windows/win-x64/neon-cli.exe
+	// $(NC_ROOT)/Tools/neon-cli/bin/Release/net8.0-windows/win-x64/neon-cli.exe
+	// $(NK_ROOT)/Tools/neon-cli/bin/Debug/net8.0-windows/win-x64/neon-cli.exe
+	// $(NK_ROOT)/Tools/neon-cli/bin/Debug/net8.0-windows/win-x64/neon-cli.exe
+	//
+	// NOTE: We'll need to update the hardcoded subfolder paths when we
+	//       update .NET SDKs or we target another version of Windows.
+
+	const frameworkMoniker = "net8.0-windows"
+	const architecture = "win-x64"
+
+	// Create a slice with information about the candidate executables.
+
+	candidates := make([]pathInfo, 0)
+
+	neonInstallFolder := os.Getenv("NEON_INSTALL_FOLDER")
+	if neonInstallFolder != "" {
+		return path.Join(neonInstallFolder, "neon-cli.exe")
+	}
+    
+	ncRoot := os.Getenv("NC_ROOT")
+	if ncRoot != "" {
+
+		candidates = appendPathInfo(candidates, path.Join(ncRoot, "Build", "neon-cli", "neon-cli.exe"))
+		candidates = appendPathInfo(candidates, path.Join(ncRoot, "Tools", "neon-cli", "bin", "Debug", frameworkMoniker, architecture, "neon-cli.exe"))
+		candidates = appendPathInfo(candidates, path.Join(ncRoot, "Tools", "neon-cli", "bin", "Release", frameworkMoniker, architecture, "neon-cli.exe"))
+	}
+
+	nkRoot := os.Getenv("NK_ROOT")
+	if nkRoot != "" {
+
+		candidates = appendPathInfo(candidates, path.Join(nkRoot, "Tools", "neon-cli", "bin", "Debug", frameworkMoniker, architecture, "neon-cli.exe"))
+		candidates = appendPathInfo(candidates, path.Join(nkRoot, "Tools", "neon-cli", "bin", "Release", frameworkMoniker, architecture, "neon-cli.exe"))
+	}
+
+	if len(candidates) == 0 {
+		panic(errors.New("cannot locate the [neon-cli] binary"))
+	}
+
+	// Look for the candidate executable with the most recent timestamp.
+
+	latestCandidate := candidates[0]
+
+	for _, candidate := range candidates {
+		if candidate.timestamp.After(latestCandidate.timestamp) {
+			latestCandidate = candidate
+		}
+	}
+
+	return latestCandidate.path
+}

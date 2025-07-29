@@ -66,7 +66,7 @@ var (
 
 	resumeExample = templates.Examples(`
 		# Resume an already paused deployment
-		kubectl rollout resume deployment/nginx`)
+		neon rollout resume deployment/nginx`)
 )
 
 // NewRolloutResumeOptions returns an initialized ResumeOptions instance

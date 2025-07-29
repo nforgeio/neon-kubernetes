@@ -41,11 +41,16 @@ var (
 		Create a role binding for a particular role or cluster role.`))
 
 	roleBindingExample = templates.Examples(i18n.T(`
+<<<<<<< HEAD
 		# Create a role binding for user1, user2, and group1 using the admin cluster role
 		kubectl create rolebinding admin --clusterrole=admin --user=user1 --user=user2 --group=group1
 
 		# Create a role binding for service account monitoring:sa-dev using the admin role
 		kubectl create rolebinding admin-binding --role=admin --serviceaccount=monitoring:sa-dev`))
+=======
+		  # Create a role binding for user1, user2, and group1 using the admin cluster role
+		  neon create rolebinding admin --clusterrole=admin --user=user1 --user=user2 --group=group1`))
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 )
 
 // RoleBindingOptions holds the options for 'create rolebinding' sub command

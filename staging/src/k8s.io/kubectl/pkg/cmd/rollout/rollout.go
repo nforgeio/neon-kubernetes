@@ -33,16 +33,21 @@ var (
 
 	rolloutExample = templates.Examples(`
 		# Rollback to the previous deployment
-		kubectl rollout undo deployment/abc
+		neon rollout undo deployment/abc
 
 		# Check the rollout status of a daemonset
-		kubectl rollout status daemonset/foo
+		neon rollout status daemonset/foo
 
 		# Restart a deployment
-		kubectl rollout restart deployment/abc
+		neon rollout restart deployment/abc
 
+<<<<<<< HEAD
 		# Restart deployments with the 'app=nginx' label
 		kubectl rollout restart deployment --selector=app=nginx`)
+=======
+		# Restart deployments with the app=nginx label
+		neon rollout restart deployment --selector=app=nginx`)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	rolloutValidResources = dedent.Dedent(`
 		Valid resource types include:

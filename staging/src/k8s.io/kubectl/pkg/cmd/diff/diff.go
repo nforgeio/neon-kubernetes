@@ -75,10 +75,10 @@ var (
 
 	diffExample = templates.Examples(i18n.T(`
 		# Diff resources included in pod.json
-		kubectl diff -f pod.json
+		neon diff -f pod.json
 
 		# Diff file read from stdin
-		cat service.yaml | kubectl diff -f -`))
+		cat service.yaml | neon diff -f -`))
 )
 
 // Number of times we try to diff before giving-up

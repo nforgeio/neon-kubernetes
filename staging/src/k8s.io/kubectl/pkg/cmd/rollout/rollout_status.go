@@ -57,7 +57,7 @@ var (
 
 	statusExample = templates.Examples(`
 		# Watch the rollout status of a deployment
-		kubectl rollout status deployment/nginx`)
+		neon rollout status deployment/nginx`)
 )
 
 // RolloutStatusOptions holds the command-line options for 'rollout status' sub command

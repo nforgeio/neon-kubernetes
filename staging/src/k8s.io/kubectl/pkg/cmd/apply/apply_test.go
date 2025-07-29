@@ -129,6 +129,7 @@ func TestApplyExtraArgsFail(t *testing.T) {
 	f := cmdtesting.NewTestFactory()
 	defer f.Cleanup()
 
+<<<<<<< HEAD
 	cmd := &cobra.Command{}
 	flags := NewApplyFlags(genericiooptions.NewTestIOStreamsDiscard())
 	flags.AddFlags(cmd)
@@ -155,6 +156,11 @@ func TestAlphaEnablement(t *testing.T) {
 			flags.AddFlags(cmd)
 			require.NotNil(t, cmd.Flags().Lookup(flag), "flag %q should be registered with the %q feature enabled", flag, feature)
 		})
+=======
+	c := NewCmdApply("neon", f, genericclioptions.NewTestIOStreamsDiscard())
+	if validateApplyArgs(c, []string{"rc"}) == nil {
+		t.Fatalf("unexpected non-error")
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	}
 }
 
@@ -538,8 +544,13 @@ func TestRunApplyPrintsValidObjectList(t *testing.T) {
 	}
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 	ioStreams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdApply("kubectl", tf, ioStreams)
+=======
+	ioStreams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdApply("neon", tf, ioStreams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("filename", filenameCM)
 	cmd.Flags().Set("output", "json")
 	cmd.Flags().Set("dry-run", "client")
@@ -725,15 +736,20 @@ func TestApplyObjectWithoutAnnotation(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 	tf.OpenAPIV3ClientFunc = FakeOpenAPISchema.OpenAPIV3ClientFunc
 
+<<<<<<< HEAD
 	ioStreams, _, buf, errBuf := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdApply("kubectl", tf, ioStreams)
+=======
+	ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdApply("neon", tf, ioStreams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("filename", filenameRC)
 	cmd.Flags().Set("output", "name")
 	cmd.Run(cmd, []string{})
 
 	// uses the name from the file, not the response
 	expectRC := "replicationcontroller/" + nameRC + "\n"
-	expectWarning := fmt.Sprintf(warningNoLastAppliedConfigAnnotation, "replicationcontrollers/test-rc", corev1.LastAppliedConfigAnnotation, "kubectl")
+	expectWarning := fmt.Sprintf(warningNoLastAppliedConfigAnnotation, "replicationcontrollers/test-rc", corev1.LastAppliedConfigAnnotation, "neon")
 	if errBuf.String() != expectWarning {
 		t.Fatalf("unexpected non-warning: %s\nexpected: %s", errBuf.String(), expectWarning)
 	}
@@ -777,8 +793,13 @@ func TestOpenAPIV3PatchFeatureFlag(t *testing.T) {
 			tf.OpenAPIV3ClientFunc = AlwaysPanicSchema.OpenAPIV3ClientFunc
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 			ioStreams, _, buf, errBuf := genericiooptions.NewTestIOStreams()
 			cmd := NewCmdApply("kubectl", tf, ioStreams)
+=======
+			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
+			cmd := NewCmdApply("neon", tf, ioStreams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 			cmd.Flags().Set("filename", filenameRC)
 			cmd.Flags().Set("output", "name")
 			cmd.Run(cmd, []string{})
@@ -1352,8 +1373,13 @@ func TestApplyCSAMigration(t *testing.T) {
 			tf.OpenAPIV3ClientFunc = FakeOpenAPISchema.OpenAPIV3ClientFunc
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 			ioStreams, _, buf, errBuf := genericiooptions.NewTestIOStreams()
 			cmd := NewCmdApply("kubectl", tf, ioStreams)
+=======
+			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
+			cmd := NewCmdApply("neon", tf, ioStreams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 			cmd.Flags().Set("filename", filenameRC)
 			cmd.Flags().Set("output", "yaml")
 			cmd.Flags().Set("server-side", "true")
@@ -1445,11 +1471,19 @@ func TestApplyObjectOutput(t *testing.T) {
 					tf.OpenAPIV3ClientFunc = testingOpenAPISchema.OpenAPIV3ClientFunc
 					tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 					ioStreams, _, buf, errBuf := genericiooptions.NewTestIOStreams()
 					cmd := NewCmdApply("kubectl", tf, ioStreams)
 					cmd.Flags().Set("filename", filenameRC)
 					cmd.Flags().Set("output", "yaml")
 					cmd.Run(cmd, []string{})
+=======
+			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
+			cmd := NewCmdApply("neon", tf, ioStreams)
+			cmd.Flags().Set("filename", filenameRC)
+			cmd.Flags().Set("output", "yaml")
+			cmd.Run(cmd, []string{})
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 					if !strings.Contains(buf.String(), "test-rc") {
 						t.Fatalf("unexpected output: %s\nexpected to contain: %s", buf.String(), "test-rc")
@@ -1512,11 +1546,19 @@ func TestApplyRetry(t *testing.T) {
 					tf.OpenAPIV3ClientFunc = testingOpenAPISchema.OpenAPIV3ClientFunc
 					tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 					ioStreams, _, buf, errBuf := genericiooptions.NewTestIOStreams()
 					cmd := NewCmdApply("kubectl", tf, ioStreams)
 					cmd.Flags().Set("filename", filenameRC)
 					cmd.Flags().Set("output", "name")
 					cmd.Run(cmd, []string{})
+=======
+			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
+			cmd := NewCmdApply("neon", tf, ioStreams)
+			cmd.Flags().Set("filename", filenameRC)
+			cmd.Flags().Set("output", "name")
+			cmd.Run(cmd, []string{})
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 					if !retry || getCount != 2 {
 						t.Fatalf("apply didn't retry when get conflict error")
@@ -1563,8 +1605,13 @@ func TestApplyNonExistObject(t *testing.T) {
 	}
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 	ioStreams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdApply("kubectl", tf, ioStreams)
+=======
+	ioStreams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdApply("neon", tf, ioStreams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("filename", filenameRC)
 	cmd.Flags().Set("output", "name")
 	cmd.Run(cmd, []string{})
@@ -1616,8 +1663,13 @@ func TestApplyEmptyPatch(t *testing.T) {
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
 	// 1. apply non exist object
+<<<<<<< HEAD
 	ioStreams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdApply("kubectl", tf, ioStreams)
+=======
+	ioStreams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdApply("neon", tf, ioStreams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("filename", filenameRC)
 	cmd.Flags().Set("output", "name")
 	cmd.Run(cmd, []string{})
@@ -1631,8 +1683,13 @@ func TestApplyEmptyPatch(t *testing.T) {
 	}
 
 	// 2. test apply already exist object, will not send empty patch request
+<<<<<<< HEAD
 	ioStreams, _, buf, _ = genericiooptions.NewTestIOStreams()
 	cmd = NewCmdApply("kubectl", tf, ioStreams)
+=======
+	ioStreams, _, buf, _ = genericclioptions.NewTestIOStreams()
+	cmd = NewCmdApply("neon", tf, ioStreams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("filename", filenameRC)
 	cmd.Flags().Set("output", "name")
 	cmd.Run(cmd, []string{})
@@ -1690,8 +1747,13 @@ func testApplyMultipleObjects(t *testing.T, asList bool) {
 			tf.OpenAPIV3ClientFunc = testingOpenAPISchema.OpenAPIV3ClientFunc
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 			ioStreams, _, buf, errBuf := genericiooptions.NewTestIOStreams()
 			cmd := NewCmdApply("kubectl", tf, ioStreams)
+=======
+			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
+			cmd := NewCmdApply("neon", tf, ioStreams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 			if asList {
 				cmd.Flags().Set("filename", filenameRCSVC)
 			} else {
@@ -1789,10 +1851,17 @@ func TestApplyNULLPreservation(t *testing.T) {
 					tf.OpenAPIV3ClientFunc = testingOpenAPISchema.OpenAPIV3ClientFunc
 					tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 					ioStreams, _, buf, errBuf := genericiooptions.NewTestIOStreams()
 					cmd := NewCmdApply("kubectl", tf, ioStreams)
 					cmd.Flags().Set("filename", filenameDeployObjClientside)
 					cmd.Flags().Set("output", "name")
+=======
+			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
+			cmd := NewCmdApply("neon", tf, ioStreams)
+			cmd.Flags().Set("filename", filenameDeployObjClientside)
+			cmd.Flags().Set("output", "name")
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 					cmd.Run(cmd, []string{})
 
@@ -1857,11 +1926,19 @@ func TestUnstructuredApply(t *testing.T) {
 					tf.OpenAPIV3ClientFunc = testingOpenAPISchema.OpenAPIV3ClientFunc
 					tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 					ioStreams, _, buf, errBuf := genericiooptions.NewTestIOStreams()
 					cmd := NewCmdApply("kubectl", tf, ioStreams)
 					cmd.Flags().Set("filename", filenameWidgetClientside)
 					cmd.Flags().Set("output", "name")
 					cmd.Run(cmd, []string{})
+=======
+			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
+			cmd := NewCmdApply("neon", tf, ioStreams)
+			cmd.Flags().Set("filename", filenameWidgetClientside)
+			cmd.Flags().Set("output", "name")
+			cmd.Run(cmd, []string{})
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 					expected := "widget.unit-test.test.com/" + name + "\n"
 					if buf.String() != expected {
@@ -1928,11 +2005,19 @@ func TestUnstructuredIdempotentApply(t *testing.T) {
 					tf.OpenAPIV3ClientFunc = testingOpenAPISchema.OpenAPIV3ClientFunc
 					tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 					ioStreams, _, buf, errBuf := genericiooptions.NewTestIOStreams()
 					cmd := NewCmdApply("kubectl", tf, ioStreams)
 					cmd.Flags().Set("filename", filenameWidgetClientside)
 					cmd.Flags().Set("output", "name")
 					cmd.Run(cmd, []string{})
+=======
+			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
+			cmd := NewCmdApply("neon", tf, ioStreams)
+			cmd.Flags().Set("filename", filenameWidgetClientside)
+			cmd.Flags().Set("output", "name")
+			cmd.Run(cmd, []string{})
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 					expected := "widget.unit-test.test.com/widget\n"
 					if buf.String() != expected {
@@ -2180,12 +2265,21 @@ func TestForceApply(t *testing.T) {
 					tf.Client = tf.UnstructuredClient
 					tf.ClientConfigVal = &restclient.Config{}
 
+<<<<<<< HEAD
 					ioStreams, _, buf, errBuf := genericiooptions.NewTestIOStreams()
 					cmd := NewCmdApply("kubectl", tf, ioStreams)
 					cmd.Flags().Set("filename", filenameRC)
 					cmd.Flags().Set("output", "name")
 					cmd.Flags().Set("force", "true")
 					cmd.Run(cmd, []string{})
+=======
+			ioStreams, _, buf, errBuf := genericclioptions.NewTestIOStreams()
+			cmd := NewCmdApply("neon", tf, ioStreams)
+			cmd.Flags().Set("filename", filenameRC)
+			cmd.Flags().Set("output", "name")
+			cmd.Flags().Set("force", "true")
+			cmd.Run(cmd, []string{})
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 					for method, exp := range expected {
 						if exp != counts[method] {
@@ -2223,8 +2317,13 @@ func TestDontAllowForceApplyWithServerDryRun(t *testing.T) {
 
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 	ioStreams, _, _, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdApply("kubectl", tf, ioStreams)
+=======
+	ioStreams, _, _, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdApply("neon", tf, ioStreams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("filename", filenameRC)
 	cmd.Flags().Set("dry-run", "server")
 	cmd.Flags().Set("force", "true")
@@ -2251,8 +2350,13 @@ func TestDontAllowForceApplyWithServerSide(t *testing.T) {
 
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 	ioStreams, _, _, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdApply("kubectl", tf, ioStreams)
+=======
+	ioStreams, _, _, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdApply("neon", tf, ioStreams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("filename", filenameRC)
 	cmd.Flags().Set("server-side", "true")
 	cmd.Flags().Set("force", "true")
@@ -2273,8 +2377,13 @@ func TestDontAllowApplyWithPodGeneratedName(t *testing.T) {
 	defer tf.Cleanup()
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 	ioStreams, _, _, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdApply("kubectl", tf, ioStreams)
+=======
+	ioStreams, _, _, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdApply("neon", tf, ioStreams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("filename", filenamePodGeneratedName)
 	cmd.Flags().Set("dry-run", "client")
 	cmd.Run(cmd, []string{})

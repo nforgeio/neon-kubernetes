@@ -31,7 +31,7 @@ import (
 var (
 	deleteContextExample = templates.Examples(`
 		# Delete the context for the minikube cluster
-		kubectl config delete-context minikube`)
+		neon config delete-context minikube`)
 )
 
 // NewCmdConfigDeleteContext returns a Command instance for 'config delete-context' sub command
@@ -75,7 +75,7 @@ func runDeleteContext(out, errOut io.Writer, configAccess clientcmd.ConfigAccess
 	}
 
 	if config.CurrentContext == name {
-		fmt.Fprint(errOut, "warning: this removed your active context, use \"kubectl config use-context\" to select a different one\n")
+		fmt.Fprint(errOut, "warning: this removed your active context, use \"neon config use-context\" to select a different one\n")
 	}
 
 	delete(config.Contexts, name)

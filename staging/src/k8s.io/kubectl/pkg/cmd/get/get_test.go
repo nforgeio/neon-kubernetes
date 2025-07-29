@@ -101,10 +101,16 @@ func TestGetUnknownSchemaObject(t *testing.T) {
 	}
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"type", "foo"})
 
 	expected := []runtime.Object{cmdtesting.NewInternalType("", "", "foo")}
@@ -145,8 +151,13 @@ func TestGetSchemaObject(t *testing.T) {
 	}
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"replicationcontrollers", "foo"})
 
 	if !strings.Contains(buf.String(), "foo") {
@@ -154,6 +165,65 @@ func TestGetSchemaObject(t *testing.T) {
 	}
 }
 
+<<<<<<< HEAD
+=======
+func TestGetObjectsWithOpenAPIOutputFormatPresent(t *testing.T) {
+	pods, _, _ := cmdtesting.TestData()
+
+	tf := cmdtesting.NewTestFactory().WithNamespace("test")
+	defer tf.Cleanup()
+	codec := scheme.Codecs.LegacyCodec(scheme.Scheme.PrioritizedVersionsAllGroups()...)
+
+	// override the openAPISchema function to return custom output
+	// for Pod type.
+	tf.OpenAPISchemaFunc = testOpenAPISchemaData
+	tf.UnstructuredClient = &fake.RESTClient{
+		NegotiatedSerializer: resource.UnstructuredPlusDefaultContentConfig().NegotiatedSerializer,
+		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: cmdtesting.ObjBody(codec, &pods.Items[0])},
+	}
+
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+	cmd.Flags().Set(useOpenAPIPrintColumnFlagLabel, "true")
+	cmd.Run(cmd, []string{"pods", "foo"})
+
+	expected := `NAME   RSRC
+foo    10
+`
+	if e, a := expected, buf.String(); e != a {
+		t.Errorf("expected\n%v\ngot\n%v", e, a)
+	}
+}
+
+type FakeResources struct {
+	resources map[schema.GroupVersionKind]proto.Schema
+}
+
+func (f FakeResources) LookupResource(s schema.GroupVersionKind) proto.Schema {
+	return f.resources[s]
+}
+
+var _ openapi.Resources = &FakeResources{}
+
+func testOpenAPISchemaData() (openapi.Resources, error) {
+	return &FakeResources{
+		resources: map[schema.GroupVersionKind]proto.Schema{
+			{
+				Version: "v1",
+				Kind:    "Pod",
+			}: &proto.Primitive{
+				BaseSchema: proto.BaseSchema{
+					Extensions: map[string]interface{}{
+						"x-kubernetes-print-columns": "custom-columns=NAME:.metadata.name,RSRC:.metadata.resourceVersion",
+					},
+				},
+			},
+		},
+	}, nil
+}
+
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 func TestGetObjects(t *testing.T) {
 	pods, _, _ := cmdtesting.TestData()
 
@@ -166,10 +236,16 @@ func TestGetObjects(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: cmdtesting.ObjBody(codec, &pods.Items[0])},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"pods", "foo"})
 
 	expected := `NAME   AGE
@@ -192,10 +268,16 @@ func TestGetObjectSubresourceStatus(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: cmdtesting.ObjBody(codec, &replicationcontrollers.Items[0])},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("subresource", "status")
 	cmd.Run(cmd, []string{"replicationcontrollers", "rc1"})
 
@@ -220,10 +302,16 @@ func TestGetObjectSubresourceScale(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: replicationControllersScaleSubresourceTableObjBody(codec, replicationcontrollers.Items[0])},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("subresource", "scale")
 	cmd.Run(cmd, []string{"replicationcontrollers", "rc1"})
 
@@ -248,10 +336,16 @@ func TestGetTableObjects(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: podTableObjBody(codec, pods.Items[0])},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"pods", "foo"})
 
 	expected := `NAME   READY   STATUS   RESTARTS   AGE
@@ -274,10 +368,16 @@ func TestGetV1TableObjects(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: podV1TableObjBody(codec, pods.Items[0])},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"pods", "foo"})
 
 	expected := `NAME   READY   STATUS   RESTARTS   AGE
@@ -300,10 +400,16 @@ func TestGetObjectsShowKind(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: cmdtesting.ObjBody(codec, &pods.Items[0])},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("show-kind", "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
 
@@ -327,10 +433,16 @@ func TestGetTableObjectsShowKind(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: podTableObjBody(codec, pods.Items[0])},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("show-kind", "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
 
@@ -381,10 +493,16 @@ func TestGetMultipleResourceTypesShowKinds(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, bufErr := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, bufErr := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"all"})
 
 	expected := `NAME      AGE
@@ -443,10 +561,16 @@ func TestGetMultipleTableResourceTypesShowKinds(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, bufErr := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, bufErr := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"all"})
 
 	expected := `NAME      READY   STATUS   RESTARTS   AGE
@@ -505,10 +629,16 @@ func TestNoBlankLinesForGetMultipleTableResource(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, bufErr := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, bufErr := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	expected := `NAME      READY   STATUS   RESTARTS   AGE
 pod/foo   0/0              0          <unknown>
@@ -525,12 +655,12 @@ service/baz   ClusterIP   <none>       <none>        <none>    <unknown>
 		cmd.Run(cmd, cmdArgs)
 
 		if e, a := expected, buf.String(); e != a {
-			t.Errorf("[kubectl get %v] expected\n%v\ngot\n%v", cmdArgs, e, a)
+			t.Errorf("[neon get %v] expected\n%v\ngot\n%v", cmdArgs, e, a)
 		}
 
 		// The error out should be empty
 		if e, a := "", bufErr.String(); e != a {
-			t.Errorf("[kubectl get %v] expected\n%v\ngot\n%v", cmdArgs, e, a)
+			t.Errorf("[neon get %v] expected\n%v\ngot\n%v", cmdArgs, e, a)
 		}
 
 		buf.Reset()
@@ -575,10 +705,16 @@ func TestNoBlankLinesForGetAll(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, errbuf := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, errbuf := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"all"})
 
 	expected := ``
@@ -602,10 +738,16 @@ func TestNotFoundMessageForGetNonNamespacedResources(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: emptyTableObjBody(codec)},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, errbuf := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, errbuf := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"persistentvolumes"})
 
 	expected := ``
@@ -631,10 +773,16 @@ func TestGetObjectsShowLabels(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: cmdtesting.ObjBody(codec, &pods.Items[0])},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("show-labels", "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
 
@@ -658,10 +806,16 @@ func TestGetTableObjectsShowLabels(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: podTableObjBody(codec, pods.Items[0])},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("show-labels", "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
 
@@ -694,10 +848,16 @@ func TestGetEmptyTable(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: emptyTable},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, errbuf := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, errbuf := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"pods"})
 
 	expected := ``
@@ -745,10 +905,16 @@ func TestGetObjectIgnoreNotFound(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("ignore-not-found", "true")
 	cmd.Flags().Set("output", "yaml")
 	cmd.Run(cmd, []string{"pods", "nonexistentpod"})
@@ -772,8 +938,13 @@ func TestEmptyResult(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, _, errbuf := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
+=======
+	streams, _, _, errbuf := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	// we're assuming that an empty file is being passed from stdin
 	cmd.Flags().Set("filename", "-")
 	cmd.Run(cmd, []string{})
@@ -797,8 +968,13 @@ func TestEmptyResultJSON(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, outbuf, errbuf := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
+=======
+	streams, _, outbuf, errbuf := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	// we're assuming that an empty file is being passed from stdin
 	cmd.Flags().Set("filename", "-")
 	cmd.Flags().Set("output", "json")
@@ -861,10 +1037,16 @@ func TestGetSortedObjects(t *testing.T) {
 	}
 	tf.ClientConfigVal = &restclient.Config{ContentConfig: restclient.ContentConfig{GroupVersion: &corev1.SchemeGroupVersion}}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	// sorting with metadata.name
 	cmd.Flags().Set("sort-by", ".metadata.name")
@@ -901,10 +1083,16 @@ func TestGetSortedObjectsUnstructuredTable(t *testing.T) {
 	}
 	tf.ClientConfigVal = &restclient.Config{ContentConfig: restclient.ContentConfig{GroupVersion: &corev1.SchemeGroupVersion}}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	// sorting with metadata.name
 	cmd.Flags().Set("sort-by", ".metadata.name")
@@ -1134,10 +1322,16 @@ func TestGetObjectsIdentifiedByFile(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: cmdtesting.ObjBody(codec, &pods.Items[0])},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("filename", "../../../testdata/controller.yaml")
 	cmd.Run(cmd, []string{})
 
@@ -1161,10 +1355,16 @@ func TestGetTableObjectsIdentifiedByFile(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: podTableObjBody(codec, pods.Items[0])},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("filename", "../../../testdata/controller.yaml")
 	cmd.Run(cmd, []string{})
 
@@ -1188,10 +1388,16 @@ func TestGetListObjects(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: cmdtesting.ObjBody(codec, pods)},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"pods"})
 
 	expected := `NAME   AGE
@@ -1215,10 +1421,16 @@ func TestGetListTableObjects(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: podTableObjBody(codec, pods.Items...)},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"pods"})
 
 	expected := `NAME   READY   STATUS   RESTARTS   AGE
@@ -1242,10 +1454,16 @@ func TestGetListComponentStatus(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: componentStatusTableObjBody(codec, (*statuses).Items...)},
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"componentstatuses"})
 
 	expected := `NAME            STATUS      MESSAGE   ERROR
@@ -1292,10 +1510,16 @@ func TestGetMixedGenericObjects(t *testing.T) {
 	}
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().Set("output", "json")
 	cmd.Run(cmd, []string{"pods"})
 
@@ -1342,10 +1566,16 @@ func TestGetMultipleTypeObjects(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"pods,services"})
 
 	expected := `NAME      AGE
@@ -1382,10 +1612,16 @@ func TestGetMultipleTypeTableObjects(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Run(cmd, []string{"pods,services"})
 
 	expected := `NAME      READY   STATUS   RESTARTS   AGE
@@ -1423,10 +1659,16 @@ func TestGetMultipleTypeObjectsAsList(t *testing.T) {
 	}
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("output", "json")
 	cmd.Run(cmd, []string{"pods,services"})
@@ -1526,10 +1768,16 @@ func TestGetMultipleTypeObjectsWithLabelSelector(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("selector", "a=b")
 	cmd.Run(cmd, []string{"pods,services"})
@@ -1571,10 +1819,16 @@ func TestGetMultipleTypeTableObjectsWithLabelSelector(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("selector", "a=b")
 	cmd.Run(cmd, []string{"pods,services"})
@@ -1616,10 +1870,16 @@ func TestGetMultipleTypeObjectsWithFieldSelector(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("field-selector", "a=b")
 	cmd.Run(cmd, []string{"pods,services"})
@@ -1661,10 +1921,16 @@ func TestGetMultipleTypeTableObjectsWithFieldSelector(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("field-selector", "a=b")
 	cmd.Run(cmd, []string{"pods,services"})
@@ -1708,10 +1974,16 @@ func TestGetMultipleTypeObjectsWithDirectReference(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Run(cmd, []string{"services/bar", "node/foo"})
 
@@ -1753,10 +2025,16 @@ func TestGetMultipleTypeTableObjectsWithDirectReference(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Run(cmd, []string{"services/bar", "node/foo"})
 
@@ -1909,10 +2187,16 @@ func TestWatchLabelSelector(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("watch", "true")
 	cmd.Flags().Set("selector", "a=b")
@@ -1961,10 +2245,16 @@ func TestWatchTableLabelSelector(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("watch", "true")
 	cmd.Flags().Set("selector", "a=b")
@@ -2013,10 +2303,16 @@ func TestWatchFieldSelector(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("watch", "true")
 	cmd.Flags().Set("field-selector", "a=b")
@@ -2065,10 +2361,16 @@ func TestWatchTableFieldSelector(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("watch", "true")
 	cmd.Flags().Set("field-selector", "a=b")
@@ -2111,10 +2413,16 @@ func TestWatchResource(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("watch", "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
@@ -2156,10 +2464,16 @@ func TestWatchStatus(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("watch", "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
@@ -2203,10 +2517,16 @@ func TestWatchTableResource(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("watch", "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
@@ -2310,10 +2630,16 @@ func TestWatchResourceTable(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("watch", "true")
 	cmd.Run(cmd, []string{"pods"})
@@ -2523,10 +2849,16 @@ pod/foo
 				}),
 			}
 
+<<<<<<< HEAD
 			streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 			cmd := NewCmdGet("kubectl", tf, streams)
 			cmd.SetOut(buf)
 			cmd.SetErr(buf)
+=======
+			streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+			cmd := NewCmdGet("neon", tf, streams)
+			cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 			cmd.Flags().Set("watch", "true")
 			cmd.Flags().Set("all-namespaces", "true")
@@ -2570,10 +2902,16 @@ func TestWatchResourceIdentifiedByFile(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("watch", "true")
 	cmd.Flags().Set("filename", "../../../testdata/controller.yaml")
@@ -2615,10 +2953,16 @@ func TestWatchOnlyResource(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("watch-only", "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
@@ -2658,10 +3002,16 @@ func TestWatchOnlyTableResource(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("watch-only", "true")
 	cmd.Run(cmd, []string{"pods", "foo"})
@@ -2704,10 +3054,16 @@ func TestWatchOnlyList(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("watch-only", "true")
 	cmd.Run(cmd, []string{"pods"})
@@ -2750,10 +3106,16 @@ func TestWatchOnlyTableList(t *testing.T) {
 		}),
 	}
 
+<<<<<<< HEAD
 	streams, _, buf, _ := genericiooptions.NewTestIOStreams()
 	cmd := NewCmdGet("kubectl", tf, streams)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
+=======
+	streams, _, buf, _ := genericclioptions.NewTestIOStreams()
+	cmd := NewCmdGet("neon", tf, streams)
+	cmd.SetOutput(buf)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	cmd.Flags().Set("watch-only", "true")
 	cmd.Run(cmd, []string{"pods"})

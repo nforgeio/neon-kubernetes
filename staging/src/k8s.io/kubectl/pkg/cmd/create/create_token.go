@@ -79,22 +79,27 @@ var (
 
 	tokenExample = templates.Examples(`
 		# Request a token to authenticate to the kube-apiserver as the service account "myapp" in the current namespace
-		kubectl create token myapp
+		neon create token myapp
 
 		# Request a token for a service account in a custom namespace
-		kubectl create token myapp --namespace myns
+		neon create token myapp --namespace myns
 
 		# Request a token with a custom expiration
-		kubectl create token myapp --duration 10m
+		neon create token myapp --duration 10m
 
 		# Request a token with a custom audience
-		kubectl create token myapp --audience https://example.com
+		neon create token myapp --audience https://example.com
 
 		# Request a token bound to an instance of a Secret object
-		kubectl create token myapp --bound-object-kind Secret --bound-object-name mysecret
+		neon create token myapp --bound-object-kind Secret --bound-object-name mysecret
 
+<<<<<<< HEAD
 		# Request a token bound to an instance of a Secret object with a specific UID
 		kubectl create token myapp --bound-object-kind Secret --bound-object-name mysecret --bound-object-uid 0d4691ed-659b-4935-a832-355f77ee47cc
+=======
+		# Request a token bound to an instance of a Secret object with a specific uid
+		neon create token myapp --bound-object-kind Secret --bound-object-name mysecret --bound-object-uid 0d4691ed-659b-4935-a832-355f77ee47cc
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 `)
 )
 

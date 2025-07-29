@@ -59,19 +59,24 @@ var (
 
 	editExample = templates.Examples(i18n.T(`
 		# Edit the service named 'registry'
-		kubectl edit svc/registry
+		neon edit svc/registry
 
 		# Use an alternative editor
-		KUBE_EDITOR="nano" kubectl edit svc/registry
+		KUBE_EDITOR="nano" neon edit svc/registry
 
 		# Edit the job 'myjob' in JSON using the v1 API format
-		kubectl edit job.v1.batch/myjob -o json
+		neon edit job.v1.batch/myjob -o json
 
 		# Edit the deployment 'mydeployment' in YAML and save the modified config in its annotation
-		kubectl edit deployment/mydeployment -o yaml --save-config
+		neon edit deployment/mydeployment -o yaml --save-config
 
+<<<<<<< HEAD
 		# Edit the 'status' subresource for the 'mydeployment' deployment
 		kubectl edit deployment mydeployment --subresource='status'`))
+=======
+		# Edit the deployment/mydeployment's status subresource
+		neon edit deployment mydeployment --subresource='status'`))
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 )
 
 // NewCmdEdit creates the `edit` command

@@ -81,19 +81,24 @@ var (
 	taintExample = templates.Examples(i18n.T(`
 		# Update node 'foo' with a taint with key 'dedicated' and value 'special-user' and effect 'NoSchedule'
 		# If a taint with that key and effect already exists, its value is replaced as specified
-		kubectl taint nodes foo dedicated=special-user:NoSchedule
+		neon taint nodes foo dedicated=special-user:NoSchedule
 
 		# Remove from node 'foo' the taint with key 'dedicated' and effect 'NoSchedule' if one exists
-		kubectl taint nodes foo dedicated:NoSchedule-
+		neon taint nodes foo dedicated:NoSchedule-
 
 		# Remove from node 'foo' all the taints with key 'dedicated'
-		kubectl taint nodes foo dedicated-
+		neon taint nodes foo dedicated-
 
+<<<<<<< HEAD
 		# Add a taint with key 'dedicated' on nodes having label myLabel=X
 		kubectl taint node -l myLabel=X  dedicated=foo:PreferNoSchedule
+=======
+		# Add a taint with key 'dedicated' on nodes having label mylabel=X
+		neon taint node -l myLabel=X  dedicated=foo:PreferNoSchedule
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 		# Add to node 'foo' a taint with key 'bar' and no value
-		kubectl taint nodes foo bar:NoSchedule`))
+		neon taint nodes foo bar:NoSchedule`))
 )
 
 func NewCmdTaint(f cmdutil.Factory, streams genericiooptions.IOStreams) *cobra.Command {

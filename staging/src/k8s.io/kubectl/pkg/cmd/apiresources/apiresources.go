@@ -40,22 +40,26 @@ import (
 var (
 	apiresourcesExample = templates.Examples(`
 		# Print the supported API resources
-		kubectl api-resources
+		neon api-resources
 
 		# Print the supported API resources with more information
-		kubectl api-resources -o wide
+		neon api-resources -o wide
 
 		# Print the supported API resources sorted by a column
-		kubectl api-resources --sort-by=name
+		neon api-resources --sort-by=name
 
 		# Print the supported namespaced resources
-		kubectl api-resources --namespaced=true
+		neon api-resources --namespaced=true
 
 		# Print the supported non-namespaced resources
-		kubectl api-resources --namespaced=false
+		neon api-resources --namespaced=false
 
 		# Print the supported API resources with a specific APIGroup
+<<<<<<< HEAD
 		kubectl api-resources --api-group=rbac.authorization.k8s.io`)
+=======
+		neon api-resources --api-group=extensions`)
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 )
 
 // APIResourceOptions is the start of the data required to perform the operation.

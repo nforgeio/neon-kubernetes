@@ -42,7 +42,11 @@ func NewCmdConfig(restClientGetter genericclioptions.RESTClientGetter, pathOptio
 		DisableFlagsInUseLine: true,
 		Short:                 i18n.T("Modify kubeconfig files"),
 		Long: templates.LongDesc(i18n.T(`
+<<<<<<< HEAD
 			Modify kubeconfig files using subcommands like "kubectl config set current-context my-context".
+=======
+			Modify kubeconfig files using subcommands like "neon config set current-context my-context"
+>>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 			The loading order follows these rules:
 
