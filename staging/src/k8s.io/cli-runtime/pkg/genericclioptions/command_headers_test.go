@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var kubectlCmd = &cobra.Command{Use: "kubectl"}
+var kubectlCmd = &cobra.Command{Use: "neon"}
 var applyCmd = &cobra.Command{Use: "apply"}
 var createCmd = &cobra.Command{Use: "create"}
 var secretCmd = &cobra.Command{Use: "secret"}
@@ -42,25 +42,25 @@ func TestParseCommandHeaders(t *testing.T) {
 		"Single kubectl command example": {
 			commands: []*cobra.Command{kubectlCmd},
 			expectedHeaders: map[string]string{
-				kubectlCommandHeader: "kubectl",
+				kubectlCommandHeader: "neon",
 			},
 		},
 		"Simple kubectl apply example": {
 			commands: []*cobra.Command{kubectlCmd, applyCmd},
 			expectedHeaders: map[string]string{
-				kubectlCommandHeader: "kubectl apply",
+				kubectlCommandHeader: "neon apply",
 			},
 		},
 		"Kubectl auth reconcile example": {
 			commands: []*cobra.Command{kubectlCmd, authCmd, reconcileCmd},
 			expectedHeaders: map[string]string{
-				kubectlCommandHeader: "kubectl auth reconcile",
+				kubectlCommandHeader: "neon auth reconcile",
 			},
 		},
 		"Long kubectl create secret generic example": {
 			commands: []*cobra.Command{kubectlCmd, createCmd, secretCmd, genericCmd},
 			expectedHeaders: map[string]string{
-				kubectlCommandHeader: "kubectl create secret generic",
+				kubectlCommandHeader: "neon create secret generic",
 			},
 		},
 	}
@@ -72,7 +72,7 @@ func TestParseCommandHeaders(t *testing.T) {
 			ch.ParseCommandHeaders(rootCmd, []string{})
 			// Unique session ID header should always be present.
 			if _, found := ch.Headers[kubectlSessionHeader]; !found {
-				t.Errorf("expected kubectl session header (%s) is missing", kubectlSessionHeader)
+				t.Errorf("expected neon session header (%s) is missing", kubectlSessionHeader)
 			}
 			// All expected headers must be present; but there may be extras.
 			for key, expectedValue := range tc.expectedHeaders {

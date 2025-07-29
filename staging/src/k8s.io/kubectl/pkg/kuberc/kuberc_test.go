@@ -2645,31 +2645,31 @@ func TestGetExplicitKuberc(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			args:     []string{"kubectl", "get", "--kuberc", "/tmp/filepath"},
+			args:     []string{"neon", "get", "--kuberc", "/tmp/filepath"},
 			expected: "/tmp/filepath",
 		},
 		{
-			args:     []string{"kubectl", "get", "--kuberc=/tmp/filepath"},
+			args:     []string{"neon", "get", "--kuberc=/tmp/filepath"},
 			expected: "/tmp/filepath",
 		},
 		{
-			args:     []string{"kubectl", "get", "--kuberc=/tmp/filepath", "--", "/bin/bash", "--kuberc", "anotherpath"},
+			args:     []string{"neon", "get", "--kuberc=/tmp/filepath", "--", "/bin/bash", "--kuberc", "anotherpath"},
 			expected: "/tmp/filepath",
 		},
 		{
-			args:     []string{"kubectl", "get", "--kuberc", "/tmp/filepath", "--", "/bin/bash", "--kuberc", "anotherpath"},
+			args:     []string{"neon", "get", "--kuberc", "/tmp/filepath", "--", "/bin/bash", "--kuberc", "anotherpath"},
 			expected: "/tmp/filepath",
 		},
 		{
-			args:        []string{"kubectl", "get", "--kuberc="},
+			args:        []string{"neon", "get", "--kuberc="},
 			expectedErr: fmt.Errorf("kuberc file is not found"),
 		},
 		{
-			args:        []string{"kubectl", "get", "--kuberc"},
+			args:        []string{"neon", "get", "--kuberc"},
 			expectedErr: fmt.Errorf("kuberc file is not found"),
 		},
 		{
-			args:     []string{"kubectl", "get", "--", "/bin/bash", "--kuberc", "anotherpath"},
+			args:     []string{"neon", "get", "--", "/bin/bash", "--kuberc", "anotherpath"},
 			expected: "",
 		},
 	}

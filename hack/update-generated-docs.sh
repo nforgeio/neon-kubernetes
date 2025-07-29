@@ -58,7 +58,7 @@ generate_docs() {
   genman "${dest}/docs/man/man1/" "kube-proxy"
   genman "${dest}/docs/man/man1/" "kube-scheduler"
   genman "${dest}/docs/man/man1/" "kubelet"
-  genman "${dest}/docs/man/man1/" "kubectl"
+  genman "${dest}/docs/man/man1/" "neon"
   genman "${dest}/docs/man/man1/" "kubeadm"
 
   mkdir -p "${dest}/docs/yaml/kubectl/"

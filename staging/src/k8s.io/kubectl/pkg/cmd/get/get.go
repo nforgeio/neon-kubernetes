@@ -130,19 +130,14 @@ var (
 		# List one or more resources by their type and names
 		neon get rc/web service/frontend pods/web-pod-13je7
 
-<<<<<<< HEAD
 		# List the 'status' subresource for a single pod
-		kubectl get pod web-pod-13je7 --subresource status
+		neon get pod web-pod-13je7 --subresource status
 
 		# List all deployments in namespace 'backend'
-		kubectl get deployments.apps --namespace backend
+		neon get deployments.apps --namespace backend
 
 		# List all pods existing in all namespaces
-		kubectl get pods --all-namespaces`))
-=======
-		# List status subresource for a single pod.
-		neon get pod web-pod-13je7 --subresource status`))
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+		neon get pods --all-namespaces`))
 )
 
 const (

@@ -74,13 +74,8 @@ var (
 		rest of the resource.
 
 		After a CustomResourceDefinition is deleted, invalidation of discovery cache may take up
-<<<<<<< HEAD
 		to 6 hours. If you don't want to wait, you might want to run "kubectl api-resources" to refresh
 		the discovery cache.`))
-=======
-		to 10 minutes. If you don't want to wait, you might want to run "neon api-resources"
-		to refresh the discovery cache.`))
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 	deleteExample = templates.Examples(i18n.T(`
 		# Delete a pod using the type and name specified in pod.json
@@ -89,13 +84,8 @@ var (
 		# Delete resources from a directory containing kustomization.yaml - e.g. dir/kustomization.yaml
 		neon delete -k dir
 
-<<<<<<< HEAD
 		# Delete resources from all files that end with '.json'
-		kubectl delete -f '*.json'
-=======
-		# Delete resources from all files that end with '.json' - i.e. expand wildcard characters in file names
-		neon apply -f '*.json'
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+		neon delete -f '*.json'
 
 		# Delete a pod based on the type and name in the JSON passed into stdin
 		cat pod.json | neon delete -f -
@@ -113,14 +103,10 @@ var (
 		neon delete pod foo --force
 
 		# Delete all pods
-<<<<<<< HEAD
-		kubectl delete pods --all
+		neon delete pods --all
 
 		# Delete all pods only if the user confirms the deletion
-		kubectl delete pods --all --interactive`))
-=======
-		neon delete pods --all`))
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+		neon delete pods --all --interactive`))
 )
 
 type DeleteOptions struct {

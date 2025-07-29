@@ -63,13 +63,8 @@ var (
 
 	ingressExample = templates.Examples(i18n.T(`
 		# Create a single ingress called 'simple' that directs requests to foo.com/bar to svc
-<<<<<<< HEAD
 		# svc1:8080 with a TLS secret "my-cert"
-		kubectl create ingress simple --rule="foo.com/bar=svc1:8080,tls=my-cert"
-=======
-		# svc1:8080 with a tls secret "my-cert"
 		neon create ingress simple --rule="foo.com/bar=svc1:8080,tls=my-cert"
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 		# Create a catch all ingress of "/path" pointing to service svc:port and Ingress Class as "otheringress"
 		neon create ingress catch-all --class=otheringress --rule="/path=svc:port"

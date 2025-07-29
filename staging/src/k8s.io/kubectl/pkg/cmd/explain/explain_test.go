@@ -59,17 +59,17 @@ func TestExplainInvalidArgs(t *testing.T) {
 
 	flags := explain.NewExplainFlags(genericiooptions.NewTestIOStreamsDiscard())
 
-	opts, err := flags.ToOptions(tf, "kubectl", []string{})
+	opts, err := flags.ToOptions(tf, "neon", []string{})
 	if err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
 
 	err = opts.Validate()
-	if err.Error() != "You must specify the type of resource to explain. Use \"kubectl api-resources\" for a complete list of supported resources.\n" {
+	if err.Error() != "You must specify the type of resource to explain. Use \"neon api-resources\" for a complete list of supported resources.\n" {
 		t.Error("unexpected non-error")
 	}
 
-	opts, err = flags.ToOptions(tf, "kubectl", []string{"resource1", "resource2"})
+	opts, err = flags.ToOptions(tf, "neon", []string{"resource1", "resource2"})
 	if err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
@@ -86,7 +86,7 @@ func TestExplainNotExistResource(t *testing.T) {
 
 	flags := explain.NewExplainFlags(genericiooptions.NewTestIOStreamsDiscard())
 
-	opts, err := flags.ToOptions(tf, "kubectl", []string{"foo"})
+	opts, err := flags.ToOptions(tf, "neon", []string{"foo"})
 	if err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
@@ -243,7 +243,7 @@ func runExplainTestCases(t *testing.T, cases []explainTestCase) {
 					tf.OpenAPIV3ClientFunc = openapiV3SchemaFn
 				}
 
-				cmd := explain.NewCmdExplain("kubectl", tf, ioStreams)
+				cmd := explain.NewCmdExplain("neon", tf, ioStreams)
 				for k, v := range tcase.Flags {
 					if err := cmd.Flags().Set(k, v); err != nil {
 						t.Fatal(err)
@@ -299,7 +299,7 @@ func TestExplainOpenAPIV3DoesNotLoadOpenAPIV2Specs(t *testing.T) {
 	tf.OpenAPISchemaFunc = panicOpenAPISchemaFn
 
 	// Explain the following resources, validating the command does not panic.
-	cmd := explain.NewCmdExplain("kubectl", tf, genericiooptions.NewTestIOStreamsDiscard())
+	cmd := explain.NewCmdExplain("neon", tf, genericiooptions.NewTestIOStreamsDiscard())
 	resources := []string{"pods", "services", "endpoints", "configmaps"}
 	for _, resource := range resources {
 		cmd.Run(cmd, []string{resource})

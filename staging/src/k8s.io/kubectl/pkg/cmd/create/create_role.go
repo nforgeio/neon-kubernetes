@@ -51,11 +51,7 @@ var (
 		neon create role pod-reader --verb=get --resource=pods --resource-name=readablepod --resource-name=anotherpod
 
 		# Create a role named "foo" with API Group specified
-<<<<<<< HEAD
-		kubectl create role foo --verb=get,list,watch --resource=rs.apps
-=======
-		neon create role foo --verb=get,list,watch --resource=rs.extensions
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+		neon create role foo --verb=get,list,watch --resource=rs.apps
 
 		# Create a role named "foo" with SubResource specified
 		neon create role foo --verb=get,list,watch --resource=pods,pods/status`))

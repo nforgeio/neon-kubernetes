@@ -440,16 +440,10 @@ func TestAnnotateErrors(t *testing.T) {
 
 			tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
-<<<<<<< HEAD
 			iostreams, _, bufOut, bufErr := genericiooptions.NewTestIOStreams()
-			cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+			cmd := NewCmdAnnotate("neon", tf, iostreams)
 			cmd.SetOut(bufOut)
 			cmd.SetErr(bufOut)
-=======
-			iostreams, _, bufOut, bufErr := genericclioptions.NewTestIOStreams()
-			cmd := NewCmdAnnotate("neon", tf, iostreams)
-			cmd.SetOutput(bufOut)
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 			flags := NewAnnotateFlags(iostreams)
 			_, err := flags.ToOptions(tf, cmd, testCase.args)
@@ -504,18 +498,11 @@ func TestAnnotateObject(t *testing.T) {
 	}
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
-<<<<<<< HEAD
 	iostreams, _, bufOut, _ := genericiooptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	cmd.SetOut(bufOut)
 	cmd.SetErr(bufOut)
 	flags := NewAnnotateFlags(iostreams)
-=======
-	iostreams, _, bufOut, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("neon", tf, iostreams)
-	cmd.SetOutput(bufOut)
-	options := NewAnnotateOptions(iostreams)
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	args := []string{"pods/foo", "a=b", "c-"}
 
 	options, err := flags.ToOptions(tf, cmd, args)
@@ -577,21 +564,13 @@ func TestAnnotateResourceVersion(t *testing.T) {
 	}
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
-<<<<<<< HEAD
 	iostreams, _, bufOut, _ := genericiooptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	cmd.SetOut(bufOut)
 	cmd.SetErr(bufOut)
 	//options := NewAnnotateOptions(iostreams)
 	flags := NewAnnotateFlags(iostreams)
 	flags.resourceVersion = "10"
-=======
-	iostreams, _, bufOut, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("neon", tf, iostreams)
-	cmd.SetOutput(bufOut)
-	options := NewAnnotateOptions(iostreams)
-	options.resourceVersion = "10"
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	args := []string{"pods/foo", "a=b"}
 
 	options, err := flags.ToOptions(tf, cmd, args)
@@ -640,20 +619,12 @@ func TestAnnotateObjectFromFile(t *testing.T) {
 	}
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
-<<<<<<< HEAD
 	iostreams, _, bufOut, _ := genericiooptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	cmd.SetOut(bufOut)
 	cmd.SetErr(bufOut)
 	flags := NewAnnotateFlags(iostreams)
 	flags.Filenames = []string{"../../../testdata/controller.yaml"}
-=======
-	iostreams, _, bufOut, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("neon", tf, iostreams)
-	cmd.SetOutput(bufOut)
-	options := NewAnnotateOptions(iostreams)
-	options.Filenames = []string{"../../../testdata/controller.yaml"}
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	args := []string{"a=b", "c-"}
 
 	options, err := flags.ToOptions(tf, cmd, args)
@@ -680,19 +651,11 @@ func TestAnnotateLocal(t *testing.T) {
 	}
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
-<<<<<<< HEAD
 	iostreams, _, _, _ := genericiooptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	flags := NewAnnotateFlags(iostreams)
 	flags.Local = true
 	flags.Filenames = []string{"../../../testdata/controller.yaml"}
-=======
-	iostreams, _, _, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("neon", tf, iostreams)
-	options := NewAnnotateOptions(iostreams)
-	options.local = true
-	options.Filenames = []string{"../../../testdata/controller.yaml"}
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	args := []string{"a=b"}
 
 	options, err := flags.ToOptions(tf, cmd, args)
@@ -744,20 +707,12 @@ func TestAnnotateMultipleObjects(t *testing.T) {
 	}
 	tf.ClientConfigVal = cmdtesting.DefaultClientConfig()
 
-<<<<<<< HEAD
 	iostreams, _, _, _ := genericiooptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("kubectl", tf, iostreams)
+	cmd := NewCmdAnnotate("neon", tf, iostreams)
 	cmd.SetOut(iostreams.Out)
 	cmd.SetErr(iostreams.Out)
 	flags := NewAnnotateFlags(iostreams)
 	flags.All = true
-=======
-	iostreams, _, _, _ := genericclioptions.NewTestIOStreams()
-	cmd := NewCmdAnnotate("neon", tf, iostreams)
-	cmd.SetOutput(iostreams.Out)
-	options := NewAnnotateOptions(iostreams)
-	options.all = true
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	args := []string{"pods", "a=b", "c-"}
 
 	options, err := flags.ToOptions(tf, cmd, args)

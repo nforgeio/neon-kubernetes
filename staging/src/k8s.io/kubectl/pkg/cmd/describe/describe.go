@@ -62,11 +62,7 @@ var (
 		neon describe pods
 
 		# Describe pods by label name=myLabel
-<<<<<<< HEAD
-		kubectl describe pods -l name=myLabel
-=======
-		neon describe po -l name=myLabel
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+		neon describe pods -l name=myLabel
 
 		# Describe all pods managed by the 'frontend' replication controller
 		# (rc-created pods get the name of the rc as a prefix in the pod name)

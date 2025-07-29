@@ -539,7 +539,7 @@ spec:
 		t.Errorf("error decoding YAML: %v", err)
 	}
 
-	if err := f.Apply(appliedObj, "kubectl", false); err == nil || !apierrors.IsConflict(err) {
+	if err := f.Apply(appliedObj, "neon", false); err == nil || !apierrors.IsConflict(err) {
 		t.Errorf("expected conflict when applying with invalid last-applied annotation, but got no error for object: \n%+v", appliedObj)
 	}
 
@@ -552,7 +552,7 @@ spec:
 	}
 
 	// force server-side apply should work and fix the annotation
-	if err := f.Apply(appliedObj, "kubectl", true); err != nil {
+	if err := f.Apply(appliedObj, "neon", true); err != nil {
 		t.Errorf("failed to force server-side apply with: %v", err)
 	}
 
@@ -637,7 +637,7 @@ spec:
 		t.Errorf("error decoding YAML: %v", err)
 	}
 
-	if err := f.Apply(appliedObj, "kubectl", false); err != nil {
+	if err := f.Apply(appliedObj, "neon", false); err != nil {
 		t.Errorf("error applying object: %v", err)
 	}
 
@@ -774,7 +774,7 @@ spec:
 	if err := yaml.Unmarshal(deployment, &newObj.Object); err != nil {
 		t.Errorf("error decoding YAML: %v", err)
 	}
-	if err := f.Apply(newObj, "kubectl", false); err != nil {
+	if err := f.Apply(newObj, "neon", false); err != nil {
 		t.Errorf("error applying object: %v", err)
 	}
 	if m := f.ManagedFields(); len(m) == 0 {

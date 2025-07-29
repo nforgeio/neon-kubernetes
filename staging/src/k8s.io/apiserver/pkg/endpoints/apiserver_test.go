@@ -1587,7 +1587,7 @@ func TestGetPretty(t *testing.T) {
 	}{
 		{accept: runtime.ContentTypeJSON},
 		{accept: "application/json;pretty=0"},
-		{accept: runtime.ContentTypeJSON, userAgent: "kubectl"},
+		{accept: runtime.ContentTypeJSON, userAgent: "neon"},
 		{accept: runtime.ContentTypeJSON, params: url.Values{"pretty": {"0"}}},
 
 		{pretty: true, accept: runtime.ContentTypeJSON, userAgent: "curl"},

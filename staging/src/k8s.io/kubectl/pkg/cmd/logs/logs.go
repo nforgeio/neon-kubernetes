@@ -95,14 +95,10 @@ var (
 		neon logs --tail=20 nginx
 
 		# Show all logs from pod nginx written in the last hour
-<<<<<<< HEAD
-		kubectl logs --since=1h nginx
+		neon logs --since=1h nginx
 		
   		# Show all logs with timestamps from pod nginx starting from August 30, 2024, at 06:00:00 UTC
-  		kubectl logs nginx --since-time=2024-08-30T06:00:00Z --timestamps=true
-=======
-		neon logs --since=1h nginx
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+  		neon logs nginx --since-time=2024-08-30T06:00:00Z --timestamps=true
 
 		# Show logs from a kubelet with an expired serving certificate
 		neon logs --insecure-skip-tls-verify-backend nginx

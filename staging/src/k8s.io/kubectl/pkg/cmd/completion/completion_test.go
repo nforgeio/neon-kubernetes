@@ -71,7 +71,7 @@ See 'kubectl completion -h' for help and examples`,
 		t.Run(tc.name, func(tt *testing.T) {
 			_, _, out, _ := genericiooptions.NewTestIOStreams()
 			parentCmd := &cobra.Command{
-				Use: "kubectl",
+				Use: "neon",
 			}
 			cmd := NewCmdCompletion(out, defaultBoilerPlate)
 			parentCmd.AddCommand(cmd)

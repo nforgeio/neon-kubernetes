@@ -183,11 +183,7 @@ func TestDescribeObjectShowEvents(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: cmdtesting.ObjBody(codec, pods)},
 	}
 
-<<<<<<< HEAD
-	cmd := NewCmdDescribe("kubectl", tf, genericiooptions.NewTestIOStreamsDiscard())
-=======
-	cmd := NewCmdDescribe("neon", tf, genericclioptions.NewTestIOStreamsDiscard())
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+	cmd := NewCmdDescribe("neon", tf, genericiooptions.NewTestIOStreamsDiscard())
 	cmd.Flags().Set("show-events", "true")
 	cmd.Run(cmd, []string{"pods"})
 	if d.Settings.ShowEvents != true {
@@ -213,11 +209,7 @@ func TestDescribeObjectSkipEvents(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: cmdtesting.ObjBody(codec, pods)},
 	}
 
-<<<<<<< HEAD
-	cmd := NewCmdDescribe("kubectl", tf, genericiooptions.NewTestIOStreamsDiscard())
-=======
-	cmd := NewCmdDescribe("neon", tf, genericclioptions.NewTestIOStreamsDiscard())
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+	cmd := NewCmdDescribe("neon", tf, genericiooptions.NewTestIOStreamsDiscard())
 	cmd.Flags().Set("show-events", "false")
 	cmd.Run(cmd, []string{"pods"})
 	if d.Settings.ShowEvents != false {
@@ -243,11 +235,7 @@ func TestDescribeObjectChunkSize(t *testing.T) {
 		Resp:                 &http.Response{StatusCode: http.StatusOK, Header: cmdtesting.DefaultHeader(), Body: cmdtesting.ObjBody(codec, pods)},
 	}
 
-<<<<<<< HEAD
-	cmd := NewCmdDescribe("kubectl", tf, genericiooptions.NewTestIOStreamsDiscard())
-=======
-	cmd := NewCmdDescribe("neon", tf, genericclioptions.NewTestIOStreamsDiscard())
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+	cmd := NewCmdDescribe("neon", tf, genericiooptions.NewTestIOStreamsDiscard())
 	cmd.Flags().Set("chunk-size", "100")
 	cmd.Run(cmd, []string{"pods"})
 	if d.Settings.ChunkSize != 100 {

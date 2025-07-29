@@ -107,21 +107,7 @@ func (o *GetContextsOptions) Complete(cmd *cobra.Command, args []string) error {
 }
 
 // Validate ensures the of output format
-<<<<<<< HEAD
 func (o *GetContextsOptions) Validate() error {
-=======
-func (o *GetContextsOptions) Validate(cmd *cobra.Command) error {
-	validOutputTypes := sets.NewString("", "json", "yaml", "wide", "name", "custom-columns", "custom-columns-file", "go-template", "go-template-file", "jsonpath", "jsonpath-file")
-	supportedOutputTypes := sets.NewString("", "name")
-	outputFormat := cmdutil.GetFlagString(cmd, "output")
-	if !validOutputTypes.Has(outputFormat) {
-		return fmt.Errorf("output must be one of '' or 'name': %v", outputFormat)
-	}
-	if !supportedOutputTypes.Has(outputFormat) {
-		cmd.Flags().Set("output", "")
-		return fmt.Errorf("--output %v is not available in neon config get-contexts; resetting to default output format", outputFormat)
-	}
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	return nil
 }
 

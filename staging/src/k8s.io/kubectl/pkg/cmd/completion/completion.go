@@ -82,11 +82,7 @@ var (
 		## Write bash completion code to a file and source it from .bash_profile
 		    neon completion bash > ~/.kube/completion.bash.inc
 		    printf "
-<<<<<<< HEAD
 		      # kubectl shell completion
-=======
-		      # neon shell completion
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 		      source '$HOME/.kube/completion.bash.inc'
 		      " >> $HOME/.bash_profile
 		    source $HOME/.bash_profile
@@ -97,17 +93,10 @@ var (
 		    neon completion zsh > "${fpath[1]}/_kubectl"
 
 
-<<<<<<< HEAD
 		# Load the kubectl completion code for fish[2] into the current shell
-		    kubectl completion fish | source
-		# To load completions for each session, execute once:
-		    kubectl completion fish > ~/.config/fish/completions/kubectl.fish
-=======
-		# Load the neon completion code for fish[2] into the current shell
 		    neon completion fish | source
-		# To load completions for each session, execute once: 
+		# To load completions for each session, execute once:
 		    neon completion fish > ~/.config/fish/completions/kubectl.fish
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 		# Load the neon completion code for powershell into the current shell
 		    neon completion powershell | Out-String | Invoke-Expression

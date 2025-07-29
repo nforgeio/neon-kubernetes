@@ -58,11 +58,7 @@ var (
 		neon scale --current-replicas=2 --replicas=3 deployment/mysql
 
 		# Scale multiple replication controllers
-<<<<<<< HEAD
-		kubectl scale --replicas=5 rc/example1 rc/example2 rc/example3
-=======
-		neon scale --replicas=5 rc/foo rc/bar rc/baz
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+		neon scale --replicas=5 rc/example1 rc/example2 rc/example3
 
 		# Scale stateful set named 'web' to 3
 		neon scale --replicas=3 statefulset/web`))

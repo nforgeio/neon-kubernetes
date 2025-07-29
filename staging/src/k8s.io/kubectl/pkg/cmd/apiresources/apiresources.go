@@ -55,11 +55,7 @@ var (
 		neon api-resources --namespaced=false
 
 		# Print the supported API resources with a specific APIGroup
-<<<<<<< HEAD
-		kubectl api-resources --api-group=rbac.authorization.k8s.io`)
-=======
-		neon api-resources --api-group=extensions`)
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+		neon api-resources --api-group=rbac.authorization.k8s.io`)
 )
 
 // APIResourceOptions is the start of the data required to perform the operation.

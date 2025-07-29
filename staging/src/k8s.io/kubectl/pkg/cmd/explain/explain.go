@@ -49,20 +49,16 @@ var (
 		neon explain pods
 
 		# Get all the fields in the resource
-		kubectl explain pods --recursive
+		neon explain pods --recursive
 
 		# Get the explanation for deployment in supported api versions
-		kubectl explain deployments --api-version=apps/v1
+		neon explain deployments --api-version=apps/v1
 
 		# Get the documentation of a specific field of a resource
-<<<<<<< HEAD
-		kubectl explain pods.spec.containers
+		neon explain pods.spec.containers
 
 		# Get the documentation of resources in different format
-		kubectl explain deployment --output=plaintext-openapiv2`))
-=======
-		neon explain pods.spec.containers`))
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+		neon explain deployment --output=plaintext-openapiv2`))
 )
 
 const (

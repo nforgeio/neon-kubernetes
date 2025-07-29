@@ -54,7 +54,7 @@ func TestOmitManagedFieldsPrinter(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "pod1",
 					ManagedFields: []metav1.ManagedFieldsEntry{
-						{Manager: "kubectl", Operation: metav1.ManagedFieldsOperationApply},
+						{Manager: "neon", Operation: metav1.ManagedFieldsOperationApply},
 					},
 				},
 			},
@@ -76,7 +76,7 @@ func TestOmitManagedFieldsPrinter(t *testing.T) {
 						ObjectMeta: metav1.ObjectMeta{
 							Name: "pod2",
 							ManagedFields: []metav1.ManagedFieldsEntry{
-								{Manager: "kubectl", Operation: metav1.ManagedFieldsOperationApply},
+								{Manager: "neon", Operation: metav1.ManagedFieldsOperationApply},
 							},
 						},
 					},

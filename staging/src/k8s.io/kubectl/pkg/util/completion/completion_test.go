@@ -502,13 +502,8 @@ func prepareCompletionTest() (*cmdtesting.TestFactory, *cobra.Command) {
 	tf := cmdtesting.NewTestFactory().WithNamespace("test")
 	defer tf.Cleanup()
 
-<<<<<<< HEAD
 	streams, _, _, _ := genericiooptions.NewTestIOStreams()
-	cmd := get.NewCmdGet("kubectl", tf, streams)
-=======
-	streams, _, _, _ := genericclioptions.NewTestIOStreams()
 	cmd := get.NewCmdGet("neon", tf, streams)
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	return tf, cmd
 }
 

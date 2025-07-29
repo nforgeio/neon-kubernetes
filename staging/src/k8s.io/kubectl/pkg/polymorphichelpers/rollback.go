@@ -124,11 +124,7 @@ func (r *DeploymentRollbacker) Rollback(obj runtime.Object, updatedAnnotations m
 		return printTemplate(&rsForRevision.Spec.Template)
 	}
 	if deployment.Spec.Paused {
-<<<<<<< HEAD
-		return "", fmt.Errorf("you cannot rollback a paused deployment; resume it first with 'kubectl rollout resume' and try again")
-=======
-		return "", fmt.Errorf("you cannot rollback a paused deployment; resume it first with 'neon rollout resume deployment/%s' and try again", name)
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+		return "", fmt.Errorf("you cannot rollback a paused deployment; resume it first with 'neon rollout resume' and try again")
 	}
 
 	// Skip if the revision already matches current Deployment

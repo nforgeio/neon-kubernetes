@@ -70,7 +70,7 @@ func main() {
 	kubectl := cmd.NewKubectlCommand(cmd.KubectlOptions{IOStreams: genericiooptions.IOStreams{In: bytes.NewReader(nil), Out: io.Discard, ErrOut: io.Discard}})
 	genYaml(kubectl, "", outDir)
 	for _, c := range kubectl.Commands() {
-		genYaml(c, "kubectl", outDir)
+		genYaml(c, "neon", outDir)
 	}
 }
 

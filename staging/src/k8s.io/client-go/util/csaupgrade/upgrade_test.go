@@ -135,7 +135,7 @@ func TestFindOwners(t *testing.T) {
       `,
 			Operation:   metav1.ManagedFieldsOperationApply,
 			Fields:      fieldpath.NewSet(fieldpath.MakePathOrDie("metadata", "annotations", "kubectl.kubernetes.io/last-applied-configuration")),
-			Expectation: []string{"kubectl"},
+			Expectation: []string{"neon"},
 		},
 		{
 			// Of multiple field managers, match a single one
@@ -304,7 +304,7 @@ func TestUpgradeCSA(t *testing.T) {
 			// and renamed.
 			Name:        "csa-basic-direct-conversion",
 			CSAManagers: []string{"kubectl-client-side-apply"},
-			SSAManager:  "kubectl",
+			SSAManager:  "neon",
 			OriginalObject: []byte(`
 apiVersion: v1
 data: {}
@@ -369,7 +369,7 @@ metadata:
 			// from initial SSA.
 			Name:        "csa-combine-with-ssa-duplicate-keys",
 			CSAManagers: []string{"kubectl-client-side-apply"},
-			SSAManager:  "kubectl",
+			SSAManager:  "neon",
 			OriginalObject: []byte(`
 apiVersion: v1
 data: {}
@@ -450,7 +450,7 @@ metadata:
 			// Expect final object to have unioned keys from both entries
 			Name:        "csa-combine-with-ssa-additional-keys",
 			CSAManagers: []string{"kubectl-client-side-apply"},
-			SSAManager:  "kubectl",
+			SSAManager:  "neon",
 			OriginalObject: []byte(`
 apiVersion: v1
 data: {}
@@ -527,7 +527,7 @@ metadata:
 			// without being merged.
 			Name:        "csa-no-applicable-version",
 			CSAManagers: []string{"kubectl-client-side-apply"},
-			SSAManager:  "kubectl",
+			SSAManager:  "neon",
 			OriginalObject: []byte(`
 apiVersion: v1
 data: {}
@@ -635,7 +635,7 @@ metadata:
 			// Shows that CSA entry with matching version is unioned into the SSA entry.
 			Name:        "csa-single-applicable-version",
 			CSAManagers: []string{"kubectl-client-side-apply"},
-			SSAManager:  "kubectl",
+			SSAManager:  "neon",
 			OriginalObject: []byte(`
 apiVersion: v1
 data: {}
@@ -805,7 +805,7 @@ metadata:
 			// Expect multiple targets to be merged into existing ssa manager
 			Name:        "multipleTargetsExisting",
 			CSAManagers: []string{"kube-scheduler", "kubectl-client-side-apply"},
-			SSAManager:  "kubectl",
+			SSAManager:  "neon",
 			OriginalObject: []byte(`
 apiVersion: v1
 data: {}

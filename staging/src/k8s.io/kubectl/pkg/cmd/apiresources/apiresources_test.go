@@ -30,7 +30,7 @@ func TestAPIResourcesComplete(t *testing.T) {
 	tf := cmdtesting.NewTestFactory()
 	defer tf.Cleanup()
 	cmd := NewCmdAPIResources(tf, genericiooptions.NewTestIOStreamsDiscard())
-	parentCmd := &cobra.Command{Use: "kubectl"}
+	parentCmd := &cobra.Command{Use: "neon"}
 	parentCmd.AddCommand(cmd)
 	o := NewAPIResourceOptions(genericiooptions.NewTestIOStreamsDiscard())
 

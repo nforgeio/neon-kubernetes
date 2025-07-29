@@ -233,23 +233,23 @@ func TestValidPatchOptions(t *testing.T) {
 	}{{
 		opts: metav1.PatchOptions{
 			Force:        boolPtr(true),
-			FieldManager: "kubectl",
+			FieldManager: "neon",
 		},
 		patchType: types.ApplyYAMLPatchType,
 	}, {
 		opts: metav1.PatchOptions{
-			FieldManager: "kubectl",
+			FieldManager: "neon",
 		},
 		patchType: types.ApplyYAMLPatchType,
 	}, {
 		opts: metav1.PatchOptions{
 			Force:        boolPtr(true),
-			FieldManager: "kubectl",
+			FieldManager: "neon",
 		},
 		patchType: types.ApplyCBORPatchType,
 	}, {
 		opts: metav1.PatchOptions{
-			FieldManager: "kubectl",
+			FieldManager: "neon",
 		},
 		patchType: types.ApplyCBORPatchType,
 	}, {
@@ -297,7 +297,7 @@ func TestInvalidPatchOptions(t *testing.T) {
 		// manager and force on non-apply
 		{
 			opts: metav1.PatchOptions{
-				FieldManager: "kubectl",
+				FieldManager: "neon",
 				Force:        boolPtr(false),
 			},
 			patchType: types.MergePatchType,

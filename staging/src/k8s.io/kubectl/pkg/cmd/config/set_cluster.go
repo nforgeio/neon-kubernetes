@@ -59,19 +59,11 @@ var (
 		# Disable cert checking for the e2e cluster entry
 		neon config set-cluster e2e --insecure-skip-tls-verify=true
 
-<<<<<<< HEAD
 		# Set the custom TLS server name to use for validation for the e2e cluster entry
-		kubectl config set-cluster e2e --tls-server-name=my-cluster-name
-
-		# Set the proxy URL for the e2e cluster entry
-		kubectl config set-cluster e2e --proxy-url=https://1.2.3.4`)
-=======
-		# Set custom TLS server name to use for validation for the e2e cluster entry
 		neon config set-cluster e2e --tls-server-name=my-cluster-name
 
-		# Set proxy url for the e2e cluster entry
+		# Set the proxy URL for the e2e cluster entry
 		neon config set-cluster e2e --proxy-url=https://1.2.3.4`)
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 )
 
 // NewCmdConfigSetCluster returns a Command instance for 'config set-cluster' sub command

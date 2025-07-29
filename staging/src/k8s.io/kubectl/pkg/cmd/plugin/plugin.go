@@ -45,14 +45,10 @@ var (
 
 	pluginExample = templates.Examples(i18n.T(`
 		# List all available plugins
-<<<<<<< HEAD
-		kubectl plugin list
+		neon plugin list
 		
 		# List only binary names of available plugins without paths
-		kubectl plugin list --name-only`))
-=======
-		neon plugin list`))
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+		neon plugin list --name-only`))
 
 	pluginListLong = templates.LongDesc(i18n.T(`
 		List all available plugin files on a user's PATH.

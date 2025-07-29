@@ -82,23 +82,14 @@ var (
 
 	debugExample = templates.Examples(i18n.T(`
 		# Create an interactive debugging session in pod mypod and immediately attach to it.
-<<<<<<< HEAD
-		kubectl debug mypod -it --image=busybox
-=======
-		# (requires the EphemeralContainers feature to be enabled in the cluster)
 		neon debug mypod -it --image=busybox
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 		# Create an interactive debugging session for the pod in the file pod.yaml and immediately attach to it.
 		# (requires the EphemeralContainers feature to be enabled in the cluster)
-<<<<<<< HEAD
-		kubectl debug -f pod.yaml -it --image=busybox
+		neon debug -f pod.yaml -it --image=busybox
 
 		# Create a debug container named debugger using a custom automated debugging image.
-		kubectl debug --image=myproj/debug-tools -c debugger mypod
-=======
 		neon debug --image=myproj/debug-tools -c debugger mypod
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 		# Create a copy of mypod adding a debug container and attach to it
 		neon debug mypod -it --image=busybox --copy-to=my-debugger
@@ -199,7 +190,6 @@ func NewCmdDebug(restClientGetter genericclioptions.RESTClientGetter, streams ge
 	return cmd
 }
 
-<<<<<<< HEAD
 func (o *DebugOptions) AddFlags(cmd *cobra.Command) {
 	cmdutil.AddJsonFilenameFlag(cmd.Flags(), &o.FilenameOptions.Filenames, "identifying the resource to debug")
 
@@ -217,17 +207,6 @@ func (o *DebugOptions) AddFlags(cmd *cobra.Command) {
 	cmd.Flags().BoolVar(&o.KeepStartup, "keep-startup", o.KeepStartup, i18n.T("If true, keep the original startup probes.(This flag only works when used with '--copy-to')"))
 	cmd.Flags().BoolVar(&o.KeepInitContainers, "keep-init-containers", o.KeepInitContainers, i18n.T("Run the init containers for the pod. Defaults to true.(This flag only works when used with '--copy-to')"))
 	cmd.Flags().StringToStringVar(&o.SetImages, "set-image", o.SetImages, i18n.T("When used with '--copy-to', a list of name=image pairs for changing container images, similar to how 'kubectl set image' works."))
-=======
-func addDebugFlags(cmd *cobra.Command, opt *DebugOptions) {
-	cmd.Flags().BoolVar(&opt.ArgsOnly, "arguments-only", opt.ArgsOnly, i18n.T("If specified, everything after -- will be passed to the new container as Args instead of Command."))
-	cmd.Flags().BoolVar(&opt.Attach, "attach", opt.Attach, i18n.T("If true, wait for the container to start running, and then attach as if 'neon attach ...' were called.  Default false, unless '-i/--stdin' is set, in which case the default is true."))
-	cmd.Flags().StringVarP(&opt.Container, "container", "c", opt.Container, i18n.T("Container name to use for debug container."))
-	cmd.Flags().StringVar(&opt.CopyTo, "copy-to", opt.CopyTo, i18n.T("Create a copy of the target Pod with this name."))
-	cmd.Flags().BoolVar(&opt.Replace, "replace", opt.Replace, i18n.T("When used with '--copy-to', delete the original Pod."))
-	cmd.Flags().StringToString("env", nil, i18n.T("Environment variables to set in the container."))
-	cmd.Flags().StringVar(&opt.Image, "image", opt.Image, i18n.T("Container image to use for debug container."))
-	cmd.Flags().StringToStringVar(&opt.SetImages, "set-image", opt.SetImages, i18n.T("When used with '--copy-to', a list of name=image pairs for changing container images, similar to how 'neon set image' works."))
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 	cmd.Flags().String("image-pull-policy", "", i18n.T("The image pull policy for the container. If left empty, this value will not be specified by the client and defaulted by the server."))
 	cmd.Flags().BoolVarP(&o.Interactive, "stdin", "i", o.Interactive, i18n.T("Keep stdin open on the container(s) in the pod, even if nothing is attached."))
 	cmd.Flags().BoolVarP(&o.Quiet, "quiet", "q", o.Quiet, i18n.T("If true, suppress informational messages."))

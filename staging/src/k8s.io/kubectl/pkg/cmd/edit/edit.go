@@ -70,13 +70,8 @@ var (
 		# Edit the deployment 'mydeployment' in YAML and save the modified config in its annotation
 		neon edit deployment/mydeployment -o yaml --save-config
 
-<<<<<<< HEAD
 		# Edit the 'status' subresource for the 'mydeployment' deployment
-		kubectl edit deployment mydeployment --subresource='status'`))
-=======
-		# Edit the deployment/mydeployment's status subresource
 		neon edit deployment mydeployment --subresource='status'`))
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 )
 
 // NewCmdEdit creates the `edit` command

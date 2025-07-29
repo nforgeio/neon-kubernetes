@@ -93,13 +93,8 @@ var (
 		# Request a token bound to an instance of a Secret object
 		neon create token myapp --bound-object-kind Secret --bound-object-name mysecret
 
-<<<<<<< HEAD
 		# Request a token bound to an instance of a Secret object with a specific UID
-		kubectl create token myapp --bound-object-kind Secret --bound-object-name mysecret --bound-object-uid 0d4691ed-659b-4935-a832-355f77ee47cc
-=======
-		# Request a token bound to an instance of a Secret object with a specific uid
 		neon create token myapp --bound-object-kind Secret --bound-object-name mysecret --bound-object-uid 0d4691ed-659b-4935-a832-355f77ee47cc
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 `)
 )
 

@@ -53,14 +53,10 @@ var (
 	neon create deployment my-dep --image=nginx --replicas=3
 
 	# Create a deployment named my-dep that runs the busybox image and expose port 5701
-<<<<<<< HEAD
-	kubectl create deployment my-dep --image=busybox --port=5701
+	neon create deployment my-dep --image=busybox --port=5701
 
 	# Create a deployment named my-dep that runs multiple containers
-	kubectl create deployment my-dep --image=busybox:latest --image=ubuntu:latest --image=nginx`))
-=======
-	neon create deployment my-dep --image=busybox --port=5701`))
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+	neon create deployment my-dep --image=busybox:latest --image=ubuntu:latest --image=nginx`))
 )
 
 // CreateDeploymentOptions is returned by NewCmdCreateDeployment

@@ -46,11 +46,7 @@ var (
 
 	secretForTLSExample = templates.Examples(i18n.T(`
 	  # Create a new TLS secret named tls-secret with the given key pair
-<<<<<<< HEAD
-	  kubectl create secret tls tls-secret --cert=path/to/tls.crt --key=path/to/tls.key`))
-=======
-	  neon create secret tls tls-secret --cert=path/to/tls.cert --key=path/to/tls.key`))
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
+	  neon create secret tls tls-secret --cert=path/to/tls.crt --key=path/to/tls.key`))
 )
 
 // CreateSecretTLSOptions holds the options for 'create secret tls' sub command

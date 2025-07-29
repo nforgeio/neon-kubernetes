@@ -100,7 +100,7 @@ func main() {
 		kubectl := kubectlcmd.NewKubectlCommand(kubectlcmd.KubectlOptions{IOStreams: genericiooptions.IOStreams{In: bytes.NewReader(nil), Out: io.Discard, ErrOut: io.Discard}})
 		genMarkdown(kubectl, "", outDir)
 		for _, c := range kubectl.Commands() {
-			genMarkdown(c, "kubectl", outDir)
+			genMarkdown(c, "neon", outDir)
 		}
 	case "kubeadm":
 		// generate manpage for kubeadm

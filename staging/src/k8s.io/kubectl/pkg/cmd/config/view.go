@@ -61,13 +61,8 @@ var (
 		# Show merged kubeconfig settings
 		neon config view
 
-<<<<<<< HEAD
 		# Show merged kubeconfig settings, raw certificate data, and exposed secrets
-		kubectl config view --raw
-=======
-		# Show merged kubeconfig settings and raw certificate data
 		neon config view --raw
->>>>>>> 243802b5225 (NEONKUBE: cherry-picked NEONKUBE commits from: neon-v0.11.0-beta.4/v1.24)
 
 		# Get the password for the e2e user
 		neon config view -o jsonpath='{.users[?(@.name == "e2e")].user.password}'`)
