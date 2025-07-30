@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package version
+package neon_utility
 
 // GetNeonCliVersion returns the associated neon-cli version.
 func GetNeonCliVersion() string {
