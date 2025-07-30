@@ -718,4 +718,4 @@ function kube::build::copy_output() {
 
   kube::build::stop_rsyncd_container
 }
-
+
